@@ -41,7 +41,7 @@ void SHAPE_AddShapeToList(SHAPE_Abstract** abstract_shape_list, char* type, void
 SHAPE_Rectangle* SHAPE_CreateRectangle(float x, float y, float w, float h, float rx, float ry)
 {
     SHAPE_Rectangle* rectangle = malloc(sizeof(SHAPE_Rectangle));
-    SHAPE_Rectangle parameters = {x, y, w, h, rx, ry};
+    SHAPE_Rectangle parameters = {{x, y}, w, h, rx, ry};
     *rectangle = parameters;
 
     return rectangle;
@@ -50,7 +50,7 @@ SHAPE_Rectangle* SHAPE_CreateRectangle(float x, float y, float w, float h, float
 SHAPE_Circle* SHAPE_CreateCircle(float cx, float cy, float r)
 {
     SHAPE_Circle* circle = malloc(sizeof(SHAPE_Circle));
-    SHAPE_Circle parameters = {cx, cy, r};
+    SHAPE_Circle parameters = {{cx, cy}, r};
     *circle = parameters;
     return circle;
 }
@@ -58,68 +58,65 @@ SHAPE_Circle* SHAPE_CreateCircle(float cx, float cy, float r)
 SHAPE_Ellipse* SHAPE_CreateEllipse(float cx, float cy, float rx, float ry)
 {
     SHAPE_Ellipse* ellipse = malloc(sizeof(SHAPE_Ellipse));
-    SHAPE_Ellipse parameters = {cx, cy, rx, ry};
+    SHAPE_Ellipse parameters = {{cx, cy}, rx, ry};
     *ellipse = parameters;
     return ellipse;
 }
 
-SHAPE_Polyline** SHAPE_CreatePolyline(float nb, ...)
+SHAPE_Polyline* SHAPE_CreatePolyline(size_t nb, ...)
 {
-    SHAPE_Polyline** polyline = (SHAPE_Polyline**)calloc(sizeof(SHAPE_Polyline*), 1);
-    SHAPE_Polyline** head = polyline;
+    SHAPE_Polyline* polyline = (SHAPE_Polyline*)calloc(sizeof(SHAPE_Polyline), 1);
     va_list arguments;
     va_start(arguments, nb);
-    for (int i = 0; i < nb; ++i) {
-        float x = va_arg(arguments, float);
-        float y = va_arg(arguments, float);
-        SHAPE_PolylineAddPoint(polyline, x, y);
-        polyline = &(*polyline)->next;
+    for (int i = 0; i < nb/2; ++i) {
+        float x = va_arg(arguments, double);
+        float y = va_arg(arguments, double);
+        SHAPE_PolylineAddPoint(&polyline->p, x, y);
     }
     va_end(arguments);
-    return head;
+    return polyline;
 }
 
-void SHAPE_PolylineAddPoint(SHAPE_Polyline** polyline, float x, float y){
-    SHAPE_Polyline* points_to_add = (SHAPE_Polyline*)calloc(sizeof(SHAPE_Polyline), 1);
+void SHAPE_PolylineAddPoint(SHAPE_Point** point, float x, float y){
+    SHAPE_Point* points_to_add = (SHAPE_Point*)calloc(sizeof(SHAPE_Point), 1);
     points_to_add->x = x;
     points_to_add->y = y;
 
     // if it is the first point to add
-    if(!(*polyline)){
-        *polyline = points_to_add;
+    if(!(*point)){
+        (*point) = points_to_add;
         return;
     }
-    (*polyline)->next = points_to_add;
+    (*point)->np = points_to_add;
 }
 
-SHAPE_Polygone** SHAPE_CreatePolygone(float nb, ...)
+SHAPE_Polygone* SHAPE_CreatePolygone(size_t nb, ...)
 {
-    SHAPE_Polygone** polygone = (SHAPE_Polygone**)calloc(sizeof(SHAPE_Polygone*), 1);
-    SHAPE_Polygone** head = polygone;
+    SHAPE_Polygone* polygone = (SHAPE_Polygone*)calloc(sizeof(SHAPE_Polygone), 1);
+    SHAPE_Point* point = polygone->p;
     va_list arguments;
     va_start(arguments, nb);
-    float x_first_last = va_arg(arguments, float);
-    float y_first_last = va_arg(arguments, float);
-    SHAPE_PolygoneAddPoint(polygone, x_first_last, y_first_last);
-    for (int i = 0; i < nb; ++i) {
-        float x = va_arg(arguments, float);
-        float y = va_arg(arguments, float);
-        SHAPE_PolygoneAddPoint(polygone, x, y);
-        polygone = &(*polygone)->next;
+    float x_first_last = va_arg(arguments, double);
+    float y_first_last = va_arg(arguments, double);
+    SHAPE_PolygoneAddPoint(&point, x_first_last, y_first_last);
+    for (int i = 0; i < nb/2; ++i) {
+        float x = va_arg(arguments, double);
+        float y = va_arg(arguments, double);
+        SHAPE_PolygoneAddPoint(&point, x, y);
     }
-    SHAPE_PolygoneAddPoint(polygone, x_first_last, y_first_last);
-    return head;
+    SHAPE_PolygoneAddPoint(&point, x_first_last, y_first_last);
+    return polygone;
 }
 
-void SHAPE_PolygoneAddPoint(SHAPE_Polygone** polygone, float x, float y)
+void SHAPE_PolygoneAddPoint(SHAPE_Point** point, float x, float y)
 {
-    SHAPE_Polygone* point_to_add = (SHAPE_Polygone*)malloc(sizeof(SHAPE_Polygone));
+    SHAPE_Point* point_to_add = (SHAPE_Point*)malloc(sizeof(SHAPE_Point));
     point_to_add->x = x;
     point_to_add->y = y;
-    if(!(*polygone)){
-        *polygone = point_to_add;
+    if(!(*point)){
+        *point = point_to_add;
         return;
     }
-    polygone = &(*polygone)->next;
+    point = &(*point)->np;
 }
 

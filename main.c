@@ -8,7 +8,7 @@
 
 int main() {
     // Create a polyline
-    SHAPE_Polyline** polyline = SHAPE_CreatePolyline(4, 1, 1, 2, 2);
-    printf("%d\n", (*polyline)->next->x);
+    SHAPE_Polyline* polyline = SHAPE_CreatePolyline(4, 1.f, 1.f, 2.f, 2.f);
+    printf("%f\n", polyline->p->np->x);
     return 0;
 }
