@@ -18,6 +18,7 @@ typedef struct SHAPE_Line_s SHAPE_Line;
 typedef struct SHAPE_Polyline_s SHAPE_Polyline;
 typedef struct SHAPE_Polygone_s SHAPE_Polygone;
 typedef struct SHAPE_Point_s SHAPE_Point;
+typedef struct SHAPE_Path_s SHAPE_Path;
 
 /*
  * Abstract shapes are the generic svg shapes
@@ -79,6 +80,8 @@ struct SHAPE_Polygone_s{
 
 struct SHAPE_Path_s{
     char id;
+    struct SHAPE_Point_s p;
+    struct SHAPE_Path_s* next;
 };
 
 SHAPE_Abstract* SHAPE_Create_Abstract(char* type, void* data);
@@ -87,9 +90,10 @@ SHAPE_Rectangle* SHAPE_CreateRectangle(float x, float y, float w, float h, float
 SHAPE_Circle* SHAPE_CreateCircle(float rx, float ry, float r);
 SHAPE_Ellipse* SHAPE_CreateEllipse(float cx, float cy, float rx, float ry);
 SHAPE_Line* SHAPE_CreateLine(float x1, float x2, float y1, float y2);
-SHAPE_Polyline* SHAPE_CreatePolyline(size_t nb, ...);
-void SHAPE_PolylineAddPoint(SHAPE_Point** point, float x, float y);
-SHAPE_Polygone* SHAPE_CreatePolygone(size_t nb, ...);
-void SHAPE_PolygoneAddPoint(SHAPE_Point** point, float x, float y);
+SHAPE_Polyline* SHAPE_CreatePolyline(char* points);
+SHAPE_Point* SHAPE_PolylineAddPoint(SHAPE_Point** point, float x, float y);
+SHAPE_Polygone* SHAPE_CreatePolygone(char* points);
+SHAPE_Point* SHAPE_PolygoneAddPoint(SHAPE_Point** point, float x, float y);
+SHAPE_Path* SHAPE_CreatePath(size_t nb, ...);
 
 #endif //SVG_PARSER_SHAPES_H

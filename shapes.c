@@ -3,6 +3,8 @@
 //
 
 #include <stdarg.h>
+#include <stdbool.h>
+#include <string.h>
 #include "shapes.h"
 #include "svg.h"
 
@@ -63,60 +65,104 @@ SHAPE_Ellipse* SHAPE_CreateEllipse(float cx, float cy, float rx, float ry)
     return ellipse;
 }
 
-SHAPE_Polyline* SHAPE_CreatePolyline(size_t nb, ...)
+SHAPE_Polyline* SHAPE_CreatePolyline(char* points)
 {
     SHAPE_Polyline* polyline = (SHAPE_Polyline*)calloc(sizeof(SHAPE_Polyline), 1);
-    va_list arguments;
-    va_start(arguments, nb);
-    for (int i = 0; i < nb/2; ++i) {
-        float x = va_arg(arguments, double);
-        float y = va_arg(arguments, double);
-        SHAPE_PolylineAddPoint(&polyline->p, x, y);
+    SHAPE_Point* head = polyline->p;
+    char argument[100]; strcpy(argument, points);
+
+    char* token = strtok(argument, " ");
+    bool read_x = true, add_point = false;
+    float x, y;
+    while(token){
+        if(read_x){
+            x = atof(token);
+            read_x = false;
+            add_point = false;
+        }
+        else{
+            y = atof(token);
+            read_x = true;
+            add_point = true;
+        }
+
+        if(add_point){
+            polyline->p = SHAPE_PolylineAddPoint(&polyline->p, x, y);
+
+        }
+        token = strtok(NULL, " ");
     }
-    va_end(arguments);
+
     return polyline;
 }
 
-void SHAPE_PolylineAddPoint(SHAPE_Point** point, float x, float y){
-    SHAPE_Point* points_to_add = (SHAPE_Point*)calloc(sizeof(SHAPE_Point), 1);
-    points_to_add->x = x;
-    points_to_add->y = y;
+SHAPE_Point* SHAPE_PolylineAddPoint(SHAPE_Point** point, float x, float y){
+    SHAPE_Point* point_to_add = (SHAPE_Point*)calloc(sizeof(SHAPE_Point), 1);
+    point_to_add->x = x; point_to_add->y = y;
 
-    // if it is the first point to add
-    if(!(*point)){
-        (*point) = points_to_add;
-        return;
+    if(!(*point))
+    {
+        (*point) = point_to_add;
+        return *point;
     }
-    (*point)->np = points_to_add;
+
+    point_to_add->np = (*point);
+    return point_to_add;
 }
 
-SHAPE_Polygone* SHAPE_CreatePolygone(size_t nb, ...)
+SHAPE_Polygone* SHAPE_CreatePolygone(char* points)
 {
     SHAPE_Polygone* polygone = (SHAPE_Polygone*)calloc(sizeof(SHAPE_Polygone), 1);
-    SHAPE_Point* point = polygone->p;
-    va_list arguments;
-    va_start(arguments, nb);
-    float x_first_last = va_arg(arguments, double);
-    float y_first_last = va_arg(arguments, double);
-    SHAPE_PolygoneAddPoint(&point, x_first_last, y_first_last);
-    for (int i = 0; i < nb/2; ++i) {
-        float x = va_arg(arguments, double);
-        float y = va_arg(arguments, double);
-        SHAPE_PolygoneAddPoint(&point, x, y);
+    char argument[100]; strcpy(argument, points);
+    bool read_x = true, add_point = false, read_first = true;
+    float x_first_last, y_first_last, x, y;
+    char* token = strtok(argument, " ");
+    while(token){
+        if(read_x){
+            x = atof(token);
+            if(read_first)
+                x_first_last = x;
+            read_x = false;
+            add_point = false;
+        }
+
+        else{
+            y = atof(token);
+            if(read_first){
+                y_first_last = y_first_last;
+                read_first = false;
+            }
+            read_x = true;
+            add_point = true;
+        }
+
+        if(add_point)
+            polygone->p = SHAPE_PolygoneAddPoint(&polygone->p, x, y);
+
+        token = strtok(NULL, " ");
     }
-    SHAPE_PolygoneAddPoint(&point, x_first_last, y_first_last);
+
+    SHAPE_PolygoneAddPoint(&polygone->p, x_first_last, y_first_last);
+
     return polygone;
 }
 
-void SHAPE_PolygoneAddPoint(SHAPE_Point** point, float x, float y)
+SHAPE_Point* SHAPE_PolygoneAddPoint(SHAPE_Point** point, float x, float y)
 {
     SHAPE_Point* point_to_add = (SHAPE_Point*)malloc(sizeof(SHAPE_Point));
     point_to_add->x = x;
     point_to_add->y = y;
     if(!(*point)){
         *point = point_to_add;
-        return;
+        return *point;
     }
-    point = &(*point)->np;
+
+    point_to_add->np = (*point);
+    return point_to_add;
+}
+
+SHAPE_Path* SHAPE_CreatePath(size_t nb, ...)
+{
+
 }
 
