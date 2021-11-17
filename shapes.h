@@ -18,6 +18,7 @@ typedef struct SHAPE_Line_s SHAPE_Line;
 typedef struct SHAPE_Polyline_s SHAPE_Polyline;
 typedef struct SHAPE_Polygone_s SHAPE_Polygone;
 typedef struct SHAPE_Point_s SHAPE_Point;
+typedef struct SHAPE_Pathblock_s SHAPE_Pathblock;
 typedef struct SHAPE_Path_s SHAPE_Path;
 
 /*
@@ -78,10 +79,24 @@ struct SHAPE_Polygone_s{
     struct SHAPE_Point_s* p;
 };
 
-struct SHAPE_Path_s{
+/*
+ * Block that are contained inside the path structure
+ *  id : Command type
+ *  p : List of points
+ *  nb : Point to the next block
+ */
+struct SHAPE_Pathblock_s{
     char id;
-    struct SHAPE_Point_s p;
-    struct SHAPE_Path_s* next;
+    struct SHAPE_Point_s* p;
+    struct SHAPE_Pathblock_s* nb;
+};
+
+/*
+ * Path structure
+ * b : list of all the blocks
+ */
+struct SHAPE_Path_s{
+    struct SHAPE_Pathblock_s* b;
 };
 
 SHAPE_Abstract* SHAPE_Create_Abstract(char* type, void* data);
@@ -94,6 +109,8 @@ SHAPE_Polyline* SHAPE_CreatePolyline(char* points);
 SHAPE_Point* SHAPE_PolylineAddPoint(SHAPE_Point** point, float x, float y);
 SHAPE_Polygone* SHAPE_CreatePolygone(char* points);
 SHAPE_Point* SHAPE_PolygoneAddPoint(SHAPE_Point** point, float x, float y);
-SHAPE_Path* SHAPE_CreatePath(size_t nb, ...);
+SHAPE_Path* SHAPE_CreatePath(char* points);
+SHAPE_Pathblock* SHAPE_PathAddBlock(SHAPE_Pathblock** block, SHAPE_Pathblock* block_to_add);
+SHAPE_Point* SHAPE_PathblockAddPoint(SHAPE_Point** points, float x, float y);
 
 #endif //SVG_PARSER_SHAPES_H

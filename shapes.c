@@ -161,8 +161,76 @@ SHAPE_Point* SHAPE_PolygoneAddPoint(SHAPE_Point** point, float x, float y)
     return point_to_add;
 }
 
-SHAPE_Path* SHAPE_CreatePath(size_t nb, ...)
+SHAPE_Path* SHAPE_CreatePath(char* points)
 {
+    SHAPE_Path* path = (SHAPE_Path*)malloc(sizeof(SHAPE_Path));
+    char argument[100]; strcpy(argument, points);
 
+    // Read each block and stock it in the Path block list
+    char* token = strtok(argument, " ");
+    char current_block;
+    SHAPE_Pathblock* pathblock;
+    bool read_x = true, add_point = false, add_block = false;
+    int readed_blocks = 0;
+    float x, y;
+    while(token){
+        // If it is a command, create a new block based on that command
+        switch (*token) {
+            case 'M':
+                if(readed_blocks > 0)
+                    path->b = SHAPE_PathAddBlock(&path->b, pathblock);
+                pathblock = (SHAPE_Pathblock *) malloc(sizeof(SHAPE_Pathblock));
+                pathblock->id = 'M';
+                readed_blocks++;
+                break;
+
+
+            default:
+                // Add points to the current block
+                if(read_x)
+                {
+                    x = atof(token);
+                    read_x = false;
+                    add_point = false;
+                }
+                else{
+                    y = atof(token);
+                    read_x = true;
+                    add_point = true;
+                }
+                break;
+        }
+        if(add_point)
+            pathblock->p = SHAPE_PathblockAddPoint(&pathblock->p, x, y);
+        token = strtok(NULL, " ");
+    }
+    path->b = SHAPE_PathAddBlock(&path->b, pathblock);
+    return path;
+}
+
+SHAPE_Pathblock* SHAPE_PathAddBlock(SHAPE_Pathblock** block, SHAPE_Pathblock* block_to_add)
+{
+    // If there is no block in the list
+    if(!(*block)){
+        (*block) = block_to_add;
+        return (*block);
+    }
+
+    block_to_add->nb = (*block);
+    return block_to_add;
+}
+
+SHAPE_Point* SHAPE_PathblockAddPoint(SHAPE_Point** points, float x, float y)
+{
+    SHAPE_Point* point_to_add = (SHAPE_Point*)calloc(sizeof(SHAPE_Point), 1);
+    point_to_add->x = x; point_to_add->y = y;
+
+    if(!(*points)){
+        *points = point_to_add;
+        return *points;
+    }
+
+    (*points)->np = point_to_add;
+    return point_to_add;
 }
 
