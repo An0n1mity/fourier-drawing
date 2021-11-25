@@ -2,6 +2,8 @@
 // Created by Alexandre on 14/11/2021.
 //
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <stdarg.h>
 #include <stdbool.h>
 #include <string.h>
@@ -115,7 +117,7 @@ SHAPE_Polygone* SHAPE_CreatePolygone(char* points)
     SHAPE_Polygone* polygone = (SHAPE_Polygone*)calloc(sizeof(SHAPE_Polygone), 1);
     char argument[100]; strcpy(argument, points);
     bool read_x = true, add_point = false, read_first = true;
-    float x_first_last, y_first_last, x, y;
+    float x_first_last, y_first_last=0, x, y;
     char* token = strtok(argument, " ");
     while(token){
         if(read_x){
@@ -169,7 +171,7 @@ SHAPE_Path* SHAPE_CreatePath(char* points)
     // Read each block and stock it in the Path block list
     char* token = strtok(argument, " ");
     char current_block;
-    SHAPE_Pathblock* pathblock;
+    SHAPE_Pathblock* pathblock = NULL;
     bool read_x = true, add_point = false, add_block = false;
     int readed_blocks = 0;
     float x, y;
