@@ -1,0 +1,15 @@
+﻿  main.c
+  shapes.c
+C:\Users\biist\source\repos\Cycloide\Cycloide\shapes.c(76,21): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
+C:\Users\biist\source\repos\Cycloide\Cycloide\shapes.c(81,21): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
+C:\Users\biist\source\repos\Cycloide\Cycloide\shapes.c(119,21): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
+C:\Users\biist\source\repos\Cycloide\Cycloide\shapes.c(127,21): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
+C:\Users\biist\source\repos\Cycloide\Cycloide\shapes.c(189,25): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
+C:\Users\biist\source\repos\Cycloide\Cycloide\shapes.c(194,25): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
+C:\Users\biist\source\repos\Cycloide\Cycloide\shapes.c(168,10): warning C4101: 'current_block' : variable locale non référencée
+  svgparser.c
+C:\Users\biist\source\repos\Cycloide\Cycloide\svgparser.c(6,43): warning C4133: '=' : types incompatibles - de 'xmlDocPtr' à 'svgTree'
+C:\Users\biist\source\repos\Cycloide\Cycloide\svgparser.c(15,21): warning C4133: 'fonction' : types incompatibles - de 'svgTree' à 'xmlDocPtr'
+svgparser.obj : error LNK2001: symbole externe non résolu _xmlFreeDoc
+svgparser.obj : error LNK2001: symbole externe non résolu _xmlReadFile
+C:\Users\biist\source\repos\Cycloide\Release\Cycloide.exe : fatal error LNK1120: 2 externes non résolus
