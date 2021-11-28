@@ -1,0 +1,7 @@
+[requires]
+    libiconv/1.16
+    zlib/1.2.11
+    libxml2/2.9.12
+[generators]
+txt
+cmake

@@ -1,10 +1,9 @@
 #ifndef SVGPARSER_H
 #define SVGPARSER_H
 
-#include <libxml/tree.h>
-#include <libxml/parser.h>
 #include <stdio.h>
 #include <string.h>
+#include <libxml/tree.h>
 
 typedef struct xmlNodeShape_s xmlNodeShape;
 

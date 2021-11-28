@@ -1,0 +1,71 @@
+[settings]
+    arch=x86_64
+    build_type=Debug
+    compiler=Visual Studio
+    compiler.runtime=MDd
+    compiler.version=16
+    os=Windows
+
+[requires]
+    libiconv/1.Y.Z
+    libxml2/2.Y.Z
+    zlib/1.Y.Z
+
+[options]
+
+
+[full_settings]
+    arch=x86_64
+    build_type=Debug
+    compiler=Visual Studio
+    compiler.runtime=MDd
+    compiler.version=16
+    os=Windows
+
+[full_requires]
+    libiconv/1.16:d057732059ea44a47760900cb5e4855d2bea8714
+    libxml2/2.9.12:4985bfadea356bac8fa111cacc1cbf0ed5cf8523
+    zlib/1.2.11:d057732059ea44a47760900cb5e4855d2bea8714
+
+[full_options]
+    libiconv:shared=False
+    libxml2:c14n=True
+    libxml2:catalog=True
+    libxml2:docbook=True
+    libxml2:ftp=True
+    libxml2:html=True
+    libxml2:http=True
+    libxml2:iconv=True
+    libxml2:icu=False
+    libxml2:include_utils=True
+    libxml2:iso8859x=True
+    libxml2:legacy=True
+    libxml2:lzma=False
+    libxml2:mem-debug=False
+    libxml2:output=True
+    libxml2:pattern=True
+    libxml2:push=True
+    libxml2:python=False
+    libxml2:reader=True
+    libxml2:regexps=True
+    libxml2:run-debug=False
+    libxml2:sax1=True
+    libxml2:schemas=True
+    libxml2:schematron=True
+    libxml2:shared=False
+    libxml2:threads=True
+    libxml2:tree=True
+    libxml2:valid=True
+    libxml2:writer=True
+    libxml2:xinclude=True
+    libxml2:xpath=True
+    libxml2:xptr=True
+    libxml2:zlib=True
+    zlib:minizip=deprecated
+    zlib:shared=False
+
+[recipe_hash]
+
+
+[env]
+

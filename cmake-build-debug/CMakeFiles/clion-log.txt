@@ -1,0 +1,54 @@
+"C:/Program Files/Conan/conan/conan.exe" install "D:/Codes/PST Fourier/svg_parser" "-if=D:\Codes\PST Fourier\svg_parser\cmake-build-debug" -pr=default
+Configuration:
+[settings]
+arch=x86_64
+arch_build=x86_64
+build_type=Debug
+compiler=Visual Studio
+compiler.runtime=MDd
+compiler.version=16
+os=Windows
+[options]
+zlib:shared=False
+[build_requires]
+*: cmake/3.22.0
+[env]
+
+conanfile.txt: Installing package
+Requirements
+    libiconv/1.16 from 'conancenter' - Cache
+    libxml2/2.9.12 from 'conancenter' - Cache
+    zlib/1.2.11 from 'conancenter' - Cache
+Packages
+    libiconv/1.16:d057732059ea44a47760900cb5e4855d2bea8714 - Cache
+    libxml2/2.9.12:4985bfadea356bac8fa111cacc1cbf0ed5cf8523 - Cache
+    zlib/1.2.11:d057732059ea44a47760900cb5e4855d2bea8714 - Cache
+Build requirements
+    cmake/3.22.0 from 'conancenter' - Cache
+Build requirements packages
+    cmake/3.22.0:01edd76db8e16db9b38c3cca44ec466a9444c388 - Cache
+
+Installing (downloading, building) binaries...
+cmake/3.22.0: Already installed!
+cmake/3.22.0: Appending PATH environment variable: C:\Users\bluew\.conan\data\cmake\3.22.0\_\_\package\01edd76db8e16db9b38c3cca44ec466a9444c388\bin
+libiconv/1.16: Already installed!
+libiconv/1.16: Appending PATH environment var: C:\Users\bluew\.conan\data\libiconv\1.16\_\_\package\d057732059ea44a47760900cb5e4855d2bea8714\bin
+zlib/1.2.11: Already installed!
+libxml2/2.9.12: Already installed!
+libxml2/2.9.12: Appending PATH environment variable: C:\Users\bluew\.conan\data\libxml2\2.9.12\_\_\package\4985bfadea356bac8fa111cacc1cbf0ed5cf8523\bin
+conanfile.txt: Applying build-requirement: cmake/3.22.0
+conanfile.txt: Generator cmake created conanbuildinfo.cmake
+conanfile.txt: Generator txt created conanbuildinfo.txt
+conanfile.txt: Aggregating env generators
+conanfile.txt: Generated conaninfo.txt
+conanfile.txt: Generated graphinfo
+"D:\Programmes\CLion 2020.3.2\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - NMake Makefiles" "D:\Codes\PST Fourier\svg_parser"
+-- Conan: Adjusting output directories
+-- Conan: Using cmake global configuration
+-- Conan: Adjusting default RPATHs Conan policies
+-- Conan: Adjusting language standard
+-- This project seems to be plain C, using 'MSVC' compiler
+-- Current conanbuildinfo.cmake directory: D:/Codes/PST Fourier/svg_parser/cmake-build-debug
+-- Configuring done
+-- Generating done
+-- Build files have been written to: D:/Codes/PST Fourier/svg_parser/cmake-build-debug

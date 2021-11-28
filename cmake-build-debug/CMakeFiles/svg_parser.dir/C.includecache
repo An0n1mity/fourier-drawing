@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+D:/Codes/PST Fourier/svg_parser/main.c
+stdio.h
+-
+svg.h
+D:/Codes/PST Fourier/svg_parser/svg.h
+shapes.h
+D:/Codes/PST Fourier/svg_parser/shapes.h
+
+D:/Codes/PST Fourier/svg_parser/shapes.h
+stdlib.h
+-
+string.h
+-
+stdarg.h
+-
+svg.h
+D:/Codes/PST Fourier/svg_parser/svg.h
+
+D:/Codes/PST Fourier/svg_parser/svg.h
+stdlib.h
+D:/Codes/PST Fourier/svg_parser/stdlib.h
+shapes.h
+D:/Codes/PST Fourier/svg_parser/shapes.h
+

@@ -1,0 +1,3 @@
+D:/Codes/PST Fourier/svg_parser/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+D:/Codes/PST Fourier/svg_parser/cmake-build-debug/CMakeFiles/svg_parser.dir
+D:/Codes/PST Fourier/svg_parser/cmake-build-debug/CMakeFiles/edit_cache.dir
