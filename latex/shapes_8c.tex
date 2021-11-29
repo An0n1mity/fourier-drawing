@@ -1,0 +1,145 @@
+\hypertarget{shapes_8c}{}\doxysection{shapes.\+c File Reference}
+\label{shapes_8c}\index{shapes.c@{shapes.c}}
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}shapes.\+h\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{shapes_8c_af08ec37a8c99d747fb60fa15bc28678b}{\+\_\+\+CRT\+\_\+\+SECURE\+\_\+\+NO\+\_\+\+WARNINGS}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{shapes_8h_aee2e9319f614fe0bbca59e4c1fdf9cec}{SHAPE\+\_\+\+Abstract}} $\ast$ \mbox{\hyperlink{shapes_8c_a5dcc221d564d2fcc3db0bc5ad2da8674}{SHAPE\+\_\+\+Create\+Abstract}} (char $\ast$type, void $\ast$data)
+\item 
+void \mbox{\hyperlink{shapes_8c_adc8c35fb08a701f17ee8853c34144e4d}{SHAPE\+\_\+\+Add\+Shape\+To\+List}} (\mbox{\hyperlink{shapes_8h_aee2e9319f614fe0bbca59e4c1fdf9cec}{SHAPE\+\_\+\+Abstract}} $\ast$$\ast$abstract\+\_\+shape\+\_\+list, char $\ast$type, void $\ast$data)
+\item 
+\mbox{\hyperlink{shapes_8h_aa7341b0eebdc354fa62a53376c4ef4e0}{SHAPE\+\_\+\+Rectangle}} $\ast$ \mbox{\hyperlink{shapes_8c_aa00a39896af4e4abf82552b3d8a78222}{SHAPE\+\_\+\+Create\+Rectangle}} (float x, float y, float w, float h, float rx, float ry)
+\item 
+\mbox{\hyperlink{shapes_8h_aa7c375de0a2ad36cdbf58a3a4e0c3c6e}{SHAPE\+\_\+\+Circle}} $\ast$ \mbox{\hyperlink{shapes_8c_aa15176a410d2e7c93df9ed368378a2b8}{SHAPE\+\_\+\+Create\+Circle}} (float cx, float cy, float r)
+\item 
+\mbox{\hyperlink{shapes_8h_ae740088bd96c32bc6a424e841a46a4db}{SHAPE\+\_\+\+Ellipse}} $\ast$ \mbox{\hyperlink{shapes_8c_ae3966c82cc254144cb86fd070215326b}{SHAPE\+\_\+\+Create\+Ellipse}} (float cx, float cy, float rx, float ry)
+\item 
+\mbox{\hyperlink{shapes_8h_a008403419edd6c82999185e065aa7dc3}{SHAPE\+\_\+\+Polyline}} $\ast$ \mbox{\hyperlink{shapes_8c_a84870f8bb5dcf756de1069ba8e0efc45}{SHAPE\+\_\+\+Create\+Polyline}} (char $\ast$points)
+\item 
+\mbox{\hyperlink{shapes_8h_af4e6a5d897fe20e130aeb403697b8908}{SHAPE\+\_\+\+Polygone}} $\ast$ \mbox{\hyperlink{shapes_8c_ac6f2f09972acc413be4c82ae6dbf68cc}{SHAPE\+\_\+\+Create\+Polygone}} (char $\ast$points)
+\begin{DoxyCompactList}\small\item\em Create a polygone based on string of points coordinates. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{shapes_8h_ae4b1d05f8d63c4080e70a1f5e58f9160}{SHAPE\+\_\+\+Path}} $\ast$ \mbox{\hyperlink{shapes_8c_a0437a8574931dad8369aa7bbea93d2c4}{SHAPE\+\_\+\+Create\+Path}} (char $\ast$points)
+\begin{DoxyCompactList}\small\item\em Create a path based on string of commands/points coordinates. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{shapes_8h_aeed8344430aa0f4aa4b5b33e11b42bbc}{SHAPE\+\_\+\+Pathblock}} $\ast$ \mbox{\hyperlink{shapes_8c_ac4754b4e0dd608f958ebffa1dd20149d}{SHAPE\+\_\+\+Path\+Add\+Block}} (\mbox{\hyperlink{shapes_8h_aeed8344430aa0f4aa4b5b33e11b42bbc}{SHAPE\+\_\+\+Pathblock}} $\ast$$\ast$block, \mbox{\hyperlink{shapes_8h_aeed8344430aa0f4aa4b5b33e11b42bbc}{SHAPE\+\_\+\+Pathblock}} $\ast$block\+\_\+to\+\_\+add)
+\item 
+\mbox{\hyperlink{shapes_8h_aa2ce12a77ea9ca618cd08bdf905dae5d}{SHAPE\+\_\+\+Point}} $\ast$ \mbox{\hyperlink{shapes_8c_ab418e74ede1483983a283c1bd61a20a1}{SHAPE\+\_\+\+Add\+Point}} (\mbox{\hyperlink{shapes_8h_aa2ce12a77ea9ca618cd08bdf905dae5d}{SHAPE\+\_\+\+Point}} $\ast$$\ast$points, float x, float y)
+\begin{DoxyCompactList}\small\item\em Adding point to a list of points. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{shapes_8c_af08ec37a8c99d747fb60fa15bc28678b}\label{shapes_8c_af08ec37a8c99d747fb60fa15bc28678b}} 
+\index{shapes.c@{shapes.c}!\_CRT\_SECURE\_NO\_WARNINGS@{\_CRT\_SECURE\_NO\_WARNINGS}}
+\index{\_CRT\_SECURE\_NO\_WARNINGS@{\_CRT\_SECURE\_NO\_WARNINGS}!shapes.c@{shapes.c}}
+\doxysubsubsection{\texorpdfstring{\_CRT\_SECURE\_NO\_WARNINGS}{\_CRT\_SECURE\_NO\_WARNINGS}}
+{\footnotesize\ttfamily \#define \+\_\+\+CRT\+\_\+\+SECURE\+\_\+\+NO\+\_\+\+WARNINGS}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{shapes_8c_ab418e74ede1483983a283c1bd61a20a1}\label{shapes_8c_ab418e74ede1483983a283c1bd61a20a1}} 
+\index{shapes.c@{shapes.c}!SHAPE\_AddPoint@{SHAPE\_AddPoint}}
+\index{SHAPE\_AddPoint@{SHAPE\_AddPoint}!shapes.c@{shapes.c}}
+\doxysubsubsection{\texorpdfstring{SHAPE\_AddPoint()}{SHAPE\_AddPoint()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{shapes_8h_aa2ce12a77ea9ca618cd08bdf905dae5d}{SHAPE\+\_\+\+Point}} $\ast$ SHAPE\+\_\+\+Add\+Point (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{shapes_8h_aa2ce12a77ea9ca618cd08bdf905dae5d}{SHAPE\+\_\+\+Point}} $\ast$$\ast$}]{points,  }\item[{float}]{x,  }\item[{float}]{y }\end{DoxyParamCaption})}
+
+
+
+Adding point to a list of points. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em point} & last point added to a given shape \\
+\hline
+\mbox{\texttt{ in}}  & {\em x} & coordinate of point to add \\
+\hline
+\mbox{\texttt{ in}}  & {\em y} & coordinate of point to add \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+point\+\_\+to\+\_\+add 
+\end{DoxyReturn}
+\mbox{\Hypertarget{shapes_8c_adc8c35fb08a701f17ee8853c34144e4d}\label{shapes_8c_adc8c35fb08a701f17ee8853c34144e4d}} 
+\index{shapes.c@{shapes.c}!SHAPE\_AddShapeToList@{SHAPE\_AddShapeToList}}
+\index{SHAPE\_AddShapeToList@{SHAPE\_AddShapeToList}!shapes.c@{shapes.c}}
+\doxysubsubsection{\texorpdfstring{SHAPE\_AddShapeToList()}{SHAPE\_AddShapeToList()}}
+{\footnotesize\ttfamily void SHAPE\+\_\+\+Add\+Shape\+To\+List (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{shapes_8h_aee2e9319f614fe0bbca59e4c1fdf9cec}{SHAPE\+\_\+\+Abstract}} $\ast$$\ast$}]{abstract\+\_\+shape\+\_\+list,  }\item[{char $\ast$}]{type,  }\item[{void $\ast$}]{data }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{shapes_8c_a5dcc221d564d2fcc3db0bc5ad2da8674}\label{shapes_8c_a5dcc221d564d2fcc3db0bc5ad2da8674}} 
+\index{shapes.c@{shapes.c}!SHAPE\_CreateAbstract@{SHAPE\_CreateAbstract}}
+\index{SHAPE\_CreateAbstract@{SHAPE\_CreateAbstract}!shapes.c@{shapes.c}}
+\doxysubsubsection{\texorpdfstring{SHAPE\_CreateAbstract()}{SHAPE\_CreateAbstract()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{shapes_8h_aee2e9319f614fe0bbca59e4c1fdf9cec}{SHAPE\+\_\+\+Abstract}} $\ast$ SHAPE\+\_\+\+Create\+Abstract (\begin{DoxyParamCaption}\item[{char $\ast$}]{type,  }\item[{void $\ast$}]{data }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{shapes_8c_aa15176a410d2e7c93df9ed368378a2b8}\label{shapes_8c_aa15176a410d2e7c93df9ed368378a2b8}} 
+\index{shapes.c@{shapes.c}!SHAPE\_CreateCircle@{SHAPE\_CreateCircle}}
+\index{SHAPE\_CreateCircle@{SHAPE\_CreateCircle}!shapes.c@{shapes.c}}
+\doxysubsubsection{\texorpdfstring{SHAPE\_CreateCircle()}{SHAPE\_CreateCircle()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{shapes_8h_aa7c375de0a2ad36cdbf58a3a4e0c3c6e}{SHAPE\+\_\+\+Circle}} $\ast$ SHAPE\+\_\+\+Create\+Circle (\begin{DoxyParamCaption}\item[{float}]{cx,  }\item[{float}]{cy,  }\item[{float}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{shapes_8c_ae3966c82cc254144cb86fd070215326b}\label{shapes_8c_ae3966c82cc254144cb86fd070215326b}} 
+\index{shapes.c@{shapes.c}!SHAPE\_CreateEllipse@{SHAPE\_CreateEllipse}}
+\index{SHAPE\_CreateEllipse@{SHAPE\_CreateEllipse}!shapes.c@{shapes.c}}
+\doxysubsubsection{\texorpdfstring{SHAPE\_CreateEllipse()}{SHAPE\_CreateEllipse()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{shapes_8h_ae740088bd96c32bc6a424e841a46a4db}{SHAPE\+\_\+\+Ellipse}} $\ast$ SHAPE\+\_\+\+Create\+Ellipse (\begin{DoxyParamCaption}\item[{float}]{cx,  }\item[{float}]{cy,  }\item[{float}]{rx,  }\item[{float}]{ry }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{shapes_8c_a0437a8574931dad8369aa7bbea93d2c4}\label{shapes_8c_a0437a8574931dad8369aa7bbea93d2c4}} 
+\index{shapes.c@{shapes.c}!SHAPE\_CreatePath@{SHAPE\_CreatePath}}
+\index{SHAPE\_CreatePath@{SHAPE\_CreatePath}!shapes.c@{shapes.c}}
+\doxysubsubsection{\texorpdfstring{SHAPE\_CreatePath()}{SHAPE\_CreatePath()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{shapes_8h_ae4b1d05f8d63c4080e70a1f5e58f9160}{SHAPE\+\_\+\+Path}} $\ast$ SHAPE\+\_\+\+Create\+Path (\begin{DoxyParamCaption}\item[{char $\ast$}]{points }\end{DoxyParamCaption})}
+
+
+
+Create a path based on string of commands/points coordinates. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em command\+\_\+points} & command/points for block generation exemple\+: \char`\"{}\+M x1 y1 x2 y2 ...\char`\"{} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+path 
+\end{DoxyReturn}
+\mbox{\Hypertarget{shapes_8c_ac6f2f09972acc413be4c82ae6dbf68cc}\label{shapes_8c_ac6f2f09972acc413be4c82ae6dbf68cc}} 
+\index{shapes.c@{shapes.c}!SHAPE\_CreatePolygone@{SHAPE\_CreatePolygone}}
+\index{SHAPE\_CreatePolygone@{SHAPE\_CreatePolygone}!shapes.c@{shapes.c}}
+\doxysubsubsection{\texorpdfstring{SHAPE\_CreatePolygone()}{SHAPE\_CreatePolygone()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{shapes_8h_af4e6a5d897fe20e130aeb403697b8908}{SHAPE\+\_\+\+Polygone}} $\ast$ SHAPE\+\_\+\+Create\+Polygone (\begin{DoxyParamCaption}\item[{char $\ast$}]{command\+\_\+points }\end{DoxyParamCaption})}
+
+
+
+Create a polygone based on string of points coordinates. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em points} & coordinates exemple\+: \char`\"{}x1 y1 x2 y2 ...\char`\"{} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+polyline 
+\end{DoxyReturn}
+\mbox{\Hypertarget{shapes_8c_a84870f8bb5dcf756de1069ba8e0efc45}\label{shapes_8c_a84870f8bb5dcf756de1069ba8e0efc45}} 
+\index{shapes.c@{shapes.c}!SHAPE\_CreatePolyline@{SHAPE\_CreatePolyline}}
+\index{SHAPE\_CreatePolyline@{SHAPE\_CreatePolyline}!shapes.c@{shapes.c}}
+\doxysubsubsection{\texorpdfstring{SHAPE\_CreatePolyline()}{SHAPE\_CreatePolyline()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{shapes_8h_a008403419edd6c82999185e065aa7dc3}{SHAPE\+\_\+\+Polyline}} $\ast$ SHAPE\+\_\+\+Create\+Polyline (\begin{DoxyParamCaption}\item[{char $\ast$}]{points }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{shapes_8c_aa00a39896af4e4abf82552b3d8a78222}\label{shapes_8c_aa00a39896af4e4abf82552b3d8a78222}} 
+\index{shapes.c@{shapes.c}!SHAPE\_CreateRectangle@{SHAPE\_CreateRectangle}}
+\index{SHAPE\_CreateRectangle@{SHAPE\_CreateRectangle}!shapes.c@{shapes.c}}
+\doxysubsubsection{\texorpdfstring{SHAPE\_CreateRectangle()}{SHAPE\_CreateRectangle()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{shapes_8h_aa7341b0eebdc354fa62a53376c4ef4e0}{SHAPE\+\_\+\+Rectangle}} $\ast$ SHAPE\+\_\+\+Create\+Rectangle (\begin{DoxyParamCaption}\item[{float}]{x,  }\item[{float}]{y,  }\item[{float}]{w,  }\item[{float}]{h,  }\item[{float}]{rx,  }\item[{float}]{ry }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{shapes_8c_ac4754b4e0dd608f958ebffa1dd20149d}\label{shapes_8c_ac4754b4e0dd608f958ebffa1dd20149d}} 
+\index{shapes.c@{shapes.c}!SHAPE\_PathAddBlock@{SHAPE\_PathAddBlock}}
+\index{SHAPE\_PathAddBlock@{SHAPE\_PathAddBlock}!shapes.c@{shapes.c}}
+\doxysubsubsection{\texorpdfstring{SHAPE\_PathAddBlock()}{SHAPE\_PathAddBlock()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{shapes_8h_aeed8344430aa0f4aa4b5b33e11b42bbc}{SHAPE\+\_\+\+Pathblock}} $\ast$ SHAPE\+\_\+\+Path\+Add\+Block (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{shapes_8h_aeed8344430aa0f4aa4b5b33e11b42bbc}{SHAPE\+\_\+\+Pathblock}} $\ast$$\ast$}]{block,  }\item[{\mbox{\hyperlink{shapes_8h_aeed8344430aa0f4aa4b5b33e11b42bbc}{SHAPE\+\_\+\+Pathblock}} $\ast$}]{block\+\_\+to\+\_\+add }\end{DoxyParamCaption})}
+
