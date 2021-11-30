@@ -149,16 +149,21 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BezierCurve.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="shapes.c" />
     <ClCompile Include="svgparser.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BezierCurve.h" />
     <ClInclude Include="shapes.h" />
     <ClInclude Include="svgparser.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="test.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Cycloide.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

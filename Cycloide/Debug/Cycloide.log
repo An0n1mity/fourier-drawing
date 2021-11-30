@@ -1,17 +1,12 @@
 ﻿  main.c
-  shapes.c
-D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(60,9): warning C4033: 'SHAPE_CreateEllipse' doit retourner une valeur
-D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(70,9): warning C4033: 'SHAPE_CreatePolyline' doit retourner une valeur
-D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(79,21): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
-D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(84,21): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
-D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(103,9): warning C4033: 'SHAPE_CreatePolygone' doit retourner une valeur
-D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(110,21): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
-D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(118,21): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
-D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(166,25): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
-D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(171,25): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
-  svgparser.c
-  Génération de code en cours...
-D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(64): warning C4715: 'SHAPE_CreateEllipse' : les chemins de contrôle ne retournent pas tous une valeur
-D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(97): warning C4715: 'SHAPE_CreatePolyline' : les chemins de contrôle ne retournent pas tous une valeur
-D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(136): warning C4715: 'SHAPE_CreatePolygone' : les chemins de contrôle ne retournent pas tous une valeur
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(12,17): warning C4305: '=' : troncation de 'double' à 'float'
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(12,34): warning C4305: '=' : troncation de 'double' à 'float'
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(13,17): warning C4305: '=' : troncation de 'double' à 'float'
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(13,34): warning C4305: '=' : troncation de 'double' à 'float'
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(17,31): warning C4133: 'fonction' : types incompatibles - de 'int **' à 'double **'
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(18,31): warning C4133: 'fonction' : types incompatibles - de 'int **' à 'double **'
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(19,31): warning C4133: 'fonction' : types incompatibles - de 'int **' à 'double **'
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(20,31): warning C4133: 'fonction' : types incompatibles - de 'int **' à 'double **'
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(22,25): warning C4133: 'fonction' : types incompatibles - de 'int **' à 'double **'
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(15,1): warning C4133: 'initialisation' : types incompatibles - de 'double **' à 'int **'
   Cycloide.vcxproj -> D:\Codes\PST Fourier\svg_parser\Debug\Cycloide.exe
