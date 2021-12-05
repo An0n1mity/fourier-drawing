@@ -3,8 +3,10 @@
 
 #include <libxml/tree.h>
 #include <libxml/parser.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+#include "shapes.h"
 
 typedef struct svgShapeStack_s svgShapeStack;
 typedef struct svgAttributeStack_s svgAttributeStack;
@@ -14,14 +16,14 @@ struct svgAttributeStack_s {
 	char* key;
 	char* value;
 
-	struct svgAttributeStack_s* next;
+	struct svgAttributeStack_s* na;
 };
 
 struct svgShapeStack_s {
 	char* name;
 	struct svgAttributeStack_s* attributes;
 	
-	struct svgShapeStack_s* next;
+	struct svgShapeStack_s* ns;
 };
 
 /**
@@ -76,7 +78,5 @@ void PARSER_AddAttributesToStack(svgAttributeStack** svg_attribute_stack, svgAtt
 */
 void PARSER_ReadAttributesFromXMLNode(svgAttributeStack** svg_attribute_stack, xmlNode* xml_node);
 void PARSER_FreeAttributeStack(svgAttributeStack* svg_attribute_stack);
-
-void PARSER_ReadAtrributesFromPath(svgAttributeStack* path_attribute);
 
 #endif // !PARSER_H

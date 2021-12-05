@@ -3,11 +3,12 @@
 #include <stdbool.h>
 #include <string.h>
 #include "shapes.h"
+#include "svgparser.h"
 
 
-SHAPE_Abstract* SHAPE_CreateAbstract(char* type, void* data)
+ShapeAbstract* SHAPE_CreateAbstract(char* type, void* data)
 {
-    SHAPE_Abstract* abstract_shape = (SHAPE_Abstract*)calloc(sizeof(SHAPE_Abstract), 1);
+    ShapeAbstract* abstract_shape = (ShapeAbstract*)calloc(sizeof(ShapeAbstract), 1);
     if (!abstract_shape)
         return NULL;
 
@@ -17,19 +18,25 @@ SHAPE_Abstract* SHAPE_CreateAbstract(char* type, void* data)
     return abstract_shape;
 }
 
-
-void SHAPE_AddShapeToList(SHAPE_Abstract** abstract_shape_list, char* type, void* data)
+ShapePoint* SHAPE_CreatePoint(float x, float y)
 {
-    SHAPE_Abstract* abstract_shape_to_add = SHAPE_CreateAbstract(type, data);
+    ShapePoint* point = (ShapePoint*)calloc(sizeof(ShapePoint), 1);
+    point->x = x, point->y = y;
+    return point;
+}
+
+void SHAPE_AddShapeToList(ShapeAbstract** abstract_shape_list, char* type, void* data)
+{
+    ShapeAbstract* abstract_shape_to_add = SHAPE_CreateAbstract(type, data);
     abstract_shape_to_add->next = *abstract_shape_list;
     *abstract_shape_list = abstract_shape_to_add;
 }
 
 
-SHAPE_Rectangle* SHAPE_CreateRectangle(float x, float y, float w, float h, float rx, float ry)
+ShapeRectangle* SHAPE_CreateRectangle(float x, float y, float w, float h, float rx, float ry)
 {
-    SHAPE_Rectangle* rectangle = (SHAPE_Rectangle*)malloc(sizeof(SHAPE_Rectangle));
-    SHAPE_Rectangle parameters = { {x, y}, w, h, rx, ry };
+    ShapeRectangle* rectangle = (ShapeRectangle*)malloc(sizeof(ShapeRectangle));
+    ShapeRectangle parameters = { {x, y}, w, h, rx, ry };
     
     if (!rectangle)
         return NULL;
@@ -39,10 +46,10 @@ SHAPE_Rectangle* SHAPE_CreateRectangle(float x, float y, float w, float h, float
     return rectangle;
 }
 
-SHAPE_Circle* SHAPE_CreateCircle(float cx, float cy, float r)
+ShapeCircle* SHAPE_CreateCircle(float cx, float cy, float r)
 {
-    SHAPE_Circle* circle = (SHAPE_Circle*)malloc(sizeof(SHAPE_Circle));
-    SHAPE_Circle parameters = { {cx, cy}, r };
+    ShapeCircle* circle = (ShapeCircle*)malloc(sizeof(ShapeCircle));
+    ShapeCircle parameters = { {cx, cy}, r };
 
     if (!circle)
         return NULL;
@@ -51,10 +58,10 @@ SHAPE_Circle* SHAPE_CreateCircle(float cx, float cy, float r)
     return circle;
 }
 
-SHAPE_Ellipse* SHAPE_CreateEllipse(float cx, float cy, float rx, float ry)
+ShapeEllipse* SHAPE_CreateEllipse(float cx, float cy, float rx, float ry)
 {
-    SHAPE_Ellipse* ellipse = (SHAPE_Ellipse*)malloc(sizeof(SHAPE_Ellipse));
-    SHAPE_Ellipse parameters = { {cx, cy}, rx, ry };
+    ShapeEllipse* ellipse = (ShapeEllipse*)malloc(sizeof(ShapeEllipse));
+    ShapeEllipse parameters = { {cx, cy}, rx, ry };
 
     if (!ellipse)
         return;
@@ -63,12 +70,12 @@ SHAPE_Ellipse* SHAPE_CreateEllipse(float cx, float cy, float rx, float ry)
     return ellipse;
 }
 
-SHAPE_Polyline* SHAPE_CreatePolyline(char* points)
+ShapePolyline* SHAPE_CreatePolyline(char* points)
 {
-    SHAPE_Polyline* polyline = (SHAPE_Polyline*)calloc(sizeof(SHAPE_Polyline), 1);
+    ShapePolyline* polyline = (ShapePolyline*)calloc(sizeof(ShapePolyline), 1);
     if (!polyline)
         return;
-    SHAPE_Point* head = polyline->p;
+    ShapePoint* head = polyline->p;
     char argument[100]; strcpy(argument, points);
 
     char* token = strtok(argument, " ");
@@ -87,7 +94,8 @@ SHAPE_Polyline* SHAPE_CreatePolyline(char* points)
         }
 
         if (add_point) {
-            polyline->p = SHAPE_AddPoint(&polyline->p, x, y);
+            ShapePoint* point_to_add = SHAPE_CreatePoint(x, y);
+            SHAPE_AddPoint(&polyline->p, point_to_add);
 
         }
         token = strtok(NULL, " ");
@@ -96,9 +104,11 @@ SHAPE_Polyline* SHAPE_CreatePolyline(char* points)
     return polyline;
 }
 
-SHAPE_Polygone* SHAPE_CreatePolygone(char* points)
+ShapePolygone* SHAPE_CreatePolygone(char* points)
 {
-    SHAPE_Polygone* polygone = (SHAPE_Polygone*)calloc(sizeof(SHAPE_Polygone), 1);
+
+    ShapePolygone* polygone = (ShapePolygone*)calloc(sizeof(ShapePolygone), 1);
+    ShapePoint* point_to_add = NULL;
     if (!polygone)
         return;
     char argument[100]; strcpy(argument, points);
@@ -124,90 +134,122 @@ SHAPE_Polygone* SHAPE_CreatePolygone(char* points)
             add_point = true;
         }
 
-        if (add_point)
-            polygone->p = SHAPE_AddPoint(&polygone->p, x, y);
-
+        if (add_point) {
+            point_to_add = SHAPE_CreatePoint(x_first_last, y_first_last);
+            SHAPE_AddPoint(&polygone->p, point_to_add);
+        }
         token = strtok(NULL, " ");
     }
-
-    SHAPE_AddPoint(&polygone->p, x_first_last, y_first_last);
+    
+    point_to_add = SHAPE_CreatePoint(x_first_last, y_first_last);
+    SHAPE_AddPoint(&polygone->p, point_to_add);
 
     return polygone;
 }
 
-SHAPE_Path* SHAPE_CreatePath(char* points)
+// When reading path attributes from svg we got : M100,200 C300,400 600,700
+// This function read the attributes and give a corresponding path structure
+ShapePath* CreatePathFromSVGPath(svgAttributeStack* path_attribute)
 {
-    SHAPE_Path* path = (SHAPE_Path*)malloc(sizeof(SHAPE_Path));
-    char argument[100]; strcpy(argument, points);
+    // Delimiter in our example start_char is M
+    xmlChar readed_char, start_char;
+    start_char = path_attribute->value[0];
+    // Index to read data to a given path block
+    size_t start_index = 0, end_index = 0;
+    size_t attribute_len = strlen(path_attribute->value);
 
-    // Read each block and stock it in the Path block list
-    char* token = strtok(argument, " ");
-    SHAPE_Pathblock* pathblock = NULL;
-    bool read_x = true, add_point = false, add_block = false;
-    int readed_blocks = 0;
-    float x, y;
-    while (token) {
-        // If it is a command, create a new block based on that command
-        switch (*token) {
-        case 'M':
-            if (readed_blocks > 0)
-                path->b = SHAPE_PathAddBlock(&path->b, pathblock);
-            pathblock = (SHAPE_Pathblock*)malloc(sizeof(SHAPE_Pathblock));
-            if(pathblock)
-                pathblock->id = 'M';
-            readed_blocks++;
-            break;
+    // The shape that will contains the data 
+    ShapePath* path = (ShapePath*)calloc(sizeof(ShapePath), 1);
 
+    // Parsing all the string from start to finish
+    for (size_t i = 0; i <= attribute_len; i++)
+    {
+        readed_char = path_attribute->value[i];
+        // If the readed char is a new command, create a new path block  
+        if (readed_char != start_char && (readed_char == 'C' || readed_char == 'L' 
+            || readed_char == 'H' || readed_char == '\0' || readed_char == 'V' || readed_char == 'Z')
+            || readed_char == 'S' || readed_char == 'Q' || readed_char == 'T'
+            )
+        {
 
-        default:
-            // Add points to the current block
-            if (read_x)
+            // Create a path bloc that will contains commands and point data
+            ShapePathblock* path_block = (ShapePathblock*)calloc(sizeof(ShapePathblock), 1);
+            // Command
+            path_block->id = start_char;
+
+            // Stocking the relative points block data in a string 
+            end_index = i;
+            char* path_bloc_data = (char*)malloc(sizeof(char) * (end_index - start_index));
+            if (!path_bloc_data)
+                return;
+            path_bloc_data[end_index - start_index - 1] = '\0';
+            strncpy(path_bloc_data, path_attribute->value + start_index + 1, end_index - start_index - 1);
+
+            // Parsing points data
+            char* save_point_data = NULL, * save_x_y_data = NULL;
+            char* point_data = strtok_s(path_bloc_data, " ", &save_point_data);
+            char* x_y_data;
+            float x, y;
+            while (point_data)
             {
-                x = atof(token);
-                read_x = false;
-                add_point = false;
+                x_y_data = strtok_s(point_data, ",", &save_x_y_data);
+                x = atof(x_y_data);
+                x_y_data = strtok_s(NULL, ",", &save_x_y_data);
+                y = atof(x_y_data);
+                ShapePoint* point_to_add = SHAPE_CreatePoint(x, y);
+
+                // Add the new created points to the current path block
+                SHAPE_AddPoint(&path_block->p, point_to_add);
+                point_data = strtok_s(NULL, " ", &save_point_data);
+
             }
-            else {
-                y = atof(token);
-                read_x = true;
-                add_point = true;
-            }
-            break;
+
+            // Add the new created path block to the path
+            SHAPE_PathAddBlock(&path->b, path_block);
+            start_index = end_index;
+            start_char = readed_char;
+            free(path_bloc_data);
         }
-        if (add_point)
-            pathblock->p = SHAPE_AddPoint(&pathblock->p, x, y);
-        token = strtok(NULL, " ");
     }
-    if(path)
-        path->b = SHAPE_PathAddBlock(&path->b, pathblock);
+
     return path;
 }
 
-SHAPE_Pathblock* SHAPE_PathAddBlock(SHAPE_Pathblock** block, SHAPE_Pathblock* block_to_add)
+
+void SHAPE_PathAddBlock(ShapePathblock** blocks, ShapePathblock* block_to_add)
 {
-    // If there is no block in the list
-    if (!(*block)) {
-        (*block) = block_to_add;
-        return (*block);
+    if (!blocks)
+        return;
+    
+    // If the queu is empty  
+    if (!(*blocks)) {
+        (*blocks) = block_to_add;
+        return;
     }
 
-    block_to_add->nb = (*block);
-    return block_to_add;
+    // Add the block to the end of the queu
+    ShapePathblock* cursor = *blocks;
+    while (cursor->nb)
+        cursor = cursor->nb;
+    cursor->nb = block_to_add;
 }
 
-SHAPE_Point* SHAPE_AddPoint(SHAPE_Point** points, float x, float y)
+void SHAPE_AddPoint(ShapePoint** points, ShapePoint* point_to_add)
 {
-    SHAPE_Point* point_to_add = (SHAPE_Point*)calloc(sizeof(SHAPE_Point), 1);
-    if (!point_to_add)
-        return NULL;
-    point_to_add->x = x; point_to_add->y = y;
+    if (!points)
+        return;
 
-    if (!(*points)) {
+    if (!*points)
+    {
         *points = point_to_add;
-        return *points;
+        return;
     }
 
-    (*points)->np = point_to_add;
-    return point_to_add;
+    ShapePoint* cursor = *points;
+    while (cursor->np)
+        cursor = cursor->np;
+
+    cursor->np = point_to_add;
+
 }
 

@@ -66,7 +66,7 @@ void PARSER_AddShapeToStack(svgShapeStack** svg_shape_stack, svgShapeStack* svg_
         return;
     }
 
-    svg_shape->next = (*svg_shape_stack);
+    svg_shape->ns = (*svg_shape_stack);
     (*svg_shape_stack) = svg_shape;
 
 }
@@ -77,7 +77,7 @@ void PARSER_FreeShapeStack(svgShapeStack* svg_shape_stack)
         return;
 
     PARSER_FreeAttributeStack(svg_shape_stack->attributes);
-    PARSER_FreeShapeStack(svg_shape_stack->next);
+    PARSER_FreeShapeStack(svg_shape_stack->ns);
     free(svg_shape_stack->name);
     free(svg_shape_stack);
 }
@@ -113,7 +113,7 @@ void PARSER_AddAttributesToStack(svgAttributeStack** svg_attribute_stack, svgAtt
         return;
     }
 
-    attribute_to_add->next = *svg_attribute_stack;
+    attribute_to_add->na = *svg_attribute_stack;
     *svg_attribute_stack = attribute_to_add;
 }
 
@@ -154,22 +154,10 @@ void PARSER_FreeAttributeStack(svgAttributeStack* svg_attribute_stack)
         return;
     }
 
-    PARSER_FreeAttributeStack(svg_attribute_stack->next);
+    PARSER_FreeAttributeStack(svg_attribute_stack->na);
     free(svg_attribute_stack->key);
     free(svg_attribute_stack->value);
     free(svg_attribute_stack);
-}
-
-void PARSER_ReadAtrributesFromPath(svgAttributeStack* path_attribute)
-{
-    xmlChar readed_char;
-    for (size_t i = 0; path_attribute->value[i] != '\0'; i++)
-    {
-        readed_char = path_attribute->value[i];
-        // If the readed char is a command 
-        if(readed_char == 'C')
-            printf("%c\n", readed_char);
-    }
 }
 
 
