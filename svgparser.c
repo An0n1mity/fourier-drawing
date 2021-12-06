@@ -5,133 +5,159 @@
 xmlDocPtr PARSER_LoadSVG(char* svg_path)
 {
 	xmlDocPtr svg_tree;
-	svg_tree = xmlReadFile(svg_path, NULL, 0);//salut :)
-	if (!svg_tree)
-		return NULL;
+	svg_tree = xmlReadFile(svg_path, NULL, 0);
+    if (!svg_tree) {
+        fprintf(stderr, "Error : File %s could not be load\n", svg_path);
+        return NULL;
+    }
 
 	return svg_tree;
 }
 
-void PARSER_FreeSVG(xmlDocPtr svg_tree)
+void PARSER_FreeSVG(xmlDocPtr xml_tree)
 {
-	xmlFreeDoc(svg_tree);
+	xmlFreeDoc(xml_tree);
 }
 
-xmlNodeShape* PARSER_GetShapesFromSVG(xmlDocPtr svg_tree)
+svgShapeStack* PARSER_GetShapesFromSVG(xmlDocPtr xml_tree)
 {
-    xmlNodeShape* shapes = NULL;
-    xmlNode* svg_node = xmlDocGetRootElement(svg_tree);
-    PARSER_ReadShapesFromSVG(&shapes, svg_node);
+    if (!xml_tree) {
+        fprintf(stderr, "Error : No svg was loaded in memory\n");
+        return NULL;
+    }
+    svgShapeStack* shapes = NULL;
+    xmlNode* svg_node = xmlDocGetRootElement(xml_tree);
+    PARSER_ReadShapesFromXMLTree(&shapes, svg_node);
 
     return shapes;
 }
 
-void PARSER_ReadShapesFromSVG(xmlNodeShape** shapes, xmlNode* svg_node)
+void PARSER_ReadShapesFromXMLTree(svgShapeStack** svg_shape_stack, xmlNode* xml_root_node)
 {
-    for (svg_node = svg_node->children; svg_node != NULL; svg_node = svg_node->next) {
-        if (svg_node->type == XML_ELEMENT_NODE && (strcmp(svg_node->name, "rect") == 0) ||
-            (strcmp(svg_node->name, "circle") == 0) || 
-            (strcmp(svg_node->name, "point") == 0) || 
-            (strcmp(svg_node->name, "ellipse") == 0) || 
-            (strcmp(svg_node->name, "line") == 0) || 
-            (strcmp(svg_node->name, "polyline") == 0) || 
-            (strcmp(svg_node->name, "polygone") == 0) ||
-            (strcmp(svg_node->name, "path") == 0)
+    if (!svg_shape_stack)
+    {
+        fprintf(stderr, "Error : Argument shape_stack is void\n");
+        return;
+    }
+    for (xml_root_node = xml_root_node->children; xml_root_node != NULL; xml_root_node = xml_root_node->next) {
+        if (xml_root_node->type == XML_ELEMENT_NODE && (strcmp(xml_root_node->name, "rect") == 0) ||
+            (strcmp(xml_root_node->name, "circle") == 0) ||
+            (strcmp(xml_root_node->name, "point") == 0) ||
+            (strcmp(xml_root_node->name, "ellipse") == 0) ||
+            (strcmp(xml_root_node->name, "line") == 0) ||
+            (strcmp(xml_root_node->name, "polyline") == 0) ||
+            (strcmp(xml_root_node->name, "polygone") == 0) ||
+            (strcmp(xml_root_node->name, "path") == 0)
             ) {
-            PARSER_AddShapesNode(shapes, svg_node);
+            svgShapeStack* svg_shape = (svgShapeStack*)calloc(sizeof(svgShapeStack), 1);
+            svg_shape->name = _strdup(xml_root_node->name);
+            svg_shape->attributes = PARSER_GetAttributesFromXMLNode(xml_root_node);
+            PARSER_AddShapeToStack(svg_shape_stack, svg_shape);
         }
-        PARSER_ReadShapesFromSVG(shapes, svg_node);
+        PARSER_ReadShapesFromXMLTree(svg_shape_stack, xml_root_node);
     }
 }
 
-void PARSER_AddShapesNode(xmlNodeShape** shape_stack, xmlNode* node_to_add)
+void PARSER_AddShapeToStack(svgShapeStack** svg_shape_stack, svgShapeStack* svg_shape)
 {
-    xmlNodeShape* shape_node = (xmlNodeShape*)calloc(sizeof(xmlNodeShape), 1);
-    if (!shape_node)
+    if (!svg_shape_stack)
+    {
+        fprintf(stderr, "Error : Argument shape_stack is void\n");
         return;
+    }
 
-    shape_node->data = (xmlNode*)malloc(sizeof(xmlNode));
-
-    if(shape_node->data)
-        memcpy(shape_node->data, node_to_add, sizeof(xmlNode));
-
-    shape_node->next = (*shape_stack);
-    (*shape_stack) = shape_node;
+    svg_shape->ns = (*svg_shape_stack);
+    (*svg_shape_stack) = svg_shape;
 
 }
 
-void PARSER_FreeShapeStack(xmlNodeShape* shape_stack)
+void PARSER_FreeShapeStack(svgShapeStack* svg_shape_stack)
 {
-    if (!shape_stack)
+    if (!svg_shape_stack)
         return;
-    PARSER_FreeShapeStack(shape_stack->next);
-    free(shape_stack->data);
-    free(shape_stack);
+
+    PARSER_FreeAttributeStack(svg_shape_stack->attributes);
+    PARSER_FreeShapeStack(svg_shape_stack->ns);
+    free(svg_shape_stack->name);
+    free(svg_shape_stack);
 }
 
 
 // Retrieve from a shape a list of attributes
-xmlNodeAttribute* PARSER_GetAttributesFromShape(xmlNodeShape* shapes_node)
+svgAttributeStack* PARSER_GetAttributesFromXMLNode(xmlNode* xml_node)
 {
-    xmlNodeAttribute* attributes = NULL;
-    while (shapes_node)
+    if (!xml_node)
     {
-        PARSER_ReadAttributesFromShape(&attributes, shapes_node);
-        shapes_node = shapes_node->next;
+        fprintf(stderr, "Error : Argument shape_stack is void\n");
+        return;
     }
+
+    svgAttributeStack* attributes = NULL;
+    PARSER_ReadAttributesFromXMLNode(&attributes, xml_node);
 
     return attributes;
 }
 
 // Adding an attribute to the attributes stack
-void PARSER_AddAttributes(xmlNodeAttribute** attribute_stack, xmlNodeAttribute* attribute_to_add)
+void PARSER_AddAttributesToStack(svgAttributeStack** svg_attribute_stack, svgAttributeStack* attribute_to_add)
 {
-    if (!(*attribute_stack))
+    if (!svg_attribute_stack)
     {
-        *attribute_stack = attribute_to_add;
+        fprintf(stderr, "Error : Argument attribute_stack is void\n");
         return;
     }
 
-    attribute_to_add->next = *attribute_stack;
-    *attribute_stack = attribute_to_add;
+    if (!(*svg_attribute_stack))
+    {
+        *svg_attribute_stack = attribute_to_add;
+        return;
+    }
+
+    attribute_to_add->na = *svg_attribute_stack;
+    *svg_attribute_stack = attribute_to_add;
 }
 
 // Reading attributes to a attributes stack
-void PARSER_ReadAttributesFromShape(xmlNodeAttribute** attribute_stack, xmlNodeShape* shape_node)
+void PARSER_ReadAttributesFromXMLNode(svgAttributeStack** svg_attribute_stack, xmlNode* xml_node)
 {
+    if (!svg_attribute_stack)
+    {
+        fprintf(stderr, "Error : Argument attribute_stack is void\n");
+        return;
+    }
+
     xmlChar* attribute_value, *attribute_key;
 
-    while (shape_node->data->properties)
+    while (xml_node->properties)
     {
-        xmlNodeAttribute* attribute = (xmlNodeAttribute*)calloc(sizeof(xmlNodeAttribute), 1);
+        svgAttributeStack* attribute = (svgAttributeStack*)calloc(sizeof(svgAttributeStack), 1);
         if (!attribute)
             return;
-
-        attribute->key = (char*)malloc(sizeof(char) * 10);
-        attribute->value = (char*)malloc(sizeof(char) * 10);
         
-        attribute_key = shape_node->data->properties->name;
-        attribute_value = xmlNodeListGetString(shape_node->data->doc, shape_node->data->properties->children, 1);
+        attribute_key = xml_node->properties->name;
+        attribute_value = xmlNodeListGetString(xml_node->doc, xml_node->properties->children, 1);
         
-        if(attribute->key)
-            strcpy(attribute->key, attribute_key);
-        if(attribute->value)
-            strcpy(attribute->value, attribute_value);
+        if(attribute_key)
+            attribute->key = _strdup(attribute_key);
+        if(attribute_value)
+            attribute->value = _strdup(attribute_value);
 
-        PARSER_AddAttributes(attribute_stack, attribute);
+        PARSER_AddAttributesToStack(svg_attribute_stack, attribute);
 
-        shape_node->data->properties = shape_node->data->properties->next;
+        xml_node->properties = xml_node->properties->next;
     }
 }
 
-void PARSER_FreeAttributeStack(xmlNodeAttribute* attribute_stack)
+void PARSER_FreeAttributeStack(svgAttributeStack* svg_attribute_stack)
 {
-    if (!attribute_stack)
+    if (!svg_attribute_stack) {
         return;
-    PARSER_FreeAttributeStack(attribute_stack->next);
-    free(attribute_stack->key);
-    free(attribute_stack->value);
-    free(attribute_stack);
+    }
+
+    PARSER_FreeAttributeStack(svg_attribute_stack->na);
+    free(svg_attribute_stack->key);
+    free(svg_attribute_stack->value);
+    free(svg_attribute_stack);
 }
 
 

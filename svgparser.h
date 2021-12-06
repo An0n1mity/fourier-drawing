@@ -3,23 +3,26 @@
 
 #include <libxml/tree.h>
 #include <libxml/parser.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 
-typedef struct xmlNodeShape_s xmlNodeShape;
-typedef struct xmlNodeAttribute_s xmlNodeAttribute;
+typedef struct svgShapeStack_s svgShapeStack;
+typedef struct svgAttributeStack_s svgAttributeStack;
 
 
-struct xmlNodeShape_s {
-	xmlNode* data;
-	struct xmlNodeShape_s* next;
-};
-
-struct xmlNodeAttribute_s {
+struct svgAttributeStack_s {
 	char* key;
 	char* value;
 
-	struct xmlNodeAttribute_s* next;
+	struct svgAttributeStack_s* na;
+};
+
+struct svgShapeStack_s {
+	char* name;
+	struct svgAttributeStack_s* attributes;
+	
+	struct svgShapeStack_s* ns;
 };
 
 /**
@@ -32,25 +35,25 @@ xmlDocPtr PARSER_LoadSVG(char* svg_path);
 * @brief Free the svg tree in memory
 * \param[in] svg_tree svg tree to free
 */
-void PARSER_FreeSVG(xmlDocPtr svg_tree);
+void PARSER_FreeSVG(xmlDocPtr xml_tree);
 /**
 * @brief Get nodes containing shapes
 * \param[in] svg_tree pointer to the svg tree
 * \return shape_stack
 */
-xmlNodeShape* PARSER_GetShapesFromSVG(xmlDocPtr svg_tree);
+svgShapeStack* PARSER_GetShapesFromSVG(xmlDocPtr xml_tree);
 /**
 * @brief Returning shapes node from the svg tree
 * \param[in] svg_tree the svg tree
 * \return  
 */
-void PARSER_ReadShapesFromSVG(xmlNodeShape** shapes, xmlNode* svg_node);
+void PARSER_ReadShapesFromXMLTree(svgShapeStack** svg_shape_stack, xmlNode* xml_root_node);
 /**
 * @brief Adding shape node to a list of shapes
 * \param[in] shapes_node the list of shapes
 * \param[in] node_to_add the shape node to add
 */
-void PARSER_AddShapesNode(xmlNodeShape** shapes_node, xmlNode* node_to_add);
+void PARSER_AddShapeToStack(svgShapeStack** svg_shape_stack, svgShapeStack* svg_shape);
 
 /**
 * @brief Get attributes from a shape node 
@@ -58,21 +61,21 @@ void PARSER_AddShapesNode(xmlNodeShape** shapes_node, xmlNode* node_to_add);
 * \return attribute_stack
 * 
 */
-void PARSER_FreeShapeStack(xmlNodeShape* shape_stack);
+void PARSER_FreeShapeStack(svgShapeStack* svg_shape_stack);
 
-xmlNodeAttribute* PARSER_GetAttributesFromShape(xmlNodeShape* shapes_node);
+svgAttributeStack* PARSER_GetAttributesFromXMLNode(xmlNode* xml_node);
 /**
 * @brief Add attribute to a stack of attributes
 * \param[in] attribute_stack the stack of attributes
 * \param[in] attribute_to_add the attribute to add to the stack
 */
-void PARSER_AddAttributes(xmlNodeAttribute** attribute_stack, xmlNodeAttribute* attribute_to_add);
+void PARSER_AddAttributesToStack(svgAttributeStack** svg_attribute_stack, svgAttributeStack* attribute_to_add);
 /**
 * @brief Read attributes from a shape node 
 * \param[in] attribute_stack the stack of attributes
 * \param[in] shape_node the shape node to read attributes from
 */
-void PARSER_ReadAttributesFromShape(xmlNodeAttribute** attribute_stack, xmlNodeShape* shape_node);
-void PARSER_FreeAttributeStack(xmlNodeAttribute* attribute_stack);
+void PARSER_ReadAttributesFromXMLNode(svgAttributeStack** svg_attribute_stack, xmlNode* xml_node);
+void PARSER_FreeAttributeStack(svgAttributeStack* svg_attribute_stack);
 
 #endif // !PARSER_H
