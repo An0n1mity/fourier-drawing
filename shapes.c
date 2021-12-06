@@ -6,37 +6,81 @@
 #include "svgparser.h"
 
 
+// Abstract shape is a stack of all the implemented shapes
 ShapeAbstract* SHAPE_CreateAbstract(char* type, void* data)
 {
     ShapeAbstract* abstract_shape = (ShapeAbstract*)calloc(sizeof(ShapeAbstract), 1);
     if (!abstract_shape)
         return NULL;
 
-    strcpy(abstract_shape->type, type);
+    abstract_shape->type = _strdup(type);
     abstract_shape->data = data;
 
     return abstract_shape;
 }
 
+ShapeAbstract* SHAPE_CreateAbstractFromSVG(svgShapeStack* svg_shapes)
+{
+    ShapeAbstract* abstract_shapes = NULL;
+    ShapeAbstract* abstract_to_add = NULL;
+    while (svg_shapes)
+    {
+        abstract_to_add = NULL;
+        if (!strcmp(svg_shapes->name, "rect"))        
+           abstract_to_add = SHAPE_CreateAbstract(svg_shapes->name, SHAPE_CreateRectangleFromSVGRectangle(svg_shapes->attributes));
+        else if(!strcmp(svg_shapes->name, "circle"))
+           abstract_to_add = SHAPE_CreateAbstract(svg_shapes->name, SHAPE_CreateCircleFromSVGCircle(svg_shapes->attributes));
+
+        SHAPE_AddAbstractShapeToAbstractShapeStack(&abstract_shapes, abstract_to_add);
+        svg_shapes = svg_shapes->ns;
+    }
+
+    return abstract_shapes;
+}
+
+// Add an abstract shape to a stack of abstract shape
+void SHAPE_AddAbstractShapeToAbstractShapeStack(ShapeAbstract** abstract_shape_stack, ShapeAbstract* abstract_shape_to_add)
+{
+    if (!abstract_shape_to_add)
+        return;
+    if (!(*abstract_shape_stack))
+    {
+        *abstract_shape_stack = abstract_shape_to_add;
+        return;
+    }
+    
+    abstract_shape_to_add->next = *abstract_shape_stack;
+    *abstract_shape_stack = abstract_shape_to_add;
+}
+
+void SHAPE_FreeAbstractShape(ShapeAbstract* abstract_shapes)
+{
+    if (!abstract_shapes)
+        return;
+    SHAPE_FreeAbstractShape(abstract_shapes->next);
+    if (!strcmp(abstract_shapes->type, "rect"))
+        SHAPE_FreeRectangle(abstract_shapes->data);
+    else if (!strcmp(abstract_shapes->type, "circle"))
+        SHAPE_FreeCircle(abstract_shapes->data);
+
+    free(abstract_shapes->type);
+    free(abstract_shapes);
+}
+
+// A point is a simple geometric structure than contain an x and y coordinates
 ShapePoint* SHAPE_CreatePoint(float x, float y)
 {
     ShapePoint* point = (ShapePoint*)calloc(sizeof(ShapePoint), 1);
+    if (!point)
+        return;
     point->x = x, point->y = y;
     return point;
 }
 
-void SHAPE_AddShapeToList(ShapeAbstract** abstract_shape_list, char* type, void* data)
-{
-    ShapeAbstract* abstract_shape_to_add = SHAPE_CreateAbstract(type, data);
-    abstract_shape_to_add->next = *abstract_shape_list;
-    *abstract_shape_list = abstract_shape_to_add;
-}
-
-
-ShapeRectangle* SHAPE_CreateRectangle(float x, float y, float w, float h, float rx, float ry)
+ShapeRectangle* SHAPE_CreateRectangle(float* x, float* y, char* w, char* h, float* rx, float* ry)
 {
     ShapeRectangle* rectangle = (ShapeRectangle*)malloc(sizeof(ShapeRectangle));
-    ShapeRectangle parameters = { {x, y}, w, h, rx, ry };
+    ShapeRectangle parameters = { x, y, w, h, rx, ry };
     
     if (!rectangle)
         return NULL;
@@ -45,6 +89,50 @@ ShapeRectangle* SHAPE_CreateRectangle(float x, float y, float w, float h, float 
 
     return rectangle;
 }
+
+ShapeRectangle* SHAPE_CreateRectangleFromSVGRectangle(svgAttributeStack* rectangle_attributes)
+{
+    float* x = (float*)malloc(sizeof(float)); x = NULL;
+    float* y = (float*)malloc(sizeof(float)); y = NULL;
+    float* rx = (float*)malloc(sizeof(float)); rx = NULL;
+    float* ry = (float*)malloc(sizeof(float)); ry = NULL;
+
+    char* w = NULL, *h = NULL;
+    // While there are attributes to read from svg rectangle
+    while (rectangle_attributes)
+    {
+        if (!strcmp(rectangle_attributes->key, "x"))
+            *x = atof(rectangle_attributes->value);
+        else if (!strcmp(rectangle_attributes->key, "y"))
+            *y = atof(rectangle_attributes->value);
+        else if (!strcmp(rectangle_attributes->key, "rx"))
+            *rx = atof(rectangle_attributes->value);
+        else if (!strcmp(rectangle_attributes->key, "ry"))
+            *ry = atof(rectangle_attributes->value);
+        else if (!strcmp(rectangle_attributes->key, "width"))
+             w = _strdup(rectangle_attributes->value);
+        else if(!strcmp(rectangle_attributes->key, "height"))
+             h = _strdup(rectangle_attributes->value);
+
+        rectangle_attributes = rectangle_attributes->na;
+    }
+
+    // Create a rectangle from those attributes
+    return SHAPE_CreateRectangle(x, y, w, h, rx, ry);
+}
+
+void SHAPE_FreeRectangle(ShapeRectangle* rectangle)
+{
+    free(rectangle->x);
+    free(rectangle->y);
+    free(rectangle->w);
+    free(rectangle->h);
+    free(rectangle->rx);
+    free(rectangle->ry);
+
+    free(rectangle);
+}
+
 
 ShapeCircle* SHAPE_CreateCircle(float cx, float cy, float r)
 {
@@ -58,13 +146,36 @@ ShapeCircle* SHAPE_CreateCircle(float cx, float cy, float r)
     return circle;
 }
 
+ShapeCircle* SHAPE_CreateCircleFromSVGCircle(svgAttributeStack* attributes)
+{
+    float cx = 0, cy = 0, r = 0;
+    while (attributes)
+    {
+        if (!strcmp(attributes->key, "cx"))
+            cx = atof(attributes->value);
+        else if (!strcmp(attributes->key, "cy"))
+            cy = atof(attributes->value);
+        else if (!strcmp(attributes->key, "r"))
+            r = atof(attributes->value);
+
+        attributes = attributes->na;
+    }
+
+    return SHAPE_CreateCircle(cx, cy, r);
+}
+
+void SHAPE_FreeCircle(ShapeCircle* circle)
+{
+    free(circle);
+}
+
 ShapeEllipse* SHAPE_CreateEllipse(float cx, float cy, float rx, float ry)
 {
     ShapeEllipse* ellipse = (ShapeEllipse*)malloc(sizeof(ShapeEllipse));
     ShapeEllipse parameters = { {cx, cy}, rx, ry };
 
     if (!ellipse)
-        return;
+        return NULL;
 
     *ellipse = parameters;
     return ellipse;
@@ -74,8 +185,8 @@ ShapePolyline* SHAPE_CreatePolyline(char* points)
 {
     ShapePolyline* polyline = (ShapePolyline*)calloc(sizeof(ShapePolyline), 1);
     if (!polyline)
-        return;
-    ShapePoint* head = polyline->p;
+        return NULL;
+
     char argument[100]; strcpy(argument, points);
 
     char* token = strtok(argument, " ");
@@ -110,7 +221,7 @@ ShapePolygone* SHAPE_CreatePolygone(char* points)
     ShapePolygone* polygone = (ShapePolygone*)calloc(sizeof(ShapePolygone), 1);
     ShapePoint* point_to_add = NULL;
     if (!polygone)
-        return;
+        return NULL;
     char argument[100]; strcpy(argument, points);
     bool read_x = true, add_point = false, read_first = true;
     float x_first_last = 0, y_first_last = 0, x, y;
@@ -149,7 +260,7 @@ ShapePolygone* SHAPE_CreatePolygone(char* points)
 
 // When reading path attributes from svg we got : M100,200 C300,400 600,700
 // This function read the attributes and give a corresponding path structure
-ShapePath* CreatePathFromSVGPath(svgAttributeStack* path_attribute)
+ShapePath* SHAPE_CreatePathFromSVGPath(svgAttributeStack* path_attribute)
 {
     // Delimiter in our example start_char is M
     xmlChar readed_char, start_char;
@@ -181,7 +292,7 @@ ShapePath* CreatePathFromSVGPath(svgAttributeStack* path_attribute)
             end_index = i;
             char* path_bloc_data = (char*)malloc(sizeof(char) * (end_index - start_index));
             if (!path_bloc_data)
-                return;
+                return NULL;
             path_bloc_data[end_index - start_index - 1] = '\0';
             strncpy(path_bloc_data, path_attribute->value + start_index + 1, end_index - start_index - 1);
 

@@ -6,7 +6,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
-#include "shapes.h"
 
 typedef struct svgShapeStack_s svgShapeStack;
 typedef struct svgAttributeStack_s svgAttributeStack;

@@ -10,12 +10,12 @@ typedef struct ShapeAbstract_s ShapeAbstract;
 typedef struct ShapeRectangle_s ShapeRectangle;
 typedef struct ShapeCircle_s ShapeCircle;
 typedef struct ShapeEllipse_s ShapeEllipse;
-typedef struct SHAPE_Line_s ShapeLine;
-typedef struct SHAPE_Polyline_s ShapePolyline;
-typedef struct SHAPE_Polygone_s ShapePolygone;
+typedef struct ShapeLine_s ShapeLine;
+typedef struct ShapePolyline_s ShapePolyline;
+typedef struct ShapePolygone_s ShapePolygone;
 typedef struct ShapePoint_s ShapePoint;
-typedef struct SHAPE_Pathblock_s ShapePathblock;
-typedef struct SHAPE_Path_s ShapePath;
+typedef struct ShapePathblock_s ShapePathblock;
+typedef struct ShapePath_s ShapePath;
 
 
 struct ShapeAbstract_s {
@@ -31,7 +31,7 @@ struct ShapeAbstract_s {
 struct ShapePoint_s {
     float x; ///< x coordinate
     float y; ///< y coordinate
-    struct ShapePoint_s* np; ///< pointer to the next point
+    struct Shapeoint_s* np; ///< pointer to the next point
 };
 
 /**
@@ -40,11 +40,12 @@ struct ShapePoint_s {
  * Rectangles may have their corners rounded.
  */
 struct ShapeRectangle_s {
-    struct ShapePoint_s lc; ///< left corner point
-    float w; ///< width
-    float h; ///< height
-    float rx; ///< x round corners
-    float ry; ///< y round corners
+    float* x;
+    float* y;
+    char* w; ///< width
+    char* h; ///< height
+    float* rx; ///< x round corners
+    float* ry; ///< y round corners
 };
 
 /**
@@ -71,8 +72,8 @@ struct ShapeEllipse_s {
  * @brief Mathematical representation of lines
  * A line is just a set of two points
  */
-struct SHAPE_Line_s {
-    struct SHAPE_Point_s* p; ///< linked list of points
+struct ShapeLine_s {
+    struct ShapePoint_s* p; ///< linked list of points
 };
 
 /**
@@ -80,8 +81,8 @@ struct SHAPE_Line_s {
  * A polyline is a set of segements having same extremities
  * Points of the polyline are stored in stack
  */
-struct SHAPE_Polyline_s {
-    struct SHAPE_Point_s* p; ///< linked list of points
+struct ShapePolyline_s {
+    struct ShapePoint_s* p; ///< linked list of points
 };
 
 /**
@@ -89,17 +90,17 @@ struct SHAPE_Polyline_s {
  * The polygone is a closed shapes.
  * Points of the polygone are stored in stack
  */
-struct SHAPE_Polygone_s {
-    struct SHAPE_Point_s* p;
+struct ShapePolygone_s {
+    struct ShapePoint_s* p;
 };
 
 /**
  * @brief Used with set of command and points
  */
-struct SHAPE_Pathblock_s {
+struct ShapePathblock_s {
     char id; ///< command id
-    struct SHAPE_Point_s* p; ///< linked list of points
-    struct SHAPE_Pathblock_s* nb; ///< linked list of blocks
+    struct ShapePoint_s* p; ///< linked list of points
+    struct ShapePathblock_s* nb; ///< linked list of blocks
 };
 
 /**
@@ -107,14 +108,23 @@ struct SHAPE_Pathblock_s {
  * A path is the generic element to define a shape. 
  * All the basic shapes can be created with a path element.
  */
-struct SHAPE_Path_s {
-    struct SHAPE_Pathblock_s* b; ///< linked list of paths blocks
+struct ShapePath_s {
+    struct ShapePathblock_s* b; ///< linked list of paths blocks
 };
 
 ShapeAbstract* SHAPE_CreateAbstract(char* type, void* data);
-void SHAPE_AddShapeToList(ShapeAbstract** abstract_shape_list, char* type, void* data);
-ShapeRectangle* SHAPE_CreateRectangle(float x, float y, float w, float h, float rx, float ry);
+ShapeAbstract* SHAPE_CreateAbstractFromSVG(svgShapeStack* svg_shapes);
+void SHAPE_AddAbstractShapeToAbstractShapeStack(ShapeAbstract** abstract_shape_stack, ShapeAbstract* abstract_shape_to_add);
+void SHAPE_FreeAbstractShape(ShapeAbstract* abstract_shapes);
+
+ShapeRectangle* SHAPE_CreateRectangle(float* x, float* y, char* w, char* h, float* rx, float* ry);
+ShapeRectangle* SHAPE_CreateRectangleFromSVGRectangle(svgAttributeStack* rectangle_attributes);
+void SHAPE_FreeRectangle(ShapeRectangle* rectangle);
+
 ShapeCircle* SHAPE_CreateCircle(float rx, float ry, float r);
+ShapeCircle* SHAPE_CreateCircleFromSVGCircle(svgAttributeStack* attributes);
+void SHAPE_FreeCircle(ShapeCircle* circle);
+
 ShapeEllipse* SHAPE_CreateEllipse(float cx, float cy, float rx, float ry);
 ShapeLine* SHAPE_CreateLine(float x1, float x2, float y1, float y2);
 ShapePolyline* SHAPE_CreatePolyline(char* points);
@@ -140,4 +150,6 @@ void SHAPE_AddPoint(ShapePoint** points, ShapePoint* point_to_add);
 //ShapePath* CreatePathFromSVGPath(svgAttributeStack* path_attribute);
 void SHAPE_PathAddBlock(ShapePathblock** block, ShapePathblock* block_to_add);
 ShapePoint* SHAPE_CreatePoint(float x, float y);
+
+ShapePath* SHAPE_CreatePathFromSVGPath(svgAttributeStack* path_attribute);
 #endif //SVG_PARSER_SHAPES_H
