@@ -72,8 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users;D:\Codes\PST Fourier\svg_parser\packages\libxml2.2.7.8.7\build\native\include\libxml;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Codes\PST Fourier\svg_parser\packages\libxml2.2.7.8.7\build\native\lib\v110\Win32\Debug\dynamic\cdecl;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\Codes\PST Fourier\svg_parser\SDL2-2.0.16\include;C:\Users;D:\Codes\PST Fourier\svg_parser\packages\libxml2.2.7.8.7\build\native\include\libxml;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Codes\PST Fourier\svg_parser\SDL2-2.0.16\lib\x86;D:\Codes\PST Fourier\svg_parser\packages\libxml2.2.7.8.7\build\native\lib\v110\Win32\Debug\dynamic\cdecl;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -97,7 +97,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libxml2.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

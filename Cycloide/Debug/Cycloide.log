@@ -1,12 +1,2 @@
 ﻿  main.c
-D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(12,17): warning C4305: '=' : troncation de 'double' à 'float'
-D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(12,34): warning C4305: '=' : troncation de 'double' à 'float'
-D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(13,17): warning C4305: '=' : troncation de 'double' à 'float'
-D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(13,34): warning C4305: '=' : troncation de 'double' à 'float'
-D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(17,31): warning C4133: 'fonction' : types incompatibles - de 'int **' à 'double **'
-D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(18,31): warning C4133: 'fonction' : types incompatibles - de 'int **' à 'double **'
-D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(19,31): warning C4133: 'fonction' : types incompatibles - de 'int **' à 'double **'
-D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(20,31): warning C4133: 'fonction' : types incompatibles - de 'int **' à 'double **'
-D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(22,25): warning C4133: 'fonction' : types incompatibles - de 'int **' à 'double **'
-D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(15,1): warning C4133: 'initialisation' : types incompatibles - de 'double **' à 'int **'
   Cycloide.vcxproj -> D:\Codes\PST Fourier\svg_parser\Debug\Cycloide.exe
