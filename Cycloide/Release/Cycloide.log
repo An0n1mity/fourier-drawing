@@ -1,0 +1,20 @@
+﻿  BezierCurve.c
+D:\Codes\PST Fourier\svg_parser\Cycloide\BezierCurve.c(47,39): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\BezierCurve.c(52,39): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  main.c
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(65,22): warning C4013: 'SDL_RenderDrawLineF' undefined; assuming extern returning int
+  shapes.c
+D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(60,9): warning C4033: 'SHAPE_CreateEllipse' must return a value
+D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(70,9): warning C4033: 'SHAPE_CreatePolyline' must return a value
+D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(79,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(84,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(103,9): warning C4033: 'SHAPE_CreatePolygone' must return a value
+D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(110,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(118,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(166,25): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(171,25): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  svgparser.c
+svgparser.obj : error LNK2001: unresolved external symbol _xmlDocGetRootElement
+svgparser.obj : error LNK2001: unresolved external symbol _xmlFreeDoc
+svgparser.obj : error LNK2001: unresolved external symbol _xmlReadFile
+D:\Codes\PST Fourier\svg_parser\Release\Cycloide.exe : fatal error LNK1120: 3 unresolved externals

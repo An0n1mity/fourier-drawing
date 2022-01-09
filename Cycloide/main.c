@@ -1,8 +1,8 @@
 #include "shapes.h"
 #include "svgparser.h"
 #include "BezierCurve.h"
-#include "SDL2/SDL.h"
-#include "SDL/SDL_ttf.h"
+#include "SDL.h"
+#include "SDL_ttf.h"
 
 int precision = 1;
 

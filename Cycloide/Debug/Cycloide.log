@@ -1,1 +1,3 @@
-﻿
+﻿  main.c
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(65,22): warning C4013: 'SDL_RenderDrawLineF' undefined; assuming extern returning int
+  Cycloide.vcxproj -> D:\Codes\PST Fourier\svg_parser\Debug\Cycloide.exe

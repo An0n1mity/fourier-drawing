@@ -72,8 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\Codes\PST Fourier\svg_parser\SDL2-2.0.16\include;C:\Users;D:\Codes\PST Fourier\svg_parser\packages\libxml2.2.7.8.7\build\native\include\libxml;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Codes\PST Fourier\svg_parser\SDL2-2.0.16\lib\x86;D:\Codes\PST Fourier\svg_parser\packages\libxml2.2.7.8.7\build\native\lib\v110\Win32\Debug\dynamic\cdecl;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\packages\libxml2.2.7.8.7\build\native\include\libxml;..\_Librairies\SDL2 vs\SDL2-2.0.18\include;..\_Librairies\SDL2 vs\SDL2_ttf-devel-2.0.15-VC\SDL2_ttf-2.0.15\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\packages\libxml2.2.7.8.7\build\native\lib\v110\Win32\Debug\dynamic\cdecl;..\_Librairies\SDL2 vs\SDL2-2.0.18\lib\x86;..\_Librairies\SDL2 vs\SDL2_ttf-devel-2.0.15-VC\SDL2_ttf-2.0.15\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -96,11 +96,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\packages\libxml2.2.7.8.7\build\native\include\libxml;..\_Librairies\SDL2 vs\SDL2-2.0.18\include;..\_Librairies\SDL2 vs\SDL2_ttf-devel-2.0.15-VC\SDL2_ttf-2.0.15\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libxml2.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libxml2.lib;SDL2.lib;SDL2main.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
