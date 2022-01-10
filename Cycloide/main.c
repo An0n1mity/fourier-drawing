@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
 	SHAPE_Point test[4], testResult[4];
 	test[0].x = 50; test[0].y = 50;
 	test[1].x = 300; test[1].y = 10;
-	test[2].x = 400; test[2].y = 600;
+	test[2].x = 0; test[2].y = 200;
 	test[3].x = 1000; test[3].y = 500;
 	double** func = getBezierFunction(test[0], test[1], test[2], test[3]);
 
