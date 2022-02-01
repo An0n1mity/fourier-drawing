@@ -159,12 +159,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BezierCurve.c" />
+    <ClCompile Include="Camera.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="shapes.c" />
     <ClCompile Include="svgparser.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BezierCurve.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="shapes.h" />
     <ClInclude Include="svgparser.h" />
   </ItemGroup>

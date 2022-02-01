@@ -1,2 +1,16 @@
 ﻿  main.c
-  Cycloide.vcxproj -> D:\Codes\PST Fourier\svg_parser\Debug\Cycloide.exe
+C:\Users\gabri\OneDrive\Documents\GitHub\cycloide\Cycloide\main.c(28,20): warning C4244: '=' : conversion de 'Sint32' en 'float', perte possible de données
+C:\Users\gabri\OneDrive\Documents\GitHub\cycloide\Cycloide\main.c(29,20): warning C4244: '=' : conversion de 'Sint32' en 'float', perte possible de données
+C:\Users\gabri\OneDrive\Documents\GitHub\cycloide\Cycloide\main.c(33,21): warning C4244: '=' : conversion de 'Sint32' en 'float', perte possible de données
+C:\Users\gabri\OneDrive\Documents\GitHub\cycloide\Cycloide\main.c(34,21): warning C4244: '=' : conversion de 'Sint32' en 'float', perte possible de données
+C:\Users\gabri\OneDrive\Documents\GitHub\cycloide\Cycloide\main.c(141,21): warning C4244: '=' : conversion de 'Sint32' en 'float', perte possible de données
+C:\Users\gabri\OneDrive\Documents\GitHub\cycloide\Cycloide\main.c(142,21): warning C4244: '=' : conversion de 'Sint32' en 'float', perte possible de données
+C:\Users\gabri\OneDrive\Documents\GitHub\cycloide\Cycloide\main.c(144,23): warning C4244: '=' : conversion de 'Sint32' en 'float', perte possible de données
+C:\Users\gabri\OneDrive\Documents\GitHub\cycloide\Cycloide\main.c(145,23): warning C4244: '=' : conversion de 'Sint32' en 'float', perte possible de données
+C:\Users\gabri\OneDrive\Documents\GitHub\cycloide\Cycloide\main.c(157,22): warning C4244: '=' : conversion de 'Sint32' en 'float', perte possible de données
+C:\Users\gabri\OneDrive\Documents\GitHub\cycloide\Cycloide\main.c(158,22): warning C4244: '=' : conversion de 'Sint32' en 'float', perte possible de données
+C:\Users\gabri\OneDrive\Documents\GitHub\cycloide\Cycloide\main.c(164,25): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
+C:\Users\gabri\OneDrive\Documents\GitHub\cycloide\Cycloide\main.c(165,25): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
+C:\Users\gabri\OneDrive\Documents\GitHub\cycloide\Cycloide\main.c(241,25): warning C4244: 'initialisation' : conversion de 'float' en 'int', perte possible de données
+C:\Users\gabri\OneDrive\Documents\GitHub\cycloide\Cycloide\main.c(247,25): warning C4244: 'initialisation' : conversion de 'float' en 'int', perte possible de données
+  Cycloide.vcxproj -> C:\Users\gabri\OneDrive\Documents\GitHub\cycloide\Debug\Cycloide.exe
