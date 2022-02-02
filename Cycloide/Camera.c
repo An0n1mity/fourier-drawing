@@ -4,17 +4,17 @@
 #include "SDL.h"
 #include "Camera.h"
 
-void Camera_ViewToWorld(SDL_Renderer *renderer, SDL_Rect screen, float x, float y, float xp, float yp) {
-	
-    float deplacementx = xp - x;
-    float deplacementy = yp - y;
-    float ratioX = (float)screen.w / 1024;
-    float ratioY = (float)screen.h / 720;
-    screen.x = screen.x + ratioX * deplacementx;
-    screen.y = screen.y + ratioY * deplacementy;
-    float ratiox = 1024 / (float)screen.x;
-    float ratioy = 720 / (float)screen.y;
 
-    SDL_RenderSetViewport(renderer, &screen);
-    SDL_RenderSetScale(renderer, ratiox, ratioy);
+void Camera_ViewToWorld(Camera **camera,int screenw, int screenh, int res) {
+	
+	(* camera)->deplacementx = (*camera)->xp - (*camera)->x;
+	(*camera)->deplacementy = (*camera)->yp - (*camera)->y;
+	(*camera)->ratioX = (float)screenw / 1024;
+	(*camera)->ratioY = (float)screenh / 720;
+	if (res == 0) {
+		(*camera)->screen->x = (*camera)->screen->x +(*camera)->ratioX * (*camera)->deplacementx;
+		(*camera)->screen->y = (*camera)->screen->y+(*camera)->ratioY * (*camera)->deplacementy;
+	}
+	(*camera)->ratiox = (1024 / (float)screenw);
+	(*camera)->ratioy = (720 / (float)screenh);
 }
