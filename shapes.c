@@ -26,11 +26,14 @@ ShapeAbstract* SHAPE_CreateAbstractFromSVG(svgShapeStack* svg_shapes)
     while (svg_shapes)
     {
         abstract_to_add = NULL;
-        if (!strcmp(svg_shapes->name, "rect"))        
-           abstract_to_add = SHAPE_CreateAbstract(svg_shapes->name, SHAPE_CreateRectangleFromSVGRectangle(svg_shapes->attributes));
-        else if(!strcmp(svg_shapes->name, "circle"))
-           abstract_to_add = SHAPE_CreateAbstract(svg_shapes->name, SHAPE_CreateCircleFromSVGCircle(svg_shapes->attributes));
-
+        if (!strcmp(svg_shapes->name, "rect"))
+            abstract_to_add = SHAPE_CreateAbstract(svg_shapes->name, SHAPE_CreateRectangleFromSVGRectangle(svg_shapes->attributes));
+        else if (!strcmp(svg_shapes->name, "circle"))
+            abstract_to_add = SHAPE_CreateAbstract(svg_shapes->name, SHAPE_CreateCircleFromSVGCircle(svg_shapes->attributes));
+        else if(!strcmp(svg_shapes->name, "ellipse"))
+            abstract_to_add = SHAPE_CreateAbstract(svg_shapes->name, SHAPE_CreateEllipseFromSVGEllipse(svg_shapes->attributes));
+        else if (!strcmp(svg_shapes->name, "path"))
+            abstract_to_add = SHAPE_CreateAbstract(svg_shapes->name, SHAPE_CreatePathFromSVGPath(svg_shapes->attributes));
         SHAPE_AddAbstractShapeToAbstractShapeStack(&abstract_shapes, abstract_to_add);
         svg_shapes = svg_shapes->ns;
     }
@@ -77,7 +80,7 @@ ShapePoint* SHAPE_CreatePoint(float x, float y)
     return point;
 }
 
-ShapeRectangle* SHAPE_CreateRectangle(float* x, float* y, char* w, char* h, float* rx, float* ry)
+ShapeRectangle* SHAPE_CreateRectangle(float x, float y, float w, float h, float rx, float ry)
 {
     ShapeRectangle* rectangle = (ShapeRectangle*)malloc(sizeof(ShapeRectangle));
     ShapeRectangle parameters = { x, y, w, h, rx, ry };
@@ -92,27 +95,28 @@ ShapeRectangle* SHAPE_CreateRectangle(float* x, float* y, char* w, char* h, floa
 
 ShapeRectangle* SHAPE_CreateRectangleFromSVGRectangle(svgAttributeStack* rectangle_attributes)
 {
-    float* x = (float*)malloc(sizeof(float)); x = NULL;
-    float* y = (float*)malloc(sizeof(float)); y = NULL;
-    float* rx = (float*)malloc(sizeof(float)); rx = NULL;
-    float* ry = (float*)malloc(sizeof(float)); ry = NULL;
+    float x = 0.f;
+    float y = 0.f;
+    float rx = 0.f;
+    float ry = 0.f;
+    float w = 0.f;
+    float h = 0.f;
 
-    char* w = NULL, *h = NULL;
     // While there are attributes to read from svg rectangle
     while (rectangle_attributes)
     {
         if (!strcmp(rectangle_attributes->key, "x"))
-            *x = atof(rectangle_attributes->value);
+            x = atof(rectangle_attributes->value);
         else if (!strcmp(rectangle_attributes->key, "y"))
-            *y = atof(rectangle_attributes->value);
+            y = atof(rectangle_attributes->value);
         else if (!strcmp(rectangle_attributes->key, "rx"))
-            *rx = atof(rectangle_attributes->value);
+            rx = atof(rectangle_attributes->value);
         else if (!strcmp(rectangle_attributes->key, "ry"))
-            *ry = atof(rectangle_attributes->value);
+            ry = atof(rectangle_attributes->value);
         else if (!strcmp(rectangle_attributes->key, "width"))
-             w = _strdup(rectangle_attributes->value);
+            w = atof(rectangle_attributes->value);
         else if(!strcmp(rectangle_attributes->key, "height"))
-             h = _strdup(rectangle_attributes->value);
+            h = atof(rectangle_attributes->value);
 
         rectangle_attributes = rectangle_attributes->na;
     }
@@ -123,13 +127,14 @@ ShapeRectangle* SHAPE_CreateRectangleFromSVGRectangle(svgAttributeStack* rectang
 
 void SHAPE_FreeRectangle(ShapeRectangle* rectangle)
 {
+    /*
     free(rectangle->x);
     free(rectangle->y);
     free(rectangle->w);
     free(rectangle->h);
     free(rectangle->rx);
     free(rectangle->ry);
-
+    */
     free(rectangle);
 }
 
@@ -179,6 +184,27 @@ ShapeEllipse* SHAPE_CreateEllipse(float cx, float cy, float rx, float ry)
 
     *ellipse = parameters;
     return ellipse;
+}
+
+ShapeEllipse* SHAPE_CreateEllipseFromSVGEllipse(svgAttributeStack* attributes)
+{
+    float cx = 0, cy = 0, rx = 0, ry = 0;
+    while (attributes)
+    {
+        if (!strcmp(attributes->key, "cx"))
+            cx = atof(attributes->value);
+        else if (!strcmp(attributes->key, "cy"))
+            cy = atof(attributes->value);
+        else if (!strcmp(attributes->key, "rx"))
+            rx = atof(attributes->value);
+        else if (!strcmp(attributes->key, "ry"))
+            ry = atof(attributes->value);
+
+        attributes = attributes->na;
+    }
+
+    return SHAPE_CreateEllipse(cx, cy, rx, ry);
+
 }
 
 ShapePolyline* SHAPE_CreatePolyline(char* points)
@@ -262,6 +288,11 @@ ShapePolygone* SHAPE_CreatePolygone(char* points)
 // This function read the attributes and give a corresponding path structure
 ShapePath* SHAPE_CreatePathFromSVGPath(svgAttributeStack* path_attribute)
 {
+    // Get to the attributes that contains commands and points
+    while (path_attribute->key[0] != 'd')
+    {
+        path_attribute = path_attribute->na;
+    }
     // Delimiter in our example start_char is M
     xmlChar readed_char, start_char;
     start_char = path_attribute->value[0];
@@ -298,20 +329,20 @@ ShapePath* SHAPE_CreatePathFromSVGPath(svgAttributeStack* path_attribute)
 
             // Parsing points data
             char* save_point_data = NULL, * save_x_y_data = NULL;
-            char* point_data = strtok_s(path_bloc_data, " ", &save_point_data);
+            char* point_data = strtok_s(path_bloc_data, ",", &save_point_data);
             char* x_y_data;
             float x, y;
             while (point_data)
             {
-                x_y_data = strtok_s(point_data, ",", &save_x_y_data);
+                x_y_data = strtok_s(point_data, " ", &save_x_y_data);
                 x = atof(x_y_data);
-                x_y_data = strtok_s(NULL, ",", &save_x_y_data);
+                x_y_data = strtok_s(NULL, " ", &save_x_y_data);
                 y = atof(x_y_data);
                 ShapePoint* point_to_add = SHAPE_CreatePoint(x, y);
 
                 // Add the new created points to the current path block
                 SHAPE_AddPoint(&path_block->p, point_to_add);
-                point_data = strtok_s(NULL, " ", &save_point_data);
+                point_data = strtok_s(NULL, ",", &save_point_data);
 
             }
 
@@ -356,11 +387,83 @@ void SHAPE_AddPoint(ShapePoint** points, ShapePoint* point_to_add)
         return;
     }
 
-    ShapePoint* cursor = *points;
-    while (cursor->np)
-        cursor = cursor->np;
-
-    cursor->np = point_to_add;
-
+    point_to_add->np = *points;
+    *points = point_to_add;
 }
 
+// Return mathematical coordinates of points making the abstract shape
+ShapePoint* SHAPE_GetPointsFromShape(ShapeAbstract* abstract_shape, float step)
+{
+    // Get the type of the abstract shape
+    char* shape_type = abstract_shape->type;
+
+    // Based on its type get the set of points
+    if (!strcmp(shape_type, "rect"))
+        return SHAPE_GetPointsFromRectangle(abstract_shape->data, step);
+
+    else if (!strcmp(shape_type, "circle"))
+        return SHAPE_GetPointsFromCircle(abstract_shape->data, step);
+
+    else if (!strcmp(shape_type, "ellipse"))
+        return SHAPE_GetPointsFromEllipse(abstract_shape->data, step);
+}
+
+ShapePoint* SHAPE_GetPointsFromRectangle(ShapeRectangle* rectangle, float step)
+{
+    ShapePoint* top_left_corner = SHAPE_CreatePoint(rectangle->x, rectangle->y);
+    // Get points from the first edge 
+    float value = top_left_corner->x;
+    for (float x = top_left_corner->x; x < value + rectangle->w; x+=step)
+    {
+        SHAPE_AddPoint(&top_left_corner, SHAPE_CreatePoint(x, top_left_corner->y));
+    }
+
+    // Get points from the second edge
+    value = top_left_corner->y;
+    for (float y = top_left_corner->y; y < value+rectangle->h; y+=step)
+    {
+        SHAPE_AddPoint(&top_left_corner, SHAPE_CreatePoint(top_left_corner->x, y));
+    }
+    
+    // Get points from the third edge
+    value = top_left_corner->x;
+    for (float x = top_left_corner->x; x > value-rectangle->w; x-=step)
+    {
+        SHAPE_AddPoint(&top_left_corner, SHAPE_CreatePoint(x, top_left_corner->y));
+    }
+    
+    // Get points from the last edge
+    value = top_left_corner->y;
+    for (float y = top_left_corner->y; y > value-rectangle->h; y-=step)
+    {
+        SHAPE_AddPoint(&top_left_corner, SHAPE_CreatePoint(top_left_corner->x, y));
+    }
+    
+    return top_left_corner;
+}
+
+ShapePoint* SHAPE_GetPointsFromCircle(ShapeCircle* circle, float step)
+{
+    ShapePoint* points = SHAPE_CreatePoint(circle->r * sinf(0) + circle->c.x, circle->r * cosf(0) + circle->c.y);
+    for (float i = step; i < step+2*M_PI; i+=step)
+    {
+        SHAPE_AddPoint(&points, SHAPE_CreatePoint(circle->r * sinf(i) + circle->c.x, circle->r * cosf(i) + circle->c.y));
+    }
+    return points;
+}
+
+ShapePoint* SHAPE_GetPointsFromEllipse(ShapeEllipse* ellipse, float step)
+{
+    float rx = ellipse->rx;
+    float ry = ellipse->ry;
+    ShapePoint* points = SHAPE_CreatePoint(ellipse->c.x - rx, sqrtf( (1 - (powf(ellipse->c.x - rx, 2) / powf(rx, 2))) * powf(ry, 2) ));
+    for (float x = ellipse->c.x - rx + step; x < ellipse->c.x + step + rx; x+=step)
+    {
+        SHAPE_AddPoint(&points, SHAPE_CreatePoint(x + ellipse->c.x, sqrtf((1 - (powf(x, 2) / powf(rx, 2))) * powf(ry, 2)) + ellipse->c.y ));
+        SHAPE_AddPoint(&points, SHAPE_CreatePoint(x + ellipse->c.x, -1 * sqrtf((1 - (powf(x, 2) / powf(rx, 2))) * powf(ry, 2))+ ellipse->c.y));
+        SHAPE_AddPoint(&points, SHAPE_CreatePoint(-x + ellipse->c.x, sqrtf((1 - (powf(-x, 2) / powf(rx, 2))) * powf(ry, 2)) + ellipse->c.y));
+        SHAPE_AddPoint(&points, SHAPE_CreatePoint(-x + ellipse->c.x, -1 * sqrtf((1 - (powf(-x, 2) / powf(rx, 2))) * powf(ry, 2)) + ellipse->c.y));
+    }
+
+    return points;
+}
