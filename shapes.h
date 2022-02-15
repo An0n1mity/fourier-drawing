@@ -40,7 +40,7 @@ struct ShapeAbstract_s {
 struct ShapePoint_s {
     float x; ///< x coordinate
     float y; ///< y coordinate
-    struct Shapeoint_s* np; ///< pointer to the next point
+    struct ShapePoint_s* np; ///< pointer to the next point
 };
 
 /**
@@ -144,16 +144,22 @@ void SHAPE_FreeAbstractShape(ShapeAbstract* abstract_shapes);
 
 ShapeRectangle* SHAPE_CreateRectangle(float x, float y, float w, float h, float rx, float ry);
 ShapeRectangle* SHAPE_CreateRectangleFromSVGRectangle(svgAttributeStack* rectangle_attributes);
+ShapePoint* SHAPE_GetPointsFromRectangle(ShapeRectangle* rectangle, float step);
 void SHAPE_FreeRectangle(ShapeRectangle* rectangle);
 
 ShapeCircle* SHAPE_CreateCircle(float rx, float ry, float r);
 ShapeCircle* SHAPE_CreateCircleFromSVGCircle(svgAttributeStack* attributes);
+ShapePoint* SHAPE_GetPointsFromCircle(ShapeCircle* circle, float step);
 void SHAPE_FreeCircle(ShapeCircle* circle);
 
 ShapeEllipse* SHAPE_CreateEllipse(float cx, float cy, float rx, float ry);
 ShapeEllipse* SHAPE_CreateEllipseFromSVGEllipse(svgAttributeStack* attributes);
+ShapePoint* SHAPE_GetPointsFromEllipse(ShapeEllipse* ellipse, float step);
 
 ShapeLine* SHAPE_CreateLine(float x1, float x2, float y1, float y2);
+ShapeLine* SHAPE_CreateLineFromSVGLine(svgAttributeStack* attributes);
+ShapePoint* SHAPE_GetPointsFromLine(ShapeLine* line, float step);
+
 ShapePolyline* SHAPE_CreatePolyline(char* points);
 /**
  * @brief Create a polygone based on string of points coordinates
@@ -161,6 +167,8 @@ ShapePolyline* SHAPE_CreatePolyline(char* points);
  * \return polyline
  */
 ShapePolygone* SHAPE_CreatePolygone(char* command_points);
+ShapePolyline* SHAPE_CreatePolylineFromSVGPolyline(svgAttributeStack* attributes);
+ShapePoint* SHAPE_GetPointsFromPolyline(ShapePolyline* polyline, float step);
 /**
  * @brief Adding point to a list of points
  * \param[in] point last point added to a given shape
@@ -174,6 +182,7 @@ void SHAPE_AddPoint(ShapePoint** points, ShapePoint* point_to_add);
  * \param[in] command_points command/points for block generation exemple: "M x1 y1 x2 y2 ..."
  * \return path
  */
+void SHAPE_AddPoints(ShapePoint** points, ShapePoint* points_to_add);
 //ShapePath* CreatePathFromSVGPath(svgAttributeStack* path_attribute);
 void SHAPE_PathAddBlock(ShapePathblock** block, ShapePathblock* block_to_add);
 ShapePoint* SHAPE_CreatePoint(float x, float y);
@@ -181,7 +190,5 @@ ShapePoint* SHAPE_CreatePoint(float x, float y);
 ShapePath* SHAPE_CreatePathFromSVGPath(svgAttributeStack* path_attribute);
 
 ShapePoint* SHAPE_GetPointsFromShape(ShapeAbstract* abstract_shape, float step);
-ShapePoint* SHAPE_GetPointsFromRectangle(ShapeRectangle* rectangle, float step);
-ShapePoint* SHAPE_GetPointsFromCircle(ShapeCircle* circle, float step);
-ShapePoint* SHAPE_GetPointsFromEllipse(ShapeEllipse* ellipse, float step);
+
 #endif //SVG_PARSER_SHAPES_H
