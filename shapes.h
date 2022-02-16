@@ -18,7 +18,7 @@ typedef struct ShapeCircle_s ShapeCircle;
 typedef struct ShapeEllipse_s ShapeEllipse;
 typedef struct ShapeLine_s ShapeLine;
 typedef struct ShapePolyline_s ShapePolyline;
-typedef struct ShapePolygone_s ShapePolygone;
+typedef struct ShapePolygon_s ShapePolygon;
 typedef struct ShapePoint_s ShapePoint;
 typedef struct ShapePathblock_s ShapePathblock;
 typedef struct ShapePath_s ShapePath;
@@ -40,7 +40,7 @@ struct ShapeAbstract_s {
 struct ShapePoint_s {
     float x; ///< x coordinate
     float y; ///< y coordinate
-    struct Shapeoint_s* np; ///< pointer to the next point
+    struct ShapePoint_s* np; ///< pointer to the next point
 };
 
 /**
@@ -99,7 +99,7 @@ struct ShapePolyline_s {
  * The polygone is a closed shapes.
  * Points of the polygone are stored in stack
  */
-struct ShapePolygone_s {
+struct ShapePolygon_s {
     struct ShapePoint_s* p;
 };
 
@@ -108,6 +108,7 @@ struct ShapePolygone_s {
  */
 struct ShapePathblock_s {
     char id; ///< command id
+    float n;
     struct ShapePoint_s* p; ///< linked list of points
     struct ShapePathblock_s* nb; ///< linked list of blocks
 };
@@ -144,23 +145,34 @@ void SHAPE_FreeAbstractShape(ShapeAbstract* abstract_shapes);
 
 ShapeRectangle* SHAPE_CreateRectangle(float x, float y, float w, float h, float rx, float ry);
 ShapeRectangle* SHAPE_CreateRectangleFromSVGRectangle(svgAttributeStack* rectangle_attributes);
+ShapePoint* SHAPE_GetPointsFromRectangle(ShapeRectangle* rectangle, float step);
 void SHAPE_FreeRectangle(ShapeRectangle* rectangle);
 
 ShapeCircle* SHAPE_CreateCircle(float rx, float ry, float r);
 ShapeCircle* SHAPE_CreateCircleFromSVGCircle(svgAttributeStack* attributes);
+ShapePoint* SHAPE_GetPointsFromCircle(ShapeCircle* circle, float step);
 void SHAPE_FreeCircle(ShapeCircle* circle);
 
 ShapeEllipse* SHAPE_CreateEllipse(float cx, float cy, float rx, float ry);
 ShapeEllipse* SHAPE_CreateEllipseFromSVGEllipse(svgAttributeStack* attributes);
+ShapePoint* SHAPE_GetPointsFromEllipse(ShapeEllipse* ellipse, float step);
 
 ShapeLine* SHAPE_CreateLine(float x1, float x2, float y1, float y2);
+ShapeLine* SHAPE_CreateLineFromSVGLine(svgAttributeStack* attributes);
+ShapePoint* SHAPE_GetPointsFromLine(ShapeLine* line, float step);
+
 ShapePolyline* SHAPE_CreatePolyline(char* points);
 /**
  * @brief Create a polygone based on string of points coordinates
  * \param[in] points coordinates exemple: "x1 y1 x2 y2 ..."
  * \return polyline
  */
-ShapePolygone* SHAPE_CreatePolygone(char* command_points);
+ShapePolyline* SHAPE_CreatePolylineFromSVGPolyline(svgAttributeStack* attributes);
+ShapePoint* SHAPE_GetPointsFromPolyline(ShapePolyline* polyline, float step);
+
+ShapePolygon* SHAPE_CreatePolygon(char* command_points);
+ShapePolygon* SHAPE_CreatePolygonFromSVGPolygon(svgAttributeStack* attributes);
+ShapePoint* SHAPE_GetPointsFromPolygon(ShapePolygon* polygon, float step);
 /**
  * @brief Adding point to a list of points
  * \param[in] point last point added to a given shape
@@ -174,14 +186,15 @@ void SHAPE_AddPoint(ShapePoint** points, ShapePoint* point_to_add);
  * \param[in] command_points command/points for block generation exemple: "M x1 y1 x2 y2 ..."
  * \return path
  */
+void SHAPE_AddPoints(ShapePoint** points, ShapePoint* points_to_add);
 //ShapePath* CreatePathFromSVGPath(svgAttributeStack* path_attribute);
 void SHAPE_PathAddBlock(ShapePathblock** block, ShapePathblock* block_to_add);
 ShapePoint* SHAPE_CreatePoint(float x, float y);
 
-ShapePath* SHAPE_CreatePathFromSVGPath(svgAttributeStack* path_attribute);
+ShapePathblock* SHAPE_CreatePathBlock(char type, char* points);
+ShapePathblock* SHAPE_CreatePathblocksFromSVGPathblocks(svgAttributeStack* path_attribute);
+ShapePoint* SHAPE_GetPointsFromPathblocks(ShapePathblock* blocks, float step);
 
-ShapePoint* SHAPE_GetPointsFromShape(ShapeAbstract* abstract_shape, float step);
-ShapePoint* SHAPE_GetPointsFromRectangle(ShapeRectangle* rectangle, float step);
-ShapePoint* SHAPE_GetPointsFromCircle(ShapeCircle* circle, float step);
-ShapePoint* SHAPE_GetPointsFromEllipse(ShapeEllipse* ellipse, float step);
+ShapePoint* SHAPE_GetPointsFromAbstractShape(ShapeAbstract* abstract_shape, float step);
+ShapePoint* SHAPE_GetPointsFromAbstractShapes(ShapeAbstract* abstract_shape_stack, float step);
 #endif //SVG_PARSER_SHAPES_H
