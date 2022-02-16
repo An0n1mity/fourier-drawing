@@ -36,9 +36,12 @@ ShapeAbstract* SHAPE_CreateAbstractFromSVG(svgShapeStack* svg_shapes)
             abstract_to_add = SHAPE_CreateAbstract(svg_shapes->name, SHAPE_CreateLineFromSVGLine(svg_shapes->attributes));
         else if (!strcmp(svg_shapes->name, "polyline"))
             abstract_to_add = SHAPE_CreateAbstract(svg_shapes->name, SHAPE_CreatePolylineFromSVGPolyline(svg_shapes->attributes));
+        else if (!strcmp(svg_shapes->name, "polygon"))
+            abstract_to_add = SHAPE_CreateAbstract(svg_shapes->name, SHAPE_CreatePolygonFromSVGPolygon(svg_shapes->attributes));
         else if (!strcmp(svg_shapes->name, "path"))
             abstract_to_add = SHAPE_CreateAbstract(svg_shapes->name, SHAPE_CreatePathFromSVGPath(svg_shapes->attributes));
         
+
         SHAPE_AddAbstractShapeToAbstractShapeStack(&abstract_shapes, abstract_to_add);
         svg_shapes = svg_shapes->ns;
     }
@@ -129,6 +132,40 @@ ShapeRectangle* SHAPE_CreateRectangleFromSVGRectangle(svgAttributeStack* rectang
 
     // Create a rectangle from those attributes
     return SHAPE_CreateRectangle(x, y, w, h, rx, ry);
+}
+
+ShapePoint* SHAPE_GetPointsFromRectangle(ShapeRectangle* rectangle, float step)
+{
+    ShapePoint* top_left_corner = SHAPE_CreatePoint(rectangle->x, rectangle->y);
+    // Get points from the first edge 
+    float value = top_left_corner->x;
+    for (float x = top_left_corner->x; x < value + rectangle->w; x += step)
+    {
+        SHAPE_AddPoint(&top_left_corner, SHAPE_CreatePoint(x, top_left_corner->y));
+    }
+
+    // Get points from the second edge
+    value = top_left_corner->y;
+    for (float y = top_left_corner->y; y < value + rectangle->h; y += step)
+    {
+        SHAPE_AddPoint(&top_left_corner, SHAPE_CreatePoint(top_left_corner->x, y));
+    }
+
+    // Get points from the third edge
+    value = top_left_corner->x;
+    for (float x = top_left_corner->x; x > value - rectangle->w; x -= step)
+    {
+        SHAPE_AddPoint(&top_left_corner, SHAPE_CreatePoint(x, top_left_corner->y));
+    }
+
+    // Get points from the last edge
+    value = top_left_corner->y;
+    for (float y = top_left_corner->y; y > value - rectangle->h; y -= step)
+    {
+        SHAPE_AddPoint(&top_left_corner, SHAPE_CreatePoint(top_left_corner->x, y));
+    }
+
+    return top_left_corner;
 }
 
 void SHAPE_FreeRectangle(ShapeRectangle* rectangle)
@@ -276,20 +313,20 @@ ShapePoint* SHAPE_GetPointsFromLine(ShapeLine* line, float step)
     ShapePoint* points = SHAPE_CreatePoint(a->x, a->y);
 
     float m = (b->y - a->y) / (b->x - a->x);
-    float y, x;
+    float y = a->y, x = a->x;
 
-    for (float i = 0; i < abs(b->x - a->x); i += step)
+    float diff_x =  b->x - a->x;
+    float diff_y =  b->y - a->y;
+
+    size_t nb = sqrtf(powf(a->x - b->x, 2) + powf(a->y - b->y, 2))/step;
+
+    float interval_x = diff_x / nb;
+    float interval_y = diff_y / nb;
+
+    for (size_t i = 1; i <= nb; i ++)
     {
-        if (a->x < b->x) {
-            x = a->x + i;
-            y = m * (x - a->x) + a->y;
-        }
-
-        else {
-            x = b->x + i;
-            y = m * (x - a->x) + a->y;
-        }
-
+        x = ((float)i/nb) * diff_x + a->x;
+        y = ((float)i/nb) * diff_y + a->y;
         SHAPE_AddPoint(&points, SHAPE_CreatePoint(x, y));
     }
 
@@ -345,10 +382,10 @@ ShapePoint* SHAPE_GetPointsFromPolyline(ShapePolyline* polyline, float step)
     ShapeLine* line = SHAPE_CreateLine(a->x, b->x, a->y, b->y);
     ShapePoint* points = SHAPE_GetPointsFromLine(line, step);
 
-    while (a->np->np)
+    while (b->np)
     {
-        a = a->np;
-        b = a->np;
+        a = b;
+        b = b->np;
 
         line = SHAPE_CreateLine(a->x, b->x, a->y, b->y);
         SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
@@ -357,47 +394,76 @@ ShapePoint* SHAPE_GetPointsFromPolyline(ShapePolyline* polyline, float step)
     return points;
 }
 
-ShapePolygone* SHAPE_CreatePolygone(char* points)
+ShapePolygon* SHAPE_CreatePolygon(char* points)
 {
 
-    ShapePolygone* polygone = (ShapePolygone*)calloc(sizeof(ShapePolygone), 1);
-    ShapePoint* point_to_add = NULL;
-    if (!polygone)
+    ShapePolygon* polygon = (ShapePolygon*)calloc(sizeof(ShapePolygon), 1);
+    if (!polygon)
         return NULL;
-    char argument[100]; strcpy(argument, points);
-    bool read_x = true, add_point = false, read_first = true;
-    float x_first_last = 0, y_first_last = 0, x, y;
+
+    char* argument = _strdup(points);
+
     char* token = strtok(argument, " ");
+    char* token_b = NULL;
+    char token_c[10];
+    char* token_s = NULL;
+    float x, y, first_x, first_y;
+    bool first = true;
+
     while (token) {
-        if (read_x) {
-            x = atof(token);
-            if (read_first)
-                x_first_last = x;
-            read_x = false;
-            add_point = false;
+        strcpy(token_c, token);
+        token_s = strtok_s(token_c, ",", &token_b);
+        x = atof(token_s);
+        token_s = strtok_s(NULL, ",", &token_b);
+        y = atof(token_s);
+
+        if (first)
+        {
+            first_x = x;
+            first_y = y;
+            first = false;
         }
 
-        else {
-            y = atof(token);
-            if (read_first) {
-                y_first_last = y_first_last;
-                read_first = false;
-            }
-            read_x = true;
-            add_point = true;
-        }
+        ShapePoint* point_to_add = SHAPE_CreatePoint(x, y);
+        SHAPE_AddPoint(&polygon->p, point_to_add);
 
-        if (add_point) {
-            point_to_add = SHAPE_CreatePoint(x_first_last, y_first_last);
-            SHAPE_AddPoint(&polygone->p, point_to_add);
-        }
         token = strtok(NULL, " ");
     }
-    
-    point_to_add = SHAPE_CreatePoint(x_first_last, y_first_last);
-    SHAPE_AddPoint(&polygone->p, point_to_add);
 
-    return polygone;
+    ShapePoint* point_to_add = SHAPE_CreatePoint(first_x, first_y);
+    SHAPE_AddPoint(&polygon->p, point_to_add);
+
+    return polygon;
+}
+
+ShapePolygon* SHAPE_CreatePolygonFromSVGPolygon(svgAttributeStack* attributes)
+{
+    while (attributes)
+    {
+        if (!strcmp(attributes->key, "points"))
+            return SHAPE_CreatePolygon(attributes->value);
+
+        attributes = attributes->na;
+    }
+}
+
+ShapePoint* SHAPE_GetPointsFromPolygon(ShapePolygon* polygon, float step)
+{
+    ShapePoint* a = polygon->p;
+    ShapePoint* b = polygon->p->np;
+
+    ShapeLine* line = SHAPE_CreateLine(a->x, b->x, a->y, b->y);
+    ShapePoint* points = SHAPE_GetPointsFromLine(line, step);
+    while (b->np)
+    {
+        a = b;
+        b = b->np;
+
+        line = SHAPE_CreateLine(a->x, b->x, a->y, b->y);
+        SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
+    }
+
+    return points;
 }
 
 // When reading path attributes from svg we got : M100,200 C300,400 600,700
@@ -548,39 +614,11 @@ ShapePoint* SHAPE_GetPointsFromShape(ShapeAbstract* abstract_shape, float step)
 
     else if (!strcmp(shape_type, "polyline"))
         return SHAPE_GetPointsFromPolyline(abstract_shape->data, step);
+
+    else if (!strcmp(shape_type, "polygon"))
+        return SHAPE_GetPointsFromPolygon(abstract_shape->data, step);
+
 }
 
-ShapePoint* SHAPE_GetPointsFromRectangle(ShapeRectangle* rectangle, float step)
-{
-    ShapePoint* top_left_corner = SHAPE_CreatePoint(rectangle->x, rectangle->y);
-    // Get points from the first edge 
-    float value = top_left_corner->x;
-    for (float x = top_left_corner->x; x < value + rectangle->w; x+=step)
-    {
-        SHAPE_AddPoint(&top_left_corner, SHAPE_CreatePoint(x, top_left_corner->y));
-    }
 
-    // Get points from the second edge
-    value = top_left_corner->y;
-    for (float y = top_left_corner->y; y < value+rectangle->h; y+=step)
-    {
-        SHAPE_AddPoint(&top_left_corner, SHAPE_CreatePoint(top_left_corner->x, y));
-    }
-    
-    // Get points from the third edge
-    value = top_left_corner->x;
-    for (float x = top_left_corner->x; x > value-rectangle->w; x-=step)
-    {
-        SHAPE_AddPoint(&top_left_corner, SHAPE_CreatePoint(x, top_left_corner->y));
-    }
-    
-    // Get points from the last edge
-    value = top_left_corner->y;
-    for (float y = top_left_corner->y; y > value-rectangle->h; y-=step)
-    {
-        SHAPE_AddPoint(&top_left_corner, SHAPE_CreatePoint(top_left_corner->x, y));
-    }
-    
-    return top_left_corner;
-}
 

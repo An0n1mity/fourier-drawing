@@ -18,7 +18,7 @@ typedef struct ShapeCircle_s ShapeCircle;
 typedef struct ShapeEllipse_s ShapeEllipse;
 typedef struct ShapeLine_s ShapeLine;
 typedef struct ShapePolyline_s ShapePolyline;
-typedef struct ShapePolygone_s ShapePolygone;
+typedef struct ShapePolygon_s ShapePolygon;
 typedef struct ShapePoint_s ShapePoint;
 typedef struct ShapePathblock_s ShapePathblock;
 typedef struct ShapePath_s ShapePath;
@@ -99,7 +99,7 @@ struct ShapePolyline_s {
  * The polygone is a closed shapes.
  * Points of the polygone are stored in stack
  */
-struct ShapePolygone_s {
+struct ShapePolygon_s {
     struct ShapePoint_s* p;
 };
 
@@ -166,9 +166,12 @@ ShapePolyline* SHAPE_CreatePolyline(char* points);
  * \param[in] points coordinates exemple: "x1 y1 x2 y2 ..."
  * \return polyline
  */
-ShapePolygone* SHAPE_CreatePolygone(char* command_points);
 ShapePolyline* SHAPE_CreatePolylineFromSVGPolyline(svgAttributeStack* attributes);
 ShapePoint* SHAPE_GetPointsFromPolyline(ShapePolyline* polyline, float step);
+
+ShapePolygon* SHAPE_CreatePolygon(char* command_points);
+ShapePolygon* SHAPE_CreatePolygonFromSVGPolygon(svgAttributeStack* attributes);
+ShapePoint* SHAPE_GetPointsFromPolygon(ShapePolygon* polygon, float step);
 /**
  * @brief Adding point to a list of points
  * \param[in] point last point added to a given shape
