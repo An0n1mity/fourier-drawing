@@ -39,7 +39,7 @@ ShapeAbstract* SHAPE_CreateAbstractFromSVG(svgShapeStack* svg_shapes)
         else if (!strcmp(svg_shapes->name, "polygon"))
             abstract_to_add = SHAPE_CreateAbstract(svg_shapes->name, SHAPE_CreatePolygonFromSVGPolygon(svg_shapes->attributes));
         else if (!strcmp(svg_shapes->name, "path"))
-            abstract_to_add = SHAPE_CreateAbstract(svg_shapes->name, SHAPE_CreatePathFromSVGPath(svg_shapes->attributes));
+            abstract_to_add = SHAPE_CreateAbstract(svg_shapes->name, SHAPE_CreatePathblocksFromSVGPathblocks(svg_shapes->attributes));
         
 
         SHAPE_AddAbstractShapeToAbstractShapeStack(&abstract_shapes, abstract_to_add);
@@ -466,9 +466,33 @@ ShapePoint* SHAPE_GetPointsFromPolygon(ShapePolygon* polygon, float step)
     return points;
 }
 
+ShapePathblock* SHAPE_CreatePathBlock(char type, char* points)
+{
+    ShapePathblock* path_block = (ShapePathblock*)calloc(sizeof(ShapePathblock), 1);
+    path_block->id = type;
+
+    if (type == 'M' || type == 'L')
+    {
+        path_block->p = (ShapePoint*)calloc(sizeof(ShapePoint), 1);
+        char* token = strtok(points, " ");
+        path_block->p->x = atof(token);
+        token = strtok(NULL, " ");
+        path_block->p->y = atof(token);
+    }
+
+    else if (type == 'H' || type == 'V')
+    {
+        path_block->n = atof(points);
+    }
+    
+  
+
+    return path_block;
+}
+
 // When reading path attributes from svg we got : M100,200 C300,400 600,700
 // This function read the attributes and give a corresponding path structure
-ShapePath* SHAPE_CreatePathFromSVGPath(svgAttributeStack* path_attribute)
+ShapePathblock* SHAPE_CreatePathblocksFromSVGPathblocks(svgAttributeStack* path_attribute)
 {
     // Get to the attributes that contains commands and points
     while (path_attribute->key[0] != 'd')
@@ -482,61 +506,66 @@ ShapePath* SHAPE_CreatePathFromSVGPath(svgAttributeStack* path_attribute)
     size_t start_index = 0, end_index = 0;
     size_t attribute_len = strlen(path_attribute->value);
 
-    // The shape that will contains the data 
-    ShapePath* path = (ShapePath*)calloc(sizeof(ShapePath), 1);
-
-    // Parsing all the string from start to finish
+    // Get pointer to the start of a bloc 
+    char* block_delimiter[10] = {0}; size_t j = 0;
     for (size_t i = 0; i <= attribute_len; i++)
     {
-        readed_char = path_attribute->value[i];
-        // If the readed char is a new command, create a new path block  
-        if (readed_char != start_char && (readed_char == 'C' || readed_char == 'L' 
-            || readed_char == 'H' || readed_char == '\0' || readed_char == 'V' || readed_char == 'Z')
-            || readed_char == 'S' || readed_char == 'Q' || readed_char == 'T'
-            )
+        if (path_attribute->value[i] == 'M' || path_attribute->value[i] == 'H' ||
+            path_attribute->value[i] == '\0' || path_attribute->value[i] == 'V' ||
+            path_attribute->value[i] == 'L')
         {
-
-            // Create a path bloc that will contains commands and point data
-            ShapePathblock* path_block = (ShapePathblock*)calloc(sizeof(ShapePathblock), 1);
-            // Command
-            path_block->id = start_char;
-
-            // Stocking the relative points block data in a string 
-            end_index = i;
-            char* path_bloc_data = (char*)malloc(sizeof(char) * (end_index - start_index));
-            if (!path_bloc_data)
-                return NULL;
-            path_bloc_data[end_index - start_index - 1] = '\0';
-            strncpy(path_bloc_data, path_attribute->value + start_index + 1, end_index - start_index - 1);
-
-            // Parsing points data
-            char* save_point_data = NULL, * save_x_y_data = NULL;
-            char* point_data = strtok_s(path_bloc_data, ",", &save_point_data);
-            char* x_y_data;
-            float x, y;
-            while (point_data)
-            {
-                x_y_data = strtok_s(point_data, " ", &save_x_y_data);
-                x = atof(x_y_data);
-                x_y_data = strtok_s(NULL, " ", &save_x_y_data);
-                y = atof(x_y_data);
-                ShapePoint* point_to_add = SHAPE_CreatePoint(x, y);
-
-                // Add the new created points to the current path block
-                SHAPE_AddPoint(&path_block->p, point_to_add);
-                point_data = strtok_s(NULL, ",", &save_point_data);
-
-            }
-
-            // Add the new created path block to the path
-            SHAPE_PathAddBlock(&path->b, path_block);
-            start_index = end_index;
-            start_char = readed_char;
-            free(path_bloc_data);
+            block_delimiter[j] = &path_attribute->value[i];
+            j++;
         }
     }
 
-    return path;
+    // Parsing the data in a given block
+    ShapePathblock* blocks = NULL;
+    char block_parameters[100] = { 0 };
+    size_t idx = 0;
+    for (size_t i = 0; i < j-1; i++)
+    {
+        // Copy paramaters contain in a block
+        strncpy(block_parameters, block_delimiter[i], block_delimiter[i + 1] - block_delimiter[i]);
+        // Transform the parameters into a block
+        SHAPE_PathAddBlock(&blocks, SHAPE_CreatePathBlock(block_parameters[0], &block_parameters[1]));
+    }
+
+    return blocks;
+}
+
+ShapePoint* SHAPE_GetPointsFromPathblocks(ShapePathblock* blocks, float step)
+{
+    // Go to the first point 
+    ShapePoint* points = SHAPE_CreatePoint(blocks->p->x, blocks->p->y);
+    float last_x = blocks->p->x, last_y = blocks->p->y;
+    blocks = blocks->nb;
+
+    while (blocks)
+    {
+        if (blocks->id == 'H')
+        {
+            ShapeLine* line = SHAPE_CreateLine(blocks->n, points->x, points->y, points->y);
+            SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
+        }
+        else if (blocks->id == 'V')
+        {
+            ShapeLine* line = SHAPE_CreateLine(points->x, points->x, blocks->n, points->y);
+            SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
+        }
+
+        else if (blocks->id == 'L')
+        {
+            ShapeLine* line = SHAPE_CreateLine(blocks->p->x, points->x, blocks->p->y, points->y);
+            SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
+            last_x = points->x, last_y = points->y;
+        }
+
+        blocks = blocks->nb;
+    }
+
+    return points;
+
 }
 
 
@@ -584,17 +613,21 @@ void SHAPE_AddPoints(ShapePoint** points, ShapePoint* points_to_add)
         return;
     }
 
-    ShapePoint* cursor = *points;
+    ShapePoint* cursor = malloc(sizeof(ShapePoint));
+    memcpy(cursor, points_to_add, sizeof(ShapePoint));
     while (cursor->np)
     {
         cursor = cursor->np;
     }
 
-    cursor->np = points_to_add;
-}
+    cursor->np = *points;
+    *points = points_to_add;
+
+
+    }
 
 // Return mathematical coordinates of points making the abstract shape
-ShapePoint* SHAPE_GetPointsFromShape(ShapeAbstract* abstract_shape, float step)
+ShapePoint* SHAPE_GetPointsFromAbstractShape(ShapeAbstract* abstract_shape, float step)
 {
     // Get the type of the abstract shape
     char* shape_type = abstract_shape->type;
@@ -617,7 +650,22 @@ ShapePoint* SHAPE_GetPointsFromShape(ShapeAbstract* abstract_shape, float step)
 
     else if (!strcmp(shape_type, "polygon"))
         return SHAPE_GetPointsFromPolygon(abstract_shape->data, step);
+    
+    else if (!strcmp(shape_type, "path"))
+        return SHAPE_GetPointsFromPathblocks(abstract_shape->data, step);
+}
 
+ShapePoint* SHAPE_GetPointsFromAbstractShapes(ShapeAbstract* abstract_shape_stack, float step)
+{
+    ShapePoint* points = (ShapePoint*)calloc(sizeof(ShapePoint), 1);
+
+    while (abstract_shape_stack)
+    {
+        SHAPE_AddPoints(&points, SHAPE_GetPointsFromAbstractShape(abstract_shape_stack, step));
+        abstract_shape_stack = abstract_shape_stack->next;
+    }
+
+    return points;
 }
 
 

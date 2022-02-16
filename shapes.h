@@ -108,6 +108,7 @@ struct ShapePolygon_s {
  */
 struct ShapePathblock_s {
     char id; ///< command id
+    float n;
     struct ShapePoint_s* p; ///< linked list of points
     struct ShapePathblock_s* nb; ///< linked list of blocks
 };
@@ -190,8 +191,10 @@ void SHAPE_AddPoints(ShapePoint** points, ShapePoint* points_to_add);
 void SHAPE_PathAddBlock(ShapePathblock** block, ShapePathblock* block_to_add);
 ShapePoint* SHAPE_CreatePoint(float x, float y);
 
-ShapePath* SHAPE_CreatePathFromSVGPath(svgAttributeStack* path_attribute);
+ShapePathblock* SHAPE_CreatePathBlock(char type, char* points);
+ShapePathblock* SHAPE_CreatePathblocksFromSVGPathblocks(svgAttributeStack* path_attribute);
+ShapePoint* SHAPE_GetPointsFromPathblocks(ShapePathblock* blocks, float step);
 
-ShapePoint* SHAPE_GetPointsFromShape(ShapeAbstract* abstract_shape, float step);
-
+ShapePoint* SHAPE_GetPointsFromAbstractShape(ShapeAbstract* abstract_shape, float step);
+ShapePoint* SHAPE_GetPointsFromAbstractShapes(ShapeAbstract* abstract_shape_stack, float step);
 #endif //SVG_PARSER_SHAPES_H
