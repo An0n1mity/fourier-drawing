@@ -466,26 +466,78 @@ ShapePoint* SHAPE_GetPointsFromPolygon(ShapePolygon* polygon, float step)
     return points;
 }
 
+ShapeCubicBezier* SHAPE_CreateCubicBezier(float x0, float y0, float x1, float y1, float x2, float y2, float x3, float y3)
+{
+    ShapeCubicBezier* cubic_bezier = (ShapeCubicBezier*)malloc(sizeof(ShapeCubicBezier));
+
+    SHAPE_AddPoint(&cubic_bezier->p, SHAPE_CreatePoint(x3, y3));
+    SHAPE_AddPoint(&cubic_bezier->p, SHAPE_CreatePoint(x2, y2));
+    SHAPE_AddPoint(&cubic_bezier->p, SHAPE_CreatePoint(x1, y1));
+    SHAPE_AddPoint(&cubic_bezier->p, SHAPE_CreatePoint(x0, y0));
+
+    return cubic_bezier;
+}
+
+ShapePoint* SHAPE_GetPointsFromCubicBezier(ShapeCubicBezier* cubic_bezier, float step)
+{
+    // Point M
+    ShapePoint* a = cubic_bezier->p;
+    ShapePoint* b = a->np;
+    ShapePoint* c = b->np;
+    ShapePoint* d = c->np;
+
+    ShapePoint* points = NULL;
+
+    float x, y;
+
+    for (float t = 0; t < 1.f; t+=step)
+    {
+        x = powf(1 - t, 3) * a->x + 3 * powf(1 - t, 2) * t * b->x + 3 * (1-t) * powf(t, 2) * c->x + powf(t, 3) * d->x;
+        y = powf(1 - t, 3) * a->y + 3 * powf(1 - t, 2) * t * b->y + 3 * (1-t) * powf(t, 2) * c->y + powf(t, 3) * d->y;
+
+        SHAPE_AddPoint(&points, SHAPE_CreatePoint(x, y));
+    }
+    return points;
+}
+
 ShapePathblock* SHAPE_CreatePathBlock(char type, char* points)
 {
     ShapePathblock* path_block = (ShapePathblock*)calloc(sizeof(ShapePathblock), 1);
     path_block->id = type;
+    float x, y;
+    char* token, buffer[100];
+    char* tmp;
 
     if (type == 'M' || type == 'L')
     {
-        path_block->p = (ShapePoint*)calloc(sizeof(ShapePoint), 1);
-        char* token = strtok(points, " ");
-        path_block->p->x = atof(token);
+        token = strtok(points, " ");
+        x = atof(token);
         token = strtok(NULL, " ");
-        path_block->p->y = atof(token);
+        y = atof(token);
+
+        path_block->p = SHAPE_CreatePoint(x, y);
     }
 
-    else if (type == 'H' || type == 'V')
+    else if (type == 'H' || type == 'V' || type == 'h' || type == 'v')
     {
         path_block->n = atof(points);
     }
     
-  
+    else if (type == 'C')
+    {
+        token = strtok_s(points, ",", &buffer);
+        while (token)
+        {
+            x = atof(strtok(token + 1, " "));
+            y = atof(strtok(NULL, " "));
+
+            SHAPE_AddPoint(&path_block->p, SHAPE_CreatePoint(x, y));
+
+            token = strtok_s(NULL, ",", &buffer);
+        }
+
+    }
+    
 
     return path_block;
 }
@@ -511,8 +563,11 @@ ShapePathblock* SHAPE_CreatePathblocksFromSVGPathblocks(svgAttributeStack* path_
     for (size_t i = 0; i <= attribute_len; i++)
     {
         if (path_attribute->value[i] == 'M' || path_attribute->value[i] == 'H' ||
-            path_attribute->value[i] == '\0' || path_attribute->value[i] == 'V' ||
-            path_attribute->value[i] == 'L')
+            path_attribute->value[i] == '\0'|| path_attribute->value[i] == 'V' ||
+            path_attribute->value[i] == 'L' || path_attribute->value[i] == 'Z' ||
+            path_attribute->value[i] == 'h' || path_attribute->value[i] == 'v' || 
+            path_attribute->value[i] == 'C'
+            )
         {
             block_delimiter[j] = &path_attribute->value[i];
             j++;
@@ -538,7 +593,7 @@ ShapePoint* SHAPE_GetPointsFromPathblocks(ShapePathblock* blocks, float step)
 {
     // Go to the first point 
     ShapePoint* points = SHAPE_CreatePoint(blocks->p->x, blocks->p->y);
-    float last_x = blocks->p->x, last_y = blocks->p->y;
+    float first_x = blocks->p->x, first_y = blocks->p->y;
     blocks = blocks->nb;
 
     while (blocks)
@@ -548,9 +603,21 @@ ShapePoint* SHAPE_GetPointsFromPathblocks(ShapePathblock* blocks, float step)
             ShapeLine* line = SHAPE_CreateLine(blocks->n, points->x, points->y, points->y);
             SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
         }
+        else if (blocks->id == 'h')
+        {
+            ShapeLine* line = SHAPE_CreateLine(points->x+blocks->n, points->x, points->y, points->y);
+            SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
+        }
+
         else if (blocks->id == 'V')
         {
             ShapeLine* line = SHAPE_CreateLine(points->x, points->x, blocks->n, points->y);
+            SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
+        }
+
+        else if (blocks->id == 'v')
+        {
+            ShapeLine* line = SHAPE_CreateLine(points->x, points->x, blocks->n+points->y, points->y);
             SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
         }
 
@@ -558,8 +625,27 @@ ShapePoint* SHAPE_GetPointsFromPathblocks(ShapePathblock* blocks, float step)
         {
             ShapeLine* line = SHAPE_CreateLine(blocks->p->x, points->x, blocks->p->y, points->y);
             SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
-            last_x = points->x, last_y = points->y;
         }
+
+        else if (blocks->id == 'Z')
+        {
+            ShapeLine* line = SHAPE_CreateLine(points->x, first_x, points->y, first_y);
+            SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
+        }
+
+        else if (blocks->id == 'C')
+        {
+            float x1, x2, x3, y1, y2, y3;
+            x3 = blocks->p->x; y3 = blocks->p->y;
+            x2 = blocks->p->np->x; y2 = blocks->p->np->y;
+            x1 = blocks->p->np->np->x; y1 = blocks->p->np->np->y;
+
+            ShapeCubicBezier* cubic_bezier = SHAPE_CreateCubicBezier(first_x, first_y, x1, y1, x2, y2, x3, y3);
+            ShapePoint* cubic_bezier_points = SHAPE_GetPointsFromCubicBezier(cubic_bezier, step);
+        
+            SHAPE_AddPoints(&points, cubic_bezier_points);
+        }
+
 
         blocks = blocks->nb;
     }

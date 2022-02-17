@@ -19,6 +19,7 @@ typedef struct ShapeEllipse_s ShapeEllipse;
 typedef struct ShapeLine_s ShapeLine;
 typedef struct ShapePolyline_s ShapePolyline;
 typedef struct ShapePolygon_s ShapePolygon;
+typedef struct ShapeCubicBezier_s ShapeCubicBezier;
 typedef struct ShapePoint_s ShapePoint;
 typedef struct ShapePathblock_s ShapePathblock;
 typedef struct ShapePath_s ShapePath;
@@ -103,6 +104,10 @@ struct ShapePolygon_s {
     struct ShapePoint_s* p;
 };
 
+struct ShapeCubicBezier_s{
+    struct ShapePoint_s* p;
+};
+
 /**
  * @brief Used with set of command and points
  */
@@ -180,6 +185,10 @@ ShapePoint* SHAPE_GetPointsFromPolygon(ShapePolygon* polygon, float step);
  * \param[in] y coordinate of point to add
  * \return point_to_add
  */
+
+ShapeCubicBezier* SHAPE_CreateCubicBezier(float x0, float y0, float x1, float y1, float x2, float y2, float x3, float y3);
+ShapePoint* SHAPE_GetPointsFromCubicBezier(ShapeCubicBezier* cubic_bezier, float step);
+
 void SHAPE_AddPoint(ShapePoint** points, ShapePoint* point_to_add);
  /**
  * @brief Create a path based on string of commands/points coordinates
