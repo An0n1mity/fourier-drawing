@@ -150,12 +150,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BezierCurve.c" />
+    <ClCompile Include="complex.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="shapes.c" />
     <ClCompile Include="svgparser.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BezierCurve.h" />
+    <ClInclude Include="complex.h" />
+    <ClInclude Include="Fourier.h" />
     <ClInclude Include="shapes.h" />
     <ClInclude Include="svgparser.h" />
   </ItemGroup>
