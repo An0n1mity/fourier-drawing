@@ -3,7 +3,9 @@
 #include "svgparser.h"
 #include "BezierCurve.h"
 #include "Camera.h"
+#include "Menutextures.h"
 #include "SDL.h"
+#include "SDL_image.h"
 
 int main(int argc, char* argv[])
 {
@@ -11,6 +13,8 @@ int main(int argc, char* argv[])
 	xmlNodeShape* shapes = PARSER_GetShapesFromSVG(svgfile);
 	Camera *camera = NULL;
 	camera = (Camera*)calloc(1, sizeof(Camera));
+	MenuTextures* textures = NULL;
+
 
 	camera->screen = (SDL_Rect*)calloc(1, sizeof(SDL_Rect));
 	camera->screen->h = 720;
@@ -41,6 +45,12 @@ int main(int argc, char* argv[])
 			return EXIT_FAILURE;
 		}
 	}
+
+	if (!IMG_Init(IMG_INIT_PNG))
+	{
+		printf("[-] ERROR - Failed to initialise SDL_Image (%s)\n", SDL_GetError());
+		return EXIT_FAILURE;
+	}
 	SDL_Window* window = SDL_CreateWindow("BezierCurve", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 720, SDL_WINDOW_OPENGL);
 	
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
@@ -51,6 +61,7 @@ int main(int argc, char* argv[])
 	camera->ratioX = 1;
 	camera->ratioY = 1;
 
+	textures = MenuTextures_new(renderer);
 	SDL_RenderSetScale(renderer, camera->ratiox, camera->ratioy);
 	while (1)
 	{
@@ -148,4 +159,5 @@ int main(int argc, char* argv[])
 	SDL_Quit();
 	freeBezierFunction(func);
 	SDL_DestroyRenderer(renderer);
+	MenuTextures_free(textures);
 }

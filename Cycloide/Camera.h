@@ -7,6 +7,7 @@
 static int precision = 1;
 
 
+
 typedef struct SCamera {
 	SDL_Rect *screen;
 
@@ -34,3 +35,4 @@ typedef struct SCamera {
 
 
 void Camera_ViewToWorld(Camera** camera,int screenw, int screenh, int res);
+
