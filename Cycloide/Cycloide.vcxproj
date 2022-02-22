@@ -72,8 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\Codes\PST Fourier\svg_parser\SDL2-2.0.16\include;C:\Users;D:\Codes\PST Fourier\svg_parser\packages\libxml2.2.7.8.7\build\native\include\libxml;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Codes\PST Fourier\svg_parser\SDL2-2.0.16\lib\x86;D:\Codes\PST Fourier\svg_parser\packages\libxml2.2.7.8.7\build\native\lib\v110\Win32\Debug\dynamic\cdecl;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\Codes\PST Fourier\svg_parser\packages\sdl2_x86-windows\include\SDL2;D:\Programmes\vcpkg\installed\x86-windows\include;D:\Codes\PST Fourier\svg_parser\SDL2-2.0.16\include;C:\Users;D:\Codes\PST Fourier\svg_parser\packages\libxml2.2.7.8.7\build\native\include\libxml;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Codes\PST Fourier\svg_parser\packages\sdl2_x86-windows\lib;D:\Codes\PST Fourier\svg_parser\packages\sdl2_x86-windows\lib\manual-link;D:\Programmes\vcpkg\installed\x86-windows\lib;D:\Programmes\vcpkg\installed\x86-windows\lib\manual-link;D:\Codes\PST Fourier\svg_parser\SDL2-2.0.16\lib\x86;D:\Codes\PST Fourier\svg_parser\packages\libxml2.2.7.8.7\build\native\lib\v110\Win32\Debug\dynamic\cdecl;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -87,12 +87,16 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <VcpkgInstalledDir>..\..\..\..\Programmes\vcpkg\installed\x86-windows</VcpkgInstalledDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\Programmes\vcpkg\installed\x86-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

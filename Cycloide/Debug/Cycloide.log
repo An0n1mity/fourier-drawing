@@ -1,16 +1,6 @@
-﻿  complex.c
-D:\Codes\PST Fourier\svg_parser\Cycloide\complex.c(8,9): warning C4013: 'printf' undefined; assuming extern returning int
-D:\Codes\PST Fourier\svg_parser\Cycloide\complex.c(18,1): warning C4133: 'initializing': incompatible types - from 'Complex_s *' to 'ComplexList_s *'
-D:\Codes\PST Fourier\svg_parser\Cycloide\complex.c(35,45): warning C4047: '=': 'Complex_s **' differs in levels of indirection from 'Complex_s *'
-D:\Codes\PST Fourier\svg_parser\Cycloide\complex.c(47,50): warning C4047: 'function': 'ComplexList_s *' differs in levels of indirection from 'Complex_s **'
-D:\Codes\PST Fourier\svg_parser\Cycloide\complex.c(47,35): warning C4024: 'destroyComplexList': different types for formal and actual parameter 1
-D:\Codes\PST Fourier\svg_parser\Cycloide\complex.c(56,37): warning C4133: 'function': incompatible types - from 'ComplexList_s *' to 'Complex_s *'
-D:\Codes\PST Fourier\svg_parser\Cycloide\complex.c(56,82): warning C4047: 'function': 'ComplexList_s *' differs in levels of indirection from 'Complex_s **'
-D:\Codes\PST Fourier\svg_parser\Cycloide\complex.c(56,67): warning C4024: 'addComplexList': different types for formal and actual parameter 1
-D:\Codes\PST Fourier\svg_parser\Cycloide\complex.c(58,46): warning C4133: 'function': incompatible types - from 'ComplexList_s *' to 'Complex_s *'
-  main.c
-  Generating Code...
-D:\Codes\PST Fourier\svg_parser\Cycloide\complex.c(65): warning C4716: 'subComplexList': must return a value
-  LINK : D:\Codes\PST Fourier\svg_parser\Debug\Cycloide.exe not found or not built by the last incremental link; performing full link
-C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(1087,5): error MSB6006: "link.exe" exited with code 1104.
-LINK : fatal error LNK1104: cannot open file 'SDL2.lib'
+﻿  main.c
+D:\Codes\PST Fourier\svg_parser\Cycloide\complex.h(72,104): warning C4098: 'printComplex': 'void' function returning a value
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(86,27): warning C4047: 'function': 'ComplexList_s **' differs in levels of indirection from 'ComplexList_s *'
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(86,23): warning C4024: 'addObjectComplexList': different types for formal and actual parameter 1
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(94): warning C4716: 'SDL_main': must return a value
+  Cycloide.vcxproj -> D:\Codes\PST Fourier\svg_parser\Debug\Cycloide.exe

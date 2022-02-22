@@ -1,8 +1,8 @@
 #include "shapes.h"
 #include "svgparser.h"
 #include "BezierCurve.h"
+#include "complex.h"
 #include "SDL2/SDL.h"
-
 int precision = 1;
 
 void doInput()
@@ -38,6 +38,7 @@ void doInput()
 
 int main(int argc, char* argv[])
 {
+#if 0
 	xmlDocPtr svgfile = PARSER_LoadSVG("../Cycloide/test.xml");
 	xmlNodeShape* shapes = PARSER_GetShapesFromSVG(svgfile);
 
@@ -78,4 +79,17 @@ int main(int argc, char* argv[])
 	}
 
 	freeBezierFunction(func);
+#else
+	struct Complex_s* a = createComplex(3, -6);
+	struct Complex_s* b = createComplex(2, 1);
+	struct ComplexList_s* list = createComplexList(a);
+	addObjectComplexList(list, b);
+	struct Complex_s* result = multiplyComplex(a, b);
+	printComplex(a, 2);
+	printComplex(b,2);
+	printComplex(result,2);
+	result = addComplexList(list);
+	//add Complex List à corriger
+	printComplex(result, 2);
+#endif
 }

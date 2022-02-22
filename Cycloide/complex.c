@@ -2,7 +2,7 @@
 
 struct Complex_s* createComplex(double p_real, double p_imaginary)
 {
-	struct Complex_s* complex = (struct Complex_s*)calloc(1, sizeof(struct Complex_s));
+	struct Complex_s* complex = (struct Complex_s*) calloc(1, sizeof(struct Complex_s));
 	if (!complex)
 	{
 		printf("Couldn't create complex in createComplex()\n");
@@ -15,7 +15,7 @@ struct Complex_s* createComplex(double p_real, double p_imaginary)
 
 struct ComplexList_s* createComplexList(struct Complex_s* p_headComplex)
 {
-	struct ComplexList_s* complexList = (struct Complex_s*)calloc(1, sizeof(struct Complex_s));
+	struct ComplexList_s* complexList = (struct ComplexList_s*) calloc(1, sizeof(struct ComplexList_s));
 	if (!complexList)
 	{
 		printf("Couldn't create complexList in createComplexList()\n");
@@ -32,7 +32,7 @@ void addObjectComplexList(struct ComplexList_s** p_complexList, struct Complex_s
 		printf("Cannot add a NULL to a ComplexList in addObjectComplexList\n");
 		return;
 	}
-	(*p_complexList)->m_nextComplex = p_complex;
+	(*p_complexList)->m_nextComplexList = createComplexList(p_complex);
 	return;
 }
 
@@ -44,7 +44,7 @@ void destroyComplex(struct Complex_s* p_complex)
 void destroyComplexList(struct ComplexList_s* p_complexList)
 {
 	if (p_complexList->m_complex)
-		destroyComplexList(p_complexList->m_nextComplex);
+		destroyComplexList(p_complexList->m_nextComplexList);
 	else
 		destroyComplex(p_complexList->m_complex);
 }
@@ -52,24 +52,26 @@ void destroyComplexList(struct ComplexList_s* p_complexList)
 struct Complex_s* addComplexList(struct ComplexList_s* p_complexList)
 {
 	struct Complex_s* complex = createComplex(0, 0);
-	if (p_complexList->m_nextComplex)
-	complex = addComplex(p_complexList->m_complex, addComplexList(p_complexList->m_nextComplex));
+	if (p_complexList->m_nextComplexList)
+		complex = addComplex(p_complexList->m_complex, addComplexList(p_complexList->m_nextComplexList));
 	return complex;
 }
 
 struct Complex_s* subComplexList(struct ComplexList_s* p_complexList)
 {
-	struct Complex_s* sumComplex;
-	if (p_complexList->m_nextComplex)
-		sumComplex = addComplexList(p_complexList->m_nextComplex);
-	return subComplex(p_complexList->m_complex, sumComplex);
+	if (!p_complexList->m_nextComplexList)
+		return p_complexList->m_complex;
+	struct Complex_s* sumComplex = addComplexList(p_complexList->m_nextComplexList);
+	struct Complex_s* sub = subComplex(p_complexList->m_complex, sumComplex);
+	destroyComplex(sumComplex);
+	return sub;
 }
 
 struct Complex_s* multiplyComplexList(struct ComplexList_s* p_complexList)
 {
 	struct Complex_s* complex = createComplex(1, 1);
-	if (p_complexList->m_nextComplex)
-		complex = multiplyComplex(p_complexList->m_complex, multiplyComplexList(p_complexList->m_nextComplex));
+	if (p_complexList->m_nextComplexList)
+		complex = multiplyComplex(p_complexList->m_complex, multiplyComplexList(p_complexList->m_nextComplexList));
 	return complex;
 }
 
@@ -90,7 +92,7 @@ struct Complex_s* divideComplex(struct Complex_s* p_first, struct Complex_s* p_s
 struct Complex_s* divideComplexList(struct ComplexList_s* p_complexList)
 {
 	struct Complex_s* productComplex = createComplex(1, 1);
-	if (p_complexList->m_nextComplex)
-		productComplex = multiplyComplex(p_complexList->m_complex, multiplyComplexList(p_complexList->m_nextComplex));
+	if (p_complexList->m_nextComplexList)
+		productComplex = multiplyComplex(p_complexList->m_complex, multiplyComplexList(p_complexList->m_nextComplexList));
 	return divideComplex(p_complexList->m_complex, productComplex);
 }
