@@ -1,6 +1,5 @@
-﻿  main.c
-D:\Codes\PST Fourier\svg_parser\Cycloide\complex.h(72,104): warning C4098: 'printComplex': 'void' function returning a value
-D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(86,27): warning C4047: 'function': 'ComplexList_s **' differs in levels of indirection from 'ComplexList_s *'
-D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(86,23): warning C4024: 'addObjectComplexList': different types for formal and actual parameter 1
-D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(94): warning C4716: 'SDL_main': must return a value
+﻿  complex.c
+  main.c
+  Generating Code...
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(101): warning C4716: 'SDL_main': must return a value
   Cycloide.vcxproj -> D:\Codes\PST Fourier\svg_parser\Debug\Cycloide.exe

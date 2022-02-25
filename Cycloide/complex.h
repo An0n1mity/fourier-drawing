@@ -18,6 +18,11 @@ struct ComplexList_s
 
 struct Complex_s* createComplex(double p_real, double p_imaginary);
 
+inline struct Complex_s* copyComplex(struct Complex_s* p_complex)
+{
+	return createComplex(p_complex->m_real, p_complex->m_imaginary);
+}
+
 struct ComplexList_s* createComplexList(struct Complex_s* p_headComplex);
 
 void addObjectComplexList(struct ComplexList_s** p_complexList, struct Complex_s* p_complex);
@@ -69,6 +74,8 @@ inline struct Complex_s* getExponentialComplex(struct Complex_s* p_exponent)
 
 inline void printComplex(struct Complex_s* p_complex, int p_precision)
 {
-	return printf("%.*lf + %.*lfi\n", p_precision, p_complex->m_real, p_precision, p_complex->m_imaginary);
+	printf("%.*lf + %.*lfi\n", p_precision, p_complex->m_real, p_precision, p_complex->m_imaginary);
 }
+
+void printComplexList(struct ComplexList_s* p_complexList, int p_precision);
 #endif // COMPLEX_H

@@ -81,15 +81,21 @@ int main(int argc, char* argv[])
 	freeBezierFunction(func);
 #else
 	struct Complex_s* a = createComplex(3, -6);
-	struct Complex_s* b = createComplex(2, 1);
+	struct Complex_s* b = createComplex(12, 1);
+	struct Complex_s* c = createComplex(0, 7);
+	struct Complex_s* d = createComplex(4, -2);
 	struct ComplexList_s* list = createComplexList(a);
-	addObjectComplexList(list, b);
-	struct Complex_s* result = multiplyComplex(a, b);
-	printComplex(a, 2);
-	printComplex(b,2);
-	printComplex(result,2);
-	result = addComplexList(list);
-	//add Complex List à corriger
-	printComplex(result, 2);
+	addObjectComplexList(&list, b);
+	addObjectComplexList(&list, c);
+	addObjectComplexList(&list, d);
+	struct Complex_s* result1 = addComplexList(list);
+	struct Complex_s* result2 = subComplexList(list);
+	struct Complex_s* result3 = multiplyComplexList(list);
+	struct Complex_s* result4 = divideComplexList(list);
+	printComplex(result1, 4);
+	printComplex(result2, 4);
+	printComplex(result3, 4);
+	printComplex(result4, 4);
+	destroyComplexList(list);
 #endif
 }
