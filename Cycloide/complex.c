@@ -139,7 +139,7 @@ struct Complex_s* divideComplex(struct Complex_s* p_first, struct Complex_s* p_s
 		return createComplex(0, 0);
 	}
 	double real = ((p_first->m_real * p_second->m_real) + (p_first->m_imaginary * p_second->m_imaginary)) / denominator;
-	double imaginary = ((p_first->m_real * p_second->m_imaginary) - (p_first->m_imaginary * p_second->m_real)) / denominator;
+	double imaginary = ((p_first->m_imaginary*p_second->m_real) - (p_first->m_real*p_second->m_imaginary)) / denominator;
 	return createComplex(real, imaginary);
 }
 
@@ -151,8 +151,14 @@ struct Complex_s* divideComplexList(struct ComplexList_s* p_complexList)
 		return NULL;
 	}
 	if (!p_complexList->m_nextComplexList)
-		return p_complexList->m_complex;
+		return copyComplex(p_complexList->m_complex);
 	struct Complex_s* denominator = multiplyComplexList(p_complexList->m_nextComplexList);
+	if (denominator == 0)
+	{
+		printf("Dividing by 0 in divideComplexList()\n");
+		destroyComplex(denominator);
+		return copyComplex(p_complexList->m_complex);
+	}
 	struct Complex_s* result = divideComplex(p_complexList->m_complex, denominator);
 	destroyComplex(denominator);
 	return result;

@@ -1,5 +1,2 @@
 ﻿  complex.c
-  main.c
-  Generating Code...
-D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(101): warning C4716: 'SDL_main': must return a value
   Cycloide.vcxproj -> D:\Codes\PST Fourier\svg_parser\Debug\Cycloide.exe
