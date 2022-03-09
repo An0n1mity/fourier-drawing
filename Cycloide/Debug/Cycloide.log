@@ -1,8 +1,2 @@
 ﻿  MenuTextures.c
-  main.c
-C:\Users\gabri\OneDrive\Documents\GitHub\cycloide\Cycloide\main.c(146,26): warning C4244: '+=' : conversion de 'float' en 'int', perte possible de données
-C:\Users\gabri\OneDrive\Documents\GitHub\cycloide\Cycloide\main.c(150,26): warning C4244: '+=' : conversion de 'float' en 'int', perte possible de données
-  Génération de code en cours...
-main.obj : error LNK2019: symbole externe non résolu _IMG_Init référencé dans la fonction _SDL_main
-MenuTextures.obj : error LNK2019: symbole externe non résolu _IMG_Load référencé dans la fonction _MenuTextures_new
-C:\Users\gabri\OneDrive\Documents\GitHub\cycloide\Debug\Cycloide.exe : fatal error LNK1120: 2 externes non résolus
+  Cycloide.vcxproj -> C:\Users\Gabriel\Documents\GitHub\cycloide\Debug\Cycloide.exe

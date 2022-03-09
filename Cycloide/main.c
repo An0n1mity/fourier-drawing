@@ -11,6 +11,8 @@ int main(int argc, char* argv[])
 {
 	xmlDocPtr svgfile = PARSER_LoadSVG("../Cycloide/test.xml");
 	xmlNodeShape* shapes = PARSER_GetShapesFromSVG(svgfile);
+
+
 	Camera *camera = NULL;
 	camera = (Camera*)calloc(1, sizeof(Camera));
 	MenuTextures* textures = NULL;
@@ -56,12 +58,17 @@ int main(int argc, char* argv[])
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
 
 	bool a = false;
+
+	//Initialisation Caméra
 	camera->ratiox = 1;
 	camera->ratioy = 1;
 	camera->ratioX = 1;
 	camera->ratioY = 1;
 
+	//Initialisation Textures
 	textures = MenuTextures_new(renderer);
+
+	//Création Caméra
 	SDL_RenderSetScale(renderer, camera->ratiox, camera->ratioy);
 	while (1)
 	{
@@ -152,6 +159,9 @@ int main(int argc, char* argv[])
 			SDL_RenderDrawLineF(renderer, lastPoint.x, lastPoint.y, current.x, current.y);
 			lastPoint = current;
 		}
+		
+
+		SDL_RenderCopy(renderer, textures->point->t,NULL, textures->point->r);
 
 		SDL_RenderPresent(renderer);
 		SDL_Delay(0);
