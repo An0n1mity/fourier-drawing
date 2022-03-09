@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "MenuTextures.h"
 #include "SDL.h"
 #include "Camera.h"
 
@@ -17,4 +18,37 @@ void Camera_ViewToWorld(Camera **camera,int screenw, int screenh, int res) {
 	}
 	(*camera)->ratiox = (1024 / (float)screenw);
 	(*camera)->ratioy = (720 / (float)screenh);
+}
+
+
+void Camera_ImageToWorld(Camera* camera, MenuTextures **textures) {
+	(*textures)->point->r->x -= camera->ratioX * camera->deplacementx;
+	(*textures)->point->r->y -= camera->ratioY * camera->deplacementy;
+	//textures->point->r->h *= camera->ratioy;
+	//textures->point->r->w *= camera->ratiox;
+
+	(*textures)->cercle->r->x -= camera->ratioX * camera->deplacementx;
+	(*textures)->cercle->r->y -= camera->ratioY * camera->deplacementy;
+	//textures->cercle->r->h *= camera->ratioy;
+	//textures->cercle->r->w *= camera->ratiox;
+
+	(*textures)->segment->r->x -= camera->ratioX * camera->deplacementx;
+	(*textures)->segment->r->y -= camera->ratioY * camera->deplacementy;
+	//textures->segment->r->h *= camera->ratioy;
+	//textures->segment->r->w *= camera->ratiox;
+
+	(*textures)->background->r->x -= camera->ratioX * camera->deplacementx;
+	(*textures)->background->r->y -= camera->ratioY * camera->deplacementy;
+	//textures->background->r->h *= camera->ratioy;
+	//textures->background->r->w *= camera->ratiox;
+
+
+	//printf("%d %d    ", (*textures)->rouleau->r->h, (*textures)->rouleau->r->w);
+	(*textures)->rouleau->r->x -= camera->ratioX * camera->deplacementx;
+	(*textures)->rouleau->r->y -= camera->ratioY * camera->deplacementy;
+	/*(*textures)->rouleau->r->h += camera->ratioy;
+	(*textures)->rouleau->r->w += camera->ratiox;*/
+
+	//printf("%d %d\n", (*textures)->rouleau->r->h, (*textures)->rouleau->r->w);
+
 }

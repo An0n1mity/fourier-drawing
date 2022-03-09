@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <SDL.h>
 #include <SDL_image.h>
+#include <stdbool.h>
 
 typedef struct Image_s
 {
@@ -14,14 +15,17 @@ typedef struct Image_s
 typedef struct MenuTextures_s
 {
     Image* logo;
-    Image* menu;
 
     Image* point;
     Image* segment;
     Image* cercle;
+
+    Image* background;
+    Image* rouleau;
       
 } MenuTextures;
 
 MenuTextures* MenuTextures_new(SDL_Renderer* renderer);
 void MenuTextures_free(MenuTextures* textures);
 void Image_free(Image* im);
+void Deroulement(MenuTextures* textures, bool rouleau, bool rouleau2);

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "SDL.h"
+#include "MenuTextures.h"
 
 //Précision de la courbe
 static int precision = 1;
@@ -36,3 +37,4 @@ typedef struct SCamera {
 
 void Camera_ViewToWorld(Camera** camera,int screenw, int screenh, int res);
 
+void Camera_ImageToWorld(Camera* camera, MenuTextures** textures);
