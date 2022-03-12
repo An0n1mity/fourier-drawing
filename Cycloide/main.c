@@ -69,6 +69,8 @@ int main(int argc, char* argv[])
 
 	//Initialisation Textures
 	textures = MenuTextures_new(renderer);
+	//int var_w = textures->rouleau->r->w;
+	//int var_h = textures->rouleau->r->h;
 
 	//Création Caméra
 	SDL_RenderSetScale(renderer, camera->ratiox, camera->ratioy);
@@ -106,7 +108,7 @@ int main(int argc, char* argv[])
 				camera->xp = event.motion.x;
 				camera->yp = event.motion.y;
 				Camera_ViewToWorld(&camera, screenw, screenh,  0);
-				Camera_ImageToWorld(camera, &textures);
+				//Camera_ImageToWorld(camera, &textures, var_h, var_w);
 				break;
 
 			case SDL_MOUSEWHEEL:
@@ -121,7 +123,7 @@ int main(int argc, char* argv[])
 					screenh -= 50;
 				}
 				Camera_ViewToWorld(&camera, screenw, screenh, 1);
-				Camera_ImageToWorld(camera, &textures);
+				//Camera_ImageToWorld(camera, &textures, var_h,var_w );
 				wheel = 0;
 				break;
 
@@ -150,7 +152,7 @@ int main(int argc, char* argv[])
 				camera->xp = event.motion.x;
 				camera->yp = event.motion.y;
 				Camera_ViewToWorld(&camera, screenw, screenh, 0);
-				Camera_ImageToWorld(camera, &textures);
+				//Camera_ImageToWorld(camera, &textures, var_h, var_w);
 			}
 			SDL_RenderSetScale(renderer, camera->ratiox, camera->ratioy);
 			SDL_RenderSetViewport(renderer, camera->screen);
@@ -165,12 +167,12 @@ int main(int argc, char* argv[])
 		for (int i = 0; i <= precision; ++i)
 		{
 			SHAPE_Point current = getBezierPoint(func, (double)i/(double)precision);
-			if (current.x > (textures->rouleau->r->x+1000)) {
-				float sub = current.x - textures->rouleau->r->x + 1000;
+			if (current.x > camera->screen->x) {
+				float sub = current.x - camera->screen->x;
 				camera->screen->w += sub;
 			}
-			if (current.y > (textures->rouleau->r->h+400)) {
-				float sub = current.y - camera->screen->h+ textures->rouleau->r->h + 400;
+			if (current.y > camera->screen->y) {
+				float sub = current.y - camera->screen->h;
 				camera->screen->h += sub;
 			}
 			SDL_RenderDrawLineF(renderer, lastPoint.x, lastPoint.y, current.x, current.y);
@@ -178,11 +180,7 @@ int main(int argc, char* argv[])
 		}
 		
 
-		SDL_RenderCopy(renderer, textures->background->t,NULL, textures->background->r);
-		SDL_RenderCopy(renderer, textures->point->t     ,NULL, textures->point->r);
-		SDL_RenderCopy(renderer, textures->segment->t   ,NULL, textures->segment->r);
-		SDL_RenderCopy(renderer, textures->cercle->t    ,NULL, textures->cercle->r);
-		SDL_RenderCopy(renderer, textures->rouleau->t      ,NULL, textures->rouleau->r);
+		render(renderer, textures);
 		
 		Deroulement(textures, rouleau, rouleau2);
 		
@@ -190,8 +188,6 @@ int main(int argc, char* argv[])
 		SDL_RenderPresent(renderer);
 		SDL_Delay(0);
 	}
-
-
 
 	SDL_Quit();
 	freeBezierFunction(func);

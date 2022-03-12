@@ -12,20 +12,21 @@ typedef struct Image_s
     SDL_Rect* r;
 
 }Image;
+
 typedef struct MenuTextures_s
 {
-    Image* logo;
+    Image *image;
+    struct MenuTextures_s* m_next;
+    char *name;
 
-    Image* point;
-    Image* segment;
-    Image* cercle;
-
-    Image* background;
-    Image* rouleau;
-      
 } MenuTextures;
+
+
+void Create(MenuTextures** textures, SDL_Renderer* renderer, char* path,char* name,  int x, int y, int h, int w);
 
 MenuTextures* MenuTextures_new(SDL_Renderer* renderer);
 void MenuTextures_free(MenuTextures* textures);
 void Image_free(Image* im);
 void Deroulement(MenuTextures* textures, bool rouleau, bool rouleau2);
+
+MenuTextures* Found(MenuTextures* textures, char *name);

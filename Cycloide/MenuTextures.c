@@ -6,83 +6,69 @@
 #include "SDL_image.h"
 
 
+void Create(MenuTextures **textures, SDL_Renderer* renderer, char* path,char* name, int x, int y, int h, int w) {
+
+    int a = 0;
+    int b = 0;
+    if ((*textures)->image == NULL)b = 1;
+
+    while ((textures != NULL) || b==1) {
+        textures = (*textures)->m_next;
+        a++;
+    }
+    if(a!=0)
+        textures = (MenuTextures*)calloc(1, sizeof(MenuTextures));
+
+   
+    (*textures)->name = "stp";
+    (*textures)->image = (Image*)calloc(1, sizeof(Image));
+
+    (*textures)->image->s = IMG_Load(path);
+    (*textures)->image->t = SDL_CreateTextureFromSurface(renderer, (*textures)->image->s);
+    SDL_FreeSurface((*textures)->image->s);
+
+    (*textures)->image->r = (SDL_Rect*)calloc(1, sizeof(SDL_Rect));
+    (*textures)->image->r->x = x;
+    (*textures)->image->r->y = y;
+    (*textures)->image->r->h = h;
+    (*textures)->image->r->w = w;
+        
+}
+
+
 
 MenuTextures* MenuTextures_new(SDL_Renderer* renderer) {
-    MenuTextures* textures = (MenuTextures*) calloc(1, sizeof(MenuTextures));
-
-
-    /*textures->logo->s = IMG_Load("../Assets/Images/Menu/Logo.png");
-    textures->logo->t = SDL_CreateTextureFromSurface(renderer, textures->logo->s);
-    SDL_FreeSurface(textures->logo->s);
-
-    textures->logo->r->x = 0;
-    textures->logo->r->y = 0;
-    textures->logo->r->h = 0;
-    textures->logo->r->w = 0;*/
-
-    textures->point = (Image*)calloc(1, sizeof(Image));
-    textures->point->s = IMG_Load("../Assets/Images/Menu/point.png");
-    textures->point->t = SDL_CreateTextureFromSurface(renderer, textures->point->s);
-    SDL_FreeSurface(textures->point->s);
-
-    textures->point->r = (SDL_Rect*)calloc(1, sizeof(SDL_Rect));
-    textures->point->r->x = 10;
-    textures->point->r->y = 100;
-    textures->point->r->h = 100;
-    textures->point->r->w = 100;
-
-    textures->cercle = (Image*)calloc(1, sizeof(Image));
-    textures->cercle->s = IMG_Load("../Assets/Images/Menu/cercle.png");
-    textures->cercle->t = SDL_CreateTextureFromSurface(renderer, textures->cercle->s);
-    SDL_FreeSurface(textures->cercle->s);
-
-    textures->cercle->r = (SDL_Rect*)calloc(1, sizeof(SDL_Rect));
-    textures->cercle->r->x = 130 ;
-    textures->cercle->r->y = 100;
-    textures->cercle->r->h = 100;
-    textures->cercle->r->w = 100;
-
-
-    textures->segment= (Image*)calloc(1, sizeof(Image));
-    textures->segment->s = IMG_Load("../Assets/Images/Menu/segment.png");
-    textures->segment->t = SDL_CreateTextureFromSurface(renderer, textures->segment->s);
-    SDL_FreeSurface(textures->segment->s);
-
-    textures->segment->r = (SDL_Rect*)calloc(1, sizeof(SDL_Rect));
-    textures->segment->r->x = 10;
-    textures->segment->r->y = 210;
-    textures->segment->r->h = 100;
-    textures->segment->r->w = 100;
-
-
-    textures->rouleau = (Image*)calloc(1, sizeof(Image));
-    textures->rouleau->s = IMG_Load("../Assets/Images/Menu/rouleau.png");
-    textures->rouleau->t = SDL_CreateTextureFromSurface(renderer, textures->rouleau->s);
-    SDL_FreeSurface(textures->rouleau->s);
-
-    textures->rouleau->r = (SDL_Rect*)calloc(1, sizeof(SDL_Rect));
-    textures->rouleau->r->x = 330;
-    textures->rouleau->r->y = 0;
-    textures->rouleau->r->h = 720;
-    textures->rouleau->r->w = 50;
-
-    textures->background = (Image*)calloc(1, sizeof(Image));
-    textures->background->s = IMG_Load("../Assets/Images/Menu/black_background.png");
-    textures->background->t = SDL_CreateTextureFromSurface(renderer, textures->background->s);
-    SDL_FreeSurface(textures->background->s);
-
-    textures->background->r = (SDL_Rect*)calloc(1, sizeof(SDL_Rect));
-    textures->background->r->x = 0;
-    textures->background->r->y = 0;
-    textures->background->r->h = 720;
-    textures->background->r->w = 330;
+    MenuTextures* textures = (MenuTextures*)calloc(1, sizeof(MenuTextures));
 
 
 
+    Create(&textures, renderer, "../Assets/Images/Menu/rouleau.png","rouleau", 330, 0, 720, 50);
+
+    Create(&textures, renderer, "../Assets/Images/Menu/black_background.png", "background", 0, 0, 720, 330);
+
+    Create(&textures, renderer, "../Assets/Images/Menu/point.png","point", 10, 100, 100, 100);
+
+    Create(&textures, renderer, "../Assets/Images/Menu/cercle.png","cercle", 130, 100, 100, 100);
+
+
+    Create(&textures, renderer, "../Assets/Images/Menu/segment.png","segment", 10, 210, 100, 100);
+
+
+    
 
     return textures;
 }
 
+MenuTextures* Found(MenuTextures* textures, char* name) {
+
+    if (!textures)return NULL;
+
+    while (name != textures->name) {
+        textures = textures->m_next;
+    }
+
+    return textures;
+}
 
 void Image_free(Image* im) {
     if (!im)
@@ -93,18 +79,27 @@ void Image_free(Image* im) {
    
 }
 
+void render(SDL_Renderer* renderer, MenuTextures* textures) {
+
+    if (textures == NULL)return;
+
+    while (textures != NULL) {
+        SDL_RenderCopy(renderer, textures->image->t, NULL, textures->image->r);
+        textures = textures->m_next;
+    }
+}
+
 void MenuTextures_free(MenuTextures* textures) {
 
     if (!textures)
         return;
-
-    //Image_free(textures->logo);
-    Image_free(textures->point);
-    Image_free(textures->segment);
-    Image_free(textures->cercle);
-    Image_free(textures->rouleau);
-    Image_free(textures->background);
-
+    MenuTextures* tmp = textures->m_next;
+    while (textures) {
+        Image_free(textures->image);
+        free(textures);
+        textures = tmp;
+        tmp = tmp->m_next;
+    }
 
     free(textures);
 }

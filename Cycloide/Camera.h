@@ -37,4 +37,4 @@ typedef struct SCamera {
 
 void Camera_ViewToWorld(Camera** camera,int screenw, int screenh, int res);
 
-void Camera_ImageToWorld(Camera* camera, MenuTextures** textures);
+void Camera_ImageToWorld(Camera* camera, MenuTextures** textures, int h, int w);

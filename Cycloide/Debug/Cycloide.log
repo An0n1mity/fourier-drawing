@@ -1,4 +1,4 @@
-﻿  main.c
-C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\main.c(170,26): warning C4244: '+=' : conversion de 'float' en 'int', perte possible de données
-C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\main.c(174,26): warning C4244: '+=' : conversion de 'float' en 'int', perte possible de données
+﻿  MenuTextures.c
+C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\MenuTextures.c(16,39): warning C4047: '=' : les niveaux d'indirection de 'MenuTextures **' et de 'MenuTextures_s *' sont différents
+C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\MenuTextures.c(20,66): warning C4047: '=' : les niveaux d'indirection de 'MenuTextures **' et de 'MenuTextures *' sont différents
   Cycloide.vcxproj -> C:\Users\Gabriel\Documents\GitHub\cycloide\Debug\Cycloide.exe
