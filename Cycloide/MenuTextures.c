@@ -9,16 +9,6 @@
 void Create(MenuTextures **textures, SDL_Renderer* renderer, char* path,char* name, int x, int y, int h, int w) {
 
 
-
-    while ((*textures)->name != NULL) {
-        (*textures)->m_next = (MenuTextures*)calloc(1, sizeof(MenuTextures));
-        (*textures)->m_next->image = (Image*)calloc(1, sizeof(Image));
-         textures = (*textures)->m_next;
-       
-    }
-   
-   
-   
     (*textures)->name = name;
     (*textures)->image = (Image*)calloc(1, sizeof(Image));
 
@@ -32,26 +22,26 @@ void Create(MenuTextures **textures, SDL_Renderer* renderer, char* path,char* na
     (*textures)->image->r->h = h;
     (*textures)->image->r->w = w;
 
-   
+    textures = (*textures)->m_next;
 }
 
 
 
-MenuTextures** MenuTextures_new(SDL_Renderer* renderer) {
-    MenuTextures** textures = (MenuTextures**)calloc(1, sizeof(MenuTextures*));
-    (*textures)->image = (Image*)calloc(1, sizeof(Image));
+MenuTextures* MenuTextures_new(SDL_Renderer* renderer) {
+    MenuTextures* textures = (MenuTextures**)calloc(1, sizeof(MenuTextures*));
+    
 
 
-    Create(textures, renderer, "../Assets/Images/Menu/rouleau.png","rouleau", 330, 0, 720, 50);
+    Create(&textures, renderer, "../Assets/Images/Menu/rouleau.png","rouleau", 330, 0, 720, 50);
 
-    Create(textures, renderer, "../Assets/Images/Menu/black_background.png", "background", 0, 0, 720, 330);
+    Create(&textures, renderer, "../Assets/Images/Menu/black_background.png", "background", 0, 0, 720, 330);
 
-    Create(textures, renderer, "../Assets/Images/Menu/point.png","point", 10, 100, 100, 100);
+    Create(&textures, renderer, "../Assets/Images/Menu/point.png","point", 10, 100, 100, 100);
 
 
-    Create(textures, renderer, "../Assets/Images/Menu/segment.png","segment", 10, 210, 100, 100);
+    Create(&textures, renderer, "../Assets/Images/Menu/segment.png","segment", 10, 210, 100, 100);
 
-    Create(textures, renderer, "../Assets/Images/Menu/cercle.png","cercle", 130, 100, 100, 100);
+    Create(&textures, renderer, "../Assets/Images/Menu/cercle.png","cercle", 130, 100, 100, 100);
 
 
 

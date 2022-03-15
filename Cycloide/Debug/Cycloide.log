@@ -1,4 +1,12 @@
-﻿  MenuTextures.c
-C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\MenuTextures.c(16,40): warning C4047: '=' : les niveaux d'indirection de 'MenuTextures **' et de 'MenuTextures_s *' sont différents
-C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\MenuTextures.c(41,1): warning C4047: 'initialisation' : les niveaux d'indirection de 'MenuTextures **' et de 'MenuTextures *' sont différents
+﻿  Camera.c
+C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\Camera.c(16,47): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\Camera.c(17,46): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
+  MenuTextures.c
+C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\MenuTextures.c(25,35): warning C4047: '=' : les niveaux d'indirection de 'MenuTextures **' et de 'MenuTextures_s *' sont différents
+C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\MenuTextures.c(31,1): warning C4047: 'initialisation' : les niveaux d'indirection de 'MenuTextures *' et de 'MenuTextures **' sont différents
+  main.c
+C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\main.c(172,26): warning C4244: '+=' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\main.c(176,26): warning C4244: '+=' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\main.c(183,9): warning C4013: 'render' non défini(e) ; extern retournant int pris par défaut
+  Génération de code en cours...
   Cycloide.vcxproj -> C:\Users\Gabriel\Documents\GitHub\cycloide\Debug\Cycloide.exe

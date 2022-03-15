@@ -24,7 +24,7 @@ typedef struct MenuTextures_s
 
 void Create(MenuTextures** textures, SDL_Renderer* renderer, char* path,char* name,  int x, int y, int h, int w);
 
-MenuTextures** MenuTextures_new(SDL_Renderer* renderer);
+MenuTextures* MenuTextures_new(SDL_Renderer* renderer);
 void MenuTextures_free(MenuTextures* textures);
 void Image_free(Image* im);
 void Deroulement(MenuTextures* textures, bool rouleau, bool rouleau2);
