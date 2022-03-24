@@ -1,12 +1,12 @@
 #include "Fourier.h"
 
-struct Circle_s createCircle(int p_index, SHAPE_Point p_position, struct Complex_s p_coeff)
+struct Circle_s* createCircle(int p_index, SHAPE_Point p_position, struct Complex_s p_coeff)
 {
-	struct Circle_s circle;
-	circle.m_index = p_index;
-	circle.m_position = p_position;
-	circle.m_coeff = p_coeff;
-	circle.m_nextCircle = NULL;
+	struct Circle_s* circle = (struct Circle_s*) calloc(1, sizeof(struct Circle_s));
+	circle->m_index = p_index;
+	circle->m_position = p_position;
+	circle->m_coeff = p_coeff;
+	circle->m_nextCircle = NULL;
 	return circle;
 }
 

@@ -14,9 +14,9 @@ struct Circle_s
 	struct Circle_s* m_nextCircle;
 };
 
-struct Circle_s createCircle(int p_index, SHAPE_Point p_position, struct Complex_s p_coeff);
+struct Circle_s* createCircle(int p_index, SHAPE_Point p_position, struct Complex_s p_coeff);
 
-void addCircleList(struct Circle_s* p_list, struct Circle_s* p_toAdd);
+void addCircleList(struct Circle_s** p_list, struct Circle_s* p_toAdd);
 
 SHAPE_Point getPositionFromCircles(struct Circle_s* p_circleList, double p_time);
 

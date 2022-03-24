@@ -111,19 +111,18 @@ int main(int argc, char* argv[])
 		tab[i].m_real = rand() % (2 - 0 + 1) + 0;
 		tab[i].m_imaginary = rand() % (2 - 0 + 1) + 0;
 	}
-	struct Circle_s* circleList = (struct Circle_s*)calloc(precision + 1, sizeof(struct Circle_s));
-	circleList[0] = createCircle(0, (SHAPE_Point) { 0, 0 }, createComplex(0, 0));
+	struct Circle_s* circleList =  createCircle(0, (SHAPE_Point) { 0, 0 }, createComplex(0, 0));
 
 	for (int i = precision / 2 * -1; i < 0; ++i)
 	{
-		circleList[1 + i + (precision / 2)] = createCircle(i, (SHAPE_Point) { tab[i + (precision / 2)].m_real, tab[i + (precision / 2)].m_imaginary }, getCoeff(i, tab[i + (precision / 2)]));
-		addCircleList(circleList, &circleList[1 + i + (precision / 2)]);
+		struct Circle_s* currentCircle = createCircle(i, (SHAPE_Point) { tab[i + (precision / 2)].m_real, tab[i + (precision / 2)].m_imaginary }, getCoeff(i, tab[i + (precision / 2)]));
+		addCircleList(&circleList, currentCircle);
 	}
 
 	for (int i = 1; i <= precision; ++i)
 	{
-		circleList[i + precision/2] = createCircle(i, (SHAPE_Point) { tab[i + (precision / 2)].m_real, tab[i + (precision / 2)].m_imaginary }, getCoeff(i, tab[i + (precision / 2)]));
-		addCircleList(circleList, &circleList[1 + i + (precision / 2)]);
+		struct Circle_s* currentCircle = createCircle(i, (SHAPE_Point) { tab[i + (precision / 2)].m_real, tab[i + (precision / 2)].m_imaginary }, getCoeff(i, tab[i + (precision / 2)]));
+		addCircleList(&circleList, currentCircle);
 	}
 
 	printf("test\n");
