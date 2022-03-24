@@ -155,6 +155,7 @@
   <ItemGroup>
     <ClCompile Include="BezierCurve.c" />
     <ClCompile Include="complex.c" />
+    <ClCompile Include="Fourier.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="shapes.c" />
     <ClCompile Include="svgparser.c" />

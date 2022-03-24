@@ -3,6 +3,9 @@
 #include "BezierCurve.h"
 #include "complex.h"
 #include "SDL2/SDL.h"
+#include "Fourier.h"
+#include <time.h>
+
 int precision = 1;
 
 void doInput()
@@ -80,22 +83,50 @@ int main(int argc, char* argv[])
 
 	freeBezierFunction(func);
 #else
-	struct Complex_s* a = createComplex(3, -6);
-	struct Complex_s* b = createComplex(12, 1);
-	struct Complex_s* c = createComplex(0, 7);
-	struct Complex_s* d = createComplex(4, -2);
-	struct ComplexList_s* list = createComplexList(a);
-	addObjectComplexList(&list, b);
-	addObjectComplexList(&list, c);
-	addObjectComplexList(&list, d);
-	struct Complex_s* result1 = addComplexList(list);
-	struct Complex_s* result2 = subComplexList(list);
-	struct Complex_s* result3 = multiplyComplexList(list);
-	struct Complex_s* result4 = divideComplexList(list);
+	srand(time(NULL));
+
+	struct Complex_s a = createComplex(3, -6);
+	struct Complex_s b = createComplex(12, 1);
+	struct Complex_s c = createComplex(0, 7);
+	struct Complex_s d = createComplex(4, -2);
+	struct ComplexList_s* list = createComplexList(&a);
+	addObjectComplexList(&list, &b);
+	addObjectComplexList(&list, &c);
+	addObjectComplexList(&list, &d);
+	struct Complex_s result1 = addComplexList(list);
+	struct Complex_s result2 = subComplexList(list);
+	struct Complex_s result3 = multiplyComplexList(list);
+	struct Complex_s result4 = divideComplexList(list);
 	printComplex(result1, 4);
 	printComplex(result2, 4);
 	printComplex(result3, 4);
 	printComplex(result4, 4);
 	destroyComplexList(list);
+
+	int precision = 10;
+	struct Complex_s* tab = (struct Complex_s*) calloc(precision, sizeof(struct Complex_s));
+
+	for (int i = 0; i < precision; ++i)
+	{
+		tab[i].m_real = rand() % (2 - 0 + 1) + 0;
+		tab[i].m_imaginary = rand() % (2 - 0 + 1) + 0;
+	}
+	struct Circle_s* circleList = (struct Circle_s*)calloc(precision + 1, sizeof(struct Circle_s));
+	circleList[0] = createCircle(0, (SHAPE_Point) { 0, 0 }, createComplex(0, 0));
+
+	for (int i = precision / 2 * -1; i < 0; ++i)
+	{
+		circleList[1 + i + (precision / 2)] = createCircle(i, (SHAPE_Point) { tab[i + (precision / 2)].m_real, tab[i + (precision / 2)].m_imaginary }, getCoeff(i, tab[i + (precision / 2)]));
+		addCircleList(circleList, &circleList[1 + i + (precision / 2)]);
+	}
+
+	for (int i = 1; i <= precision; ++i)
+	{
+		circleList[i + precision/2] = createCircle(i, (SHAPE_Point) { tab[i + (precision / 2)].m_real, tab[i + (precision / 2)].m_imaginary }, getCoeff(i, tab[i + (precision / 2)]));
+		addCircleList(circleList, &circleList[1 + i + (precision / 2)]);
+	}
+
+	printf("test\n");
 #endif
+	return 0;
 }

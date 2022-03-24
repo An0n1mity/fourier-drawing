@@ -1,2 +1,13 @@
-﻿  complex.c
+﻿  Fourier.c
+D:\Codes\PST Fourier\svg_parser\Cycloide\Fourier.c(13,38): warning C4028: formal parameter 1 different from declaration
+D:\Codes\PST Fourier\svg_parser\Cycloide\Fourier.c(28,32): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\Fourier.c(28,48): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  main.c
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(86,12): warning C4244: 'function': conversion from 'time_t' to 'unsigned int', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(119,97): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(119,130): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(125,89): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(125,122): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
+D:\Codes\PST Fourier\svg_parser\Cycloide\Fourier.c(39): warning C4716: 'getCoeff': must return a value
   Cycloide.vcxproj -> D:\Codes\PST Fourier\svg_parser\Debug\Cycloide.exe
