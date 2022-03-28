@@ -2,7 +2,7 @@
 
 struct Circle_s* createCircle(int p_index, SHAPE_Point p_position, struct Complex_s p_coeff)
 {
-	struct Circle_s* circle = (struct Circle_s*) calloc(1, sizeof(struct Circle_s));
+	struct Circle_s* circle = (struct Circle_s*) malloc(sizeof(struct Circle_s));
 	circle->m_index = p_index;
 	circle->m_position = p_position;
 	circle->m_coeff = p_coeff;
@@ -20,10 +20,11 @@ SHAPE_Point getPositionFromCircles(struct Circle_s* p_circleList, double p_time)
 {
 	SHAPE_Point position = {0};
 	struct Complex_s complex = { 0 };
+
 	while (p_circleList)
 	{
-		complex = addComplex(complex, multiplyComplex(p_circleList->m_coeff, getExponentialComplex(createComplex(0, p_circleList->m_index * 2 * PI * p_time))));
-		p_circleList->m_nextCircle;
+		complex = addComplex(complex, multiplyComplex(p_circleList->m_coeff, getExponentialComplex(createComplex(0, (double)(p_circleList->m_index * 2) * PI * p_time))));
+		p_circleList = p_circleList->m_nextCircle;
 	}
 	return (SHAPE_Point) { complex.m_real, complex.m_imaginary };
 }
@@ -36,4 +37,5 @@ struct Complex_s getCoeff(int index, struct Complex_s p_position)
 	{
 		complex = addComplex(complex, multiplyComplex(multiplyComplex(p_position, getExponentialComplex(createComplex(0, (-1) * index * 2 * PI))), createComplex(i, 0)));
 	}
+	return complex;
 }

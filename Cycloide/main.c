@@ -103,6 +103,9 @@ int main(int argc, char* argv[])
 	printComplex(result4, 4);
 	destroyComplexList(list);
 
+	SDL_Window* window = SDL_CreateWindow("BezierCurve", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 720, SDL_WINDOW_OPENGL);
+	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+
 	int precision = 10;
 	struct Complex_s* tab = (struct Complex_s*) calloc(precision, sizeof(struct Complex_s));
 
@@ -119,13 +122,38 @@ int main(int argc, char* argv[])
 		addCircleList(&circleList, currentCircle);
 	}
 
-	for (int i = 1; i <= precision; ++i)
+	for (int i = 1; i <= precision / 2; ++i)
 	{
 		struct Circle_s* currentCircle = createCircle(i, (SHAPE_Point) { tab[i + (precision / 2)].m_real, tab[i + (precision / 2)].m_imaginary }, getCoeff(i, tab[i + (precision / 2)]));
 		addCircleList(&circleList, currentCircle);
 	}
 
-	printf("test\n");
+	time_t startTime = clock();
+	time_t currentTime = startTime;
+	time_t currentDeltaTime = startTime;
+	SHAPE_Point currentPosition = { 0 }, lastPosition = {0};
+	SDL_RenderClear(renderer);
+
+	/*
+	
+				delta time se met bien à jour mais currentPosition reste constant 
+	
+	*/
+
+
+	while (1)
+	{
+		currentTime = (double) (clock() - startTime) / CLOCKS_PER_SEC;
+		currentPosition = getPositionFromCircles(circleList, currentTime);
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+		doInput();
+		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+		SDL_RenderDrawLineF(renderer, lastPosition.x, lastPosition.y, currentPosition.x, currentPosition.y);
+		SDL_SetRenderDrawColor(renderer, 0, 100, 255, 255);
+		SDL_RenderPresent(renderer);
+		SDL_Delay(0);
+		lastPosition = currentPosition;
+	}
 #endif
 	return 0;
 }
