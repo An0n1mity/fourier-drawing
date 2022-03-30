@@ -14,6 +14,12 @@ struct Circle_s
 	struct Circle_s* m_nextCircle;
 };
 
+struct Test_s
+{
+	double m_first;
+	double m_second;
+};
+
 struct Circle_s* createCircle(int p_index, SHAPE_Point p_position, struct Complex_s p_coeff);
 
 void addCircleList(struct Circle_s** p_list, struct Circle_s* p_toAdd);

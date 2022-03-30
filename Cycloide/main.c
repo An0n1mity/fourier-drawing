@@ -111,8 +111,8 @@ int main(int argc, char* argv[])
 
 	for (int i = 0; i < precision; ++i)
 	{
-		tab[i].m_real = rand() % (2 - 0 + 1) + 0;
-		tab[i].m_imaginary = rand() % (2 - 0 + 1) + 0;
+		tab[i].m_real = 2.0 * ((double)rand() / RAND_MAX);
+		tab[i].m_imaginary = 2.0 * ((double)rand() / RAND_MAX);
 	}
 	struct Circle_s* circleList =  createCircle(0, (SHAPE_Point) { 0, 0 }, createComplex(0, 0));
 
@@ -139,7 +139,6 @@ int main(int argc, char* argv[])
 				delta time se met bien à jour mais currentPosition reste constant 
 	
 	*/
-
 
 	while (1)
 	{
