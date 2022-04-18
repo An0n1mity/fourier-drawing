@@ -1,7 +1,10 @@
-#define _CRT_SECURE_NO_WARNINGS
+//
+// Created by biist on 18/04/2022.
+//
 
 #include <stdbool.h>
 #include <string.h>
+#include <corecrt.h>
 #include "shapes.h"
 #include "svgparser.h"
 
@@ -13,7 +16,12 @@ ShapeAbstract* SHAPE_CreateAbstract(char* type, void* data)
     if (!abstract_shape)
         return NULL;
 
+#ifdef _WIN32
     abstract_shape->type = _strdup(type);
+#endif
+#ifdef __linux__
+    abstract_shape->type = strdup(type);
+#endif
     abstract_shape->data = data;
 
     return abstract_shape;
@@ -38,11 +46,14 @@ ShapeAbstract* SHAPE_CreateAbstractFromSVG(svgShapeStack* svg_shapes)
             abstract_to_add = SHAPE_CreateAbstract(svg_shapes->name, SHAPE_CreatePolylineFromSVGPolyline(svg_shapes->attributes));
         else if (!strcmp(svg_shapes->name, "polygon"))
             abstract_to_add = SHAPE_CreateAbstract(svg_shapes->name, SHAPE_CreatePolygonFromSVGPolygon(svg_shapes->attributes));
-        else if (!strcmp(svg_shapes->name, "path"))
-            abstract_to_add = SHAPE_CreateAbstract(svg_shapes->name, SHAPE_CreatePathblocksFromSVGPathblocks(svg_shapes->attributes));
-        
+        else if (!strcmp(svg_shapes->name, "path")) {
 
-        SHAPE_AddAbstractShapeToAbstractShapeStack(&abstract_shapes, abstract_to_add);
+
+            abstract_to_add = SHAPE_CreateAbstract(svg_shapes->name, SHAPE_CreatePathblocksFromSVGPathblocks(svg_shapes->attributes));
+        }
+
+        if(abstract_to_add)
+            SHAPE_AddAbstractShapeToAbstractShapeStack(&abstract_shapes, abstract_to_add);
         svg_shapes = svg_shapes->ns;
     }
 
@@ -59,7 +70,7 @@ void SHAPE_AddAbstractShapeToAbstractShapeStack(ShapeAbstract** abstract_shape_s
         *abstract_shape_stack = abstract_shape_to_add;
         return;
     }
-    
+
     abstract_shape_to_add->next = *abstract_shape_stack;
     *abstract_shape_stack = abstract_shape_to_add;
 }
@@ -74,6 +85,8 @@ void SHAPE_FreeAbstractShape(ShapeAbstract* abstract_shapes)
     else if (!strcmp(abstract_shapes->type, "circle"))
         SHAPE_FreeCircle(abstract_shapes->data);
 
+
+
     free(abstract_shapes->type);
     free(abstract_shapes);
 }
@@ -83,7 +96,7 @@ ShapePoint* SHAPE_CreatePoint(float x, float y)
 {
     ShapePoint* point = (ShapePoint*)calloc(sizeof(ShapePoint), 1);
     if (!point)
-        return;
+        return NULL;
     point->x = x, point->y = y;
     return point;
 }
@@ -93,10 +106,10 @@ ShapeRectangle* SHAPE_CreateRectangle(float x, float y, float w, float h, float 
 {
     ShapeRectangle* rectangle = (ShapeRectangle*)malloc(sizeof(ShapeRectangle));
     ShapeRectangle parameters = { x, y, w, h, rx, ry };
-    
+
     if (!rectangle)
         return NULL;
-    
+
     *rectangle = parameters;
 
     return rectangle;
@@ -137,7 +150,7 @@ ShapeRectangle* SHAPE_CreateRectangleFromSVGRectangle(svgAttributeStack* rectang
 ShapePoint* SHAPE_GetPointsFromRectangle(ShapeRectangle* rectangle, float step)
 {
     ShapePoint* top_left_corner = SHAPE_CreatePoint(rectangle->x, rectangle->y);
-    // Get points from the first edge 
+    // Get points from the first edge
     float value = top_left_corner->x;
     for (float x = top_left_corner->x; x < value + rectangle->w; x += step)
     {
@@ -170,21 +183,13 @@ ShapePoint* SHAPE_GetPointsFromRectangle(ShapeRectangle* rectangle, float step)
 
 void SHAPE_FreeRectangle(ShapeRectangle* rectangle)
 {
-    /*
-    free(rectangle->x);
-    free(rectangle->y);
-    free(rectangle->w);
-    free(rectangle->h);
-    free(rectangle->rx);
-    free(rectangle->ry);
-    */
     free(rectangle);
 }
 
 
 ShapeCircle* SHAPE_CreateCircle(float cx, float cy, float r)
 {
-    ShapeCircle* circle = (ShapeCircle*)malloc(sizeof(ShapeCircle));
+    ShapeCircle* circle = (ShapeCircle*)calloc(sizeof(ShapeCircle), 1);
     ShapeCircle parameters = { {cx, cy}, r };
 
     if (!circle)
@@ -278,7 +283,7 @@ ShapePoint* SHAPE_GetPointsFromEllipse(ShapeEllipse* ellipse, float step)
 
 ShapeLine* SHAPE_CreateLine(float x1, float x2, float y1, float y2)
 {
-    ShapeLine* line = (ShapeLine*)malloc(sizeof(sizeof(ShapeLine)));
+    ShapeLine* line = (ShapeLine*)calloc(sizeof(ShapeLine), 1);
     line->p = SHAPE_CreatePoint(x1, y1);
     SHAPE_AddPoint(&line->p, SHAPE_CreatePoint(x2, y2));
 
@@ -304,6 +309,18 @@ ShapeLine* SHAPE_CreateLineFromSVGLine(svgAttributeStack* attributes)
     }
 
     return SHAPE_CreateLine(x1, x2, y1, y2);
+}
+
+void SHAPE_FreePoints(ShapePoint* points)
+{
+    ShapePoint* tmp = points;
+
+    while (points->np)
+    {
+        tmp = points;
+        points = points->np;
+        free(tmp);
+    }
 }
 
 ShapePoint* SHAPE_GetPointsFromLine(ShapeLine* line, float step)
@@ -338,8 +355,13 @@ ShapePolyline* SHAPE_CreatePolyline(char* points)
     ShapePolyline* polyline = (ShapePolyline*)calloc(sizeof(ShapePolyline), 1);
     if (!polyline)
         return NULL;
-
+#ifdef _WIN32
     char* argument = _strdup(points);
+#endif
+
+#ifdef __linux
+    char* argument = strdup(points);
+#endif
 
     char* token = strtok(argument, " ");
     char* token_b = NULL;
@@ -349,14 +371,26 @@ ShapePolyline* SHAPE_CreatePolyline(char* points)
 
     while (token) {
         strcpy(token_c, token);
+#ifdef _WIN32
         token_s = strtok_s(token_c, ",", &token_b);
+#endif
+
+#ifdef __linux
+        token_s = strtok_r(token_c, ",", &token_b);
+#endif
         x = atof(token_s);
+#ifdef _WIN32
         token_s = strtok_s(NULL, ",", &token_b);
+#endif
+
+#ifdef __linux
+        token_s = strtok_r(NULL, ",", &token_b);
+#endif
         y = atof(token_s);
-      
+
         ShapePoint* point_to_add = SHAPE_CreatePoint(x, y);
         SHAPE_AddPoint(&polyline->p, point_to_add);
-      
+
         token = strtok(NULL, " ");
     }
 
@@ -401,7 +435,13 @@ ShapePolygon* SHAPE_CreatePolygon(char* points)
     if (!polygon)
         return NULL;
 
+#ifdef _WIN32
     char* argument = _strdup(points);
+#endif
+
+#ifdef __linux
+    char* argument = strdup(points);
+#endif
 
     char* token = strtok(argument, " ");
     char* token_b = NULL;
@@ -412,9 +452,19 @@ ShapePolygon* SHAPE_CreatePolygon(char* points)
 
     while (token) {
         strcpy(token_c, token);
+#ifdef _WIN32
         token_s = strtok_s(token_c, ",", &token_b);
+#endif
+#ifdef __linux__
+        token_s = strtok_r(token_c, ",", &token_b);
+#endif
         x = atof(token_s);
+#ifdef _WIN32
         token_s = strtok_s(NULL, ",", &token_b);
+#endif
+#ifdef __linux__
+        token_s = strtok_r(NULL, ",", &token_b);
+#endif
         y = atof(token_s);
 
         if (first)
@@ -468,7 +518,8 @@ ShapePoint* SHAPE_GetPointsFromPolygon(ShapePolygon* polygon, float step)
 
 ShapeCubicBezier* SHAPE_CreateCubicBezier(float x0, float y0, float x1, float y1, float x2, float y2, float x3, float y3)
 {
-    ShapeCubicBezier* cubic_bezier = (ShapeCubicBezier*)malloc(sizeof(ShapeCubicBezier));
+    ShapeCubicBezier* cubic_bezier = (ShapeCubicBezier*)calloc(sizeof(ShapeCubicBezier), 1);
+    cubic_bezier->p = NULL;
 
     SHAPE_AddPoint(&cubic_bezier->p, SHAPE_CreatePoint(x3, y3));
     SHAPE_AddPoint(&cubic_bezier->p, SHAPE_CreatePoint(x2, y2));
@@ -500,44 +551,134 @@ ShapePoint* SHAPE_GetPointsFromCubicBezier(ShapeCubicBezier* cubic_bezier, float
     return points;
 }
 
+ShapeQuadraticBezier* SHAPE_CreateQuadraticBezier(float x0, float y0, float x1, float y1, float x2, float y2)
+{
+    ShapeQuadraticBezier* quadratic_bezier = (ShapeQuadraticBezier*)calloc(sizeof(ShapeQuadraticBezier), 1);
+    quadratic_bezier->p = NULL;
+
+    SHAPE_AddPoint(&quadratic_bezier->p, SHAPE_CreatePoint(x2, y2));
+    SHAPE_AddPoint(&quadratic_bezier->p, SHAPE_CreatePoint(x1, y1));
+    SHAPE_AddPoint(&quadratic_bezier->p, SHAPE_CreatePoint(x0, y0));
+
+    return quadratic_bezier;
+}
+
+ShapePoint* SHAPE_GetPointsFromQuadraticBezier(ShapeQuadraticBezier* quadratic_bezier, float step)
+{
+    // Point M
+    ShapePoint* a = quadratic_bezier->p;
+    ShapePoint* b = a->np;
+    ShapePoint* c = b->np;
+
+    ShapePoint* points = NULL;
+
+    float x, y;
+
+    for (float t = 0; t < 1.f; t += step)
+    {
+        x = powf(1 - t, 2) * a->x + 2 * (1 - t) * t * b->x + powf(t, 2) * c->x;
+        y = powf(1 - t, 2) * a->y + 2 * (1 - t) * t * b->y + powf(t, 2) * c->y;
+
+        SHAPE_AddPoint(&points, SHAPE_CreatePoint(x, y));
+    }
+    return points;
+}
+
+char * my_strtok( const char *s, const char *delimit )
+{
+    static const char *p;
+
+    if ( ( s == NULL ) && (  p == NULL ||  *p == '\0' ) )
+    {
+        return NULL;
+    }
+
+    if ( s )
+    {
+        p = s;
+    }
+
+    p += strspn( p, delimit );
+
+    if ( *p == '\0' )
+    {
+        return NULL;
+    }
+
+    const char *start = p;
+
+    p += strcspn( p, delimit );
+
+    size_t n = p - start;
+
+    char *substr = malloc( n + 1 );
+
+    if ( substr )
+    {
+        substr[n] = '\0';
+        memcpy( substr, start, n );
+    }
+
+    return substr;
+}
+
+
+// TODO : Update SHAPE_CreatePathBlock !
 ShapePathblock* SHAPE_CreatePathBlock(char type, char* points)
 {
     ShapePathblock* path_block = (ShapePathblock*)calloc(sizeof(ShapePathblock), 1);
+    path_block->p = NULL;
     path_block->id = type;
-    float x, y;
-    char* token, buffer[100];
-    char* tmp;
 
-    if (type == 'M' || type == 'L')
+    char* token = my_strtok(points, " ");
+    char* token_b = NULL;
+    char buffer[5000];
+    char* token_s = NULL;
+    float x, y, x1, y1, x2, y2;
+
+    if (type == 'L')
     {
-        token = strtok(points, " ");
-        x = atof(token);
-        token = strtok(NULL, " ");
-        y = atof(token);
+        strcpy(buffer, points);
+        char* second_point_token = strtok(buffer, " ");
+        char* first_point_token = strdup(second_point_token);
+        second_point_token = strtok(NULL, " ");
 
-        path_block->p = SHAPE_CreatePoint(x, y);
+        token = strtok(first_point_token, ",");
+        x1 = atof(token);
+        token = strtok(NULL, ",");
+        y1 = atof(token);
+
+        token = strtok(second_point_token, ",");
+        x2 = atof(token);
+        token = strtok(NULL, ",");
+        y2 = atof(token);
+
+        SHAPE_AddPoint(&path_block->p, SHAPE_CreatePoint(x1, y1));
+        SHAPE_AddPoint(&path_block->p, SHAPE_CreatePoint(x2, y2));
+
+        free(first_point_token);
     }
 
-    else if (type == 'H' || type == 'V' || type == 'h' || type == 'v')
+    else if (type == 'C' || type == 'Q')
     {
-        path_block->n = atof(points);
-    }
-    
-    else if (type == 'C')
-    {
-        token = strtok_s(points, ",", &buffer);
+        // Copy the bezier curves points into a buffer
+        strcpy(buffer, points);
+        token = strtok(buffer, " ");
+        char* ptr;
         while (token)
         {
-            x = atof(strtok(token + 1, " "));
-            y = atof(strtok(NULL, " "));
+            char * tokenp = _strdup(token);
+            char* coordinates_token = strtok_s(tokenp, ",", &ptr);
+            x = atof(coordinates_token);
+            coordinates_token = strtok_s(NULL, ",", &ptr);
+            y = atof(coordinates_token);
 
             SHAPE_AddPoint(&path_block->p, SHAPE_CreatePoint(x, y));
 
-            token = strtok_s(NULL, ",", &buffer);
+            token = strtok(NULL, " ");
         }
 
     }
-    
 
     return path_block;
 }
@@ -551,6 +692,39 @@ ShapePathblock* SHAPE_CreatePathblocksFromSVGPathblocks(svgAttributeStack* path_
     {
         path_attribute = path_attribute->na;
     }
+
+    // Call the script to make the path arguments readable for our program
+#ifdef _WIN32
+    char path[10000] = "C:/Users/biist/source/repos/Cycloide/Cycloide/dist/main.exe ";
+    //strcpy(path, "C:/Users/biist/source/repos/Cycloide/Cycloide/dist/main.exe ");
+#endif
+
+#ifdef __linux__
+    char path[5000] = "Linux/Ubuntu-20.04/home/an0n1mity/Desktop/build/main/main ";
+    system("ls /wsl.localhost");
+#endif
+
+    char p[10000];
+    sprintf(p, "\"%s\"", path_attribute->value);
+    char t[] = " ./";
+    strcat(path, p);
+    strcat(path, t);
+
+    char output[10000];
+#ifdef _WIN32
+    FILE* process = _popen(path, "r");
+    fgets(output, sizeof(output), process);
+    path_attribute->value = _strdup(output),
+            _pclose(process);
+    //system(path);
+#endif
+#ifdef __linux__
+    FILE* process = popen(path, "r");
+    fgets(output, sizeof(output), process);
+    path_attribute->value = strdup(output),
+            pclose(process);
+    //system(path);
+#endif
     // Delimiter in our example start_char is M
     xmlChar readed_char, start_char;
     start_char = path_attribute->value[0];
@@ -558,16 +732,17 @@ ShapePathblock* SHAPE_CreatePathblocksFromSVGPathblocks(svgAttributeStack* path_
     size_t start_index = 0, end_index = 0;
     size_t attribute_len = strlen(path_attribute->value);
 
-    // Get pointer to the start of a bloc 
-    char* block_delimiter[10] = {0}; size_t j = 0;
+    // Get pointer to the start of a bloc
+    char* block_delimiter[1000] = {0}; size_t j = 0;
     for (size_t i = 0; i <= attribute_len; i++)
     {
         if (path_attribute->value[i] == 'M' || path_attribute->value[i] == 'H' ||
-            path_attribute->value[i] == '\0'|| path_attribute->value[i] == 'V' ||
+             path_attribute->value[i] == 'V' ||
             path_attribute->value[i] == 'L' || path_attribute->value[i] == 'Z' ||
-            path_attribute->value[i] == 'h' || path_attribute->value[i] == 'v' || 
-            path_attribute->value[i] == 'C'
-            )
+            path_attribute->value[i] == 'h' || path_attribute->value[i] == 'v' ||
+            path_attribute->value[i] == 'C' || path_attribute->value[i] == 'Q' ||
+            path_attribute->value[i] == '\n'
+                )
         {
             block_delimiter[j] = &path_attribute->value[i];
             j++;
@@ -576,14 +751,17 @@ ShapePathblock* SHAPE_CreatePathblocksFromSVGPathblocks(svgAttributeStack* path_
 
     // Parsing the data in a given block
     ShapePathblock* blocks = NULL;
-    char block_parameters[100] = { 0 };
+    char block_parameters[1000] = { 0 };
     size_t idx = 0;
     for (size_t i = 0; i < j-1; i++)
     {
-        // Copy paramaters contain in a block
-        strncpy(block_parameters, block_delimiter[i], block_delimiter[i + 1] - block_delimiter[i]);
+        // Copy paramaters contain in a block ((char *)p2) - ((char *)p1)
+        strncpy(block_parameters, block_delimiter[i], (ptrdiff_t)(((char*)block_delimiter[i + 1]) - ((char*)block_delimiter[i])));
+        printf("%s\n", block_parameters);
         // Transform the parameters into a block
-        SHAPE_PathAddBlock(&blocks, SHAPE_CreatePathBlock(block_parameters[0], &block_parameters[1]));
+        if(block_parameters[0] == 'C' || block_parameters[0] == 'L')
+            SHAPE_PathAddBlock(&blocks, SHAPE_CreatePathBlock(block_parameters[0], &block_parameters[2]));
+        memset(block_parameters, 0, 1000);
     }
 
     return blocks;
@@ -591,10 +769,10 @@ ShapePathblock* SHAPE_CreatePathblocksFromSVGPathblocks(svgAttributeStack* path_
 
 ShapePoint* SHAPE_GetPointsFromPathblocks(ShapePathblock* blocks, float step)
 {
-    // Go to the first point 
-    ShapePoint* points = SHAPE_CreatePoint(blocks->p->x, blocks->p->y);
+    // Go to the first point
+    ShapePoint* points = NULL;
     float first_x = blocks->p->x, first_y = blocks->p->y;
-    blocks = blocks->nb;
+    //blocks = blocks->nb;
 
     while (blocks)
     {
@@ -602,50 +780,71 @@ ShapePoint* SHAPE_GetPointsFromPathblocks(ShapePathblock* blocks, float step)
         {
             ShapeLine* line = SHAPE_CreateLine(blocks->n, points->x, points->y, points->y);
             SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
+            SHAPE_FreePoints(line->p);
         }
         else if (blocks->id == 'h')
         {
-            ShapeLine* line = SHAPE_CreateLine(points->x+blocks->n, points->x, points->y, points->y);
+            ShapeLine* line = SHAPE_CreateLine(points->x + blocks->n, points->x, points->y, points->y);
             SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
+            SHAPE_FreePoints(line->p);
         }
 
         else if (blocks->id == 'V')
         {
             ShapeLine* line = SHAPE_CreateLine(points->x, points->x, blocks->n, points->y);
             SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
+            SHAPE_FreePoints(line->p);
         }
 
         else if (blocks->id == 'v')
         {
-            ShapeLine* line = SHAPE_CreateLine(points->x, points->x, blocks->n+points->y, points->y);
+            ShapeLine* line = SHAPE_CreateLine(points->np->x, points->x, points->np->y, points->y);
             SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
+            SHAPE_FreePoints(line->p);
         }
 
         else if (blocks->id == 'L')
         {
-            ShapeLine* line = SHAPE_CreateLine(blocks->p->x, points->x, blocks->p->y, points->y);
-            SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
+            ShapeLine* line = SHAPE_CreateLine(blocks->p->np->x, blocks->p->x, blocks->p->np->y, blocks->p->y);
+            //SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
+            SHAPE_FreePoints(line->p);
         }
 
         else if (blocks->id == 'Z')
         {
             ShapeLine* line = SHAPE_CreateLine(points->x, first_x, points->y, first_y);
             SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
+            SHAPE_FreePoints(line->p);
         }
 
         else if (blocks->id == 'C')
         {
-            float x1, x2, x3, y1, y2, y3;
-            x3 = blocks->p->x; y3 = blocks->p->y;
-            x2 = blocks->p->np->x; y2 = blocks->p->np->y;
-            x1 = blocks->p->np->np->x; y1 = blocks->p->np->np->y;
+            float x1, x2, x3, x4, y1, y2, y3, y4;
+            x4 = blocks->p->x; y4 = blocks->p->y;
+            x3 = blocks->p->np->x; y3 = blocks->p->np->y;
+            x2 = blocks->p->np->np->x; y2 = blocks->p->np->np->y;
+            x1 = blocks->p->np->np->np->x; y1 = blocks->p->np->np->np->y;
 
-            ShapeCubicBezier* cubic_bezier = SHAPE_CreateCubicBezier(first_x, first_y, x1, y1, x2, y2, x3, y3);
+
+            ShapeCubicBezier* cubic_bezier = SHAPE_CreateCubicBezier(x1, y1, x2, y2, x3, y3, x4, y4);
             ShapePoint* cubic_bezier_points = SHAPE_GetPointsFromCubicBezier(cubic_bezier, step);
-        
             SHAPE_AddPoints(&points, cubic_bezier_points);
+            SHAPE_FreePoints(cubic_bezier->p);
+
         }
 
+        else if (blocks->id == 'Q')
+        {
+            float x1, x2, y1, y2;
+            x2 = blocks->p->x; y2 = blocks->p->y;
+            x1 = blocks->p->np->x; y1 = blocks->p->np->y;
+
+            ShapeQuadraticBezier* quadratic_bezier = SHAPE_CreateQuadraticBezier(first_x, first_y, x1, y1, x2, y2);
+            ShapePoint* quadratic_bezier_points = SHAPE_GetPointsFromQuadraticBezier(quadratic_bezier, step);
+            SHAPE_AddPoints(&points, quadratic_bezier_points);
+            SHAPE_FreePoints(quadratic_bezier->p);
+
+        }
 
         blocks = blocks->nb;
     }
@@ -659,8 +858,8 @@ void SHAPE_PathAddBlock(ShapePathblock** blocks, ShapePathblock* block_to_add)
 {
     if (!blocks)
         return;
-    
-    // If the queu is empty  
+
+    // If the queu is empty
     if (!(*blocks)) {
         (*blocks) = block_to_add;
         return;
@@ -690,7 +889,7 @@ void SHAPE_AddPoint(ShapePoint** points, ShapePoint* point_to_add)
 
 void SHAPE_AddPoints(ShapePoint** points, ShapePoint* points_to_add)
 {
-    if (!points)
+    if (!points || !points_to_add)
         return;
 
     if (!*points)
@@ -710,7 +909,7 @@ void SHAPE_AddPoints(ShapePoint** points, ShapePoint* points_to_add)
     *points = points_to_add;
 
 
-    }
+}
 
 // Return mathematical coordinates of points making the abstract shape
 ShapePoint* SHAPE_GetPointsFromAbstractShape(ShapeAbstract* abstract_shape, float step)
@@ -736,7 +935,7 @@ ShapePoint* SHAPE_GetPointsFromAbstractShape(ShapeAbstract* abstract_shape, floa
 
     else if (!strcmp(shape_type, "polygon"))
         return SHAPE_GetPointsFromPolygon(abstract_shape->data, step);
-    
+
     else if (!strcmp(shape_type, "path"))
         return SHAPE_GetPointsFromPathblocks(abstract_shape->data, step);
 }
@@ -747,7 +946,8 @@ ShapePoint* SHAPE_GetPointsFromAbstractShapes(ShapeAbstract* abstract_shape_stac
 
     while (abstract_shape_stack)
     {
-        SHAPE_AddPoints(&points, SHAPE_GetPointsFromAbstractShape(abstract_shape_stack, step));
+        ShapePoint* point_to_add = SHAPE_GetPointsFromAbstractShape(abstract_shape_stack, step);
+        SHAPE_AddPoints(&points, point_to_add);
         abstract_shape_stack = abstract_shape_stack->next;
     }
 
