@@ -13,18 +13,25 @@ typedef struct Image_s
 
 }Image;
 
+typedef struct Textures_s
+{
+    int b;
+
+}Textures;
+
 typedef struct MenuTextures_s
 {
-    Image *image;
-    char *name[128];
-    struct MenuTextures_s* m_next;
+    
+    Image* image;
+    char* name[128];
+    struct MenuTextures* m_next;
 
 } MenuTextures;
 
 
-void Create_Menu(MenuTextures** textures, SDL_Renderer* renderer, char* path,char* name,  int x, int y, int h, int w);
-MenuTextures** Insert(MenuTextures** textures, MenuTextures* tmp);
-void Printf(MenuTextures* textures);
+void Create_Menu(MenuTextures** textures, SDL_Renderer* renderer, char* path,char *name, int x, int y, int h, int w);
+MenuTextures* CreateMenuTexture(SDL_Renderer*  renderer, char*  path, char*  name, int x, int y, int h, int w);
+
 
 MenuTextures* MenuTextures_new(SDL_Renderer* renderer);
 void MenuTextures_free(MenuTextures* textures);

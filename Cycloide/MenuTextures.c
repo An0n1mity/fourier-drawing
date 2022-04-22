@@ -6,54 +6,48 @@
 #include "SDL_image.h"
 
 
-void Create_Menu(MenuTextures **textures, SDL_Renderer* renderer, char* path,char* name, int x, int y, int h, int w) {
+MenuTextures* CreateMenuTexture(SDL_Renderer* renderer, char* path, char* name, int x, int y, int h, int w) {
+    MenuTextures* texture = (MenuTextures*)calloc(1, sizeof(MenuTextures));
+    texture->image = (Image*)calloc(1, sizeof(Image));
+    texture->image->r = (SDL_Rect*)calloc(1, sizeof(SDL_Rect));
 
-    MenuTextures* tmp = (MenuTextures*)calloc(1, sizeof(MenuTextures));
-    tmp->image = (Image*)calloc(1, sizeof(Image));
-    tmp->image->r = (SDL_Rect*)calloc(1, sizeof(SDL_Rect));
+    int i = 0;
+    while (name[i]) {
+        texture->name[i] = name[i];
+        i++;
+    }
 
-    tmp->name[128] = name;
-    
-    
-    tmp->image->s = IMG_Load(path);
-    tmp->image->t = SDL_CreateTextureFromSurface(renderer, tmp->image->s);
-    SDL_FreeSurface(tmp->image->s);
+    texture->image->s = IMG_Load(path);
+    texture->image->t = SDL_CreateTextureFromSurface(renderer, texture->image->s);
+    SDL_FreeSurface(texture->image->s);
 
-    
-    tmp->image->r->x = x;
-    tmp->image->r->y = y;
-    tmp->image->r->h = h;
-    tmp->image->r->w = w;
+    texture->image->r->x = x;
+    texture->image->r->y = y;
+    texture->image->r->h = h;
+    texture->image->r->w = w;
 
-    
-    textures = Insert(textures, tmp);
+    return texture;
     
 }
 
-MenuTextures** Insert(MenuTextures** textures, MenuTextures* tmp) {
-    MenuTextures** tmp2 = textures;
-    int a = 0;
-    while (tmp2) {
-        tmp2 = (*tmp2)->m_next;
-        a++;
+void Create_Menu(MenuTextures** textures, SDL_Renderer* renderer, char* path, char* name, int x, int y, int h, int w)
+{
+    // If no textures were created
+    if (!*textures)
+    {
+        *textures = CreateMenuTexture(renderer, path, name, x, y, h, w);
+        return;
     }
-    while (a > 1) {
-        textures = (*textures)->m_next;
-        a--;
-    }
-   
-    textures = &tmp;
-    textures = (*textures)->m_next;
-    textures = (MenuTextures**)calloc(1, sizeof(MenuTextures*));
-    (*textures)->image = (Image*)calloc(1, sizeof(Image));
-    (*textures)->image->r = (SDL_Rect*)calloc(1, sizeof(SDL_Rect));
-    return textures;
+
+    // Stack adding
+    MenuTextures* texture_to_add = CreateMenuTexture(renderer, path, name, x, y, h, w);
+    texture_to_add->m_next = *textures;
+    *textures = texture_to_add;
 }
 
 MenuTextures* MenuTextures_new(SDL_Renderer* renderer) {
-    MenuTextures* textures = (MenuTextures*)calloc(1, sizeof(MenuTextures));
-    textures->image = (Image*)calloc(1, sizeof(Image));
-    textures->image->r = (SDL_Rect*)calloc(1, sizeof(SDL_Rect));
+    MenuTextures* textures = NULL;
+    
     
     Create_Menu(&textures, renderer, "../Assets/Images/Menu/rouleau.png","rouleau", 330, 0, 720, 50);
 
@@ -74,7 +68,7 @@ void Printf(MenuTextures* textures) {
     if (!textures)return;
 
     while (textures) {
-        printf("%s \n", textures->name);
+        //printf("%s \n", textures->name);
         textures = textures->m_next;
     }
 

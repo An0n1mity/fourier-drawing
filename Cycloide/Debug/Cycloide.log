@@ -1,7 +1,10 @@
 ﻿  MenuTextures.c
-C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\MenuTextures.c(37,31): warning C4047: '=' : les niveaux d'indirection de 'MenuTextures **' et de 'MenuTextures_s *' sont différents
-C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\MenuTextures.c(41,39): warning C4047: '=' : les niveaux d'indirection de 'MenuTextures **' et de 'MenuTextures_s *' sont différents
-C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\MenuTextures.c(46,35): warning C4047: '=' : les niveaux d'indirection de 'MenuTextures **' et de 'MenuTextures_s *' sont différents
-C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\MenuTextures.c(77,16): warning C4477: 'printf' : la chaîne de format '%s' nécessite un argument de type 'char *', mais l'argument variadique 1 est de type 'char **'
-C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\MenuTextures.c(87,34): warning C4047: '!=' : les niveaux d'indirection de 'char *' et de 'char *[128]' sont différents
+C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\MenuTextures.c(16,35): warning C4047: '=' : les niveaux d'indirection de 'char *' et de 'char' sont différents
+C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\MenuTextures.c(44,39): warning C4133: '=' : types incompatibles - de 'MenuTextures *' à 'MenuTextures *'
+C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\MenuTextures.c(72,36): warning C4133: '=' : types incompatibles - de 'MenuTextures *' à 'MenuTextures *'
+C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\MenuTextures.c(81,34): warning C4047: '!=' : les niveaux d'indirection de 'char *' et de 'char *[128]' sont différents
+C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\MenuTextures.c(82,36): warning C4133: '=' : types incompatibles - de 'MenuTextures *' à 'MenuTextures *'
+C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\MenuTextures.c(103,36): warning C4133: '=' : types incompatibles - de 'MenuTextures *' à 'MenuTextures *'
+C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\MenuTextures.c(116,26): warning C4133: '=' : types incompatibles - de 'MenuTextures *' à 'MenuTextures *'
+C:\Users\Gabriel\Documents\GitHub\cycloide\Cycloide\MenuTextures.c(111,1): warning C4133: 'initialisation' : types incompatibles - de 'MenuTextures *' à 'MenuTextures *'
   Cycloide.vcxproj -> C:\Users\Gabriel\Documents\GitHub\cycloide\Debug\Cycloide.exe

@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
 
 	//Initialisation Textures
 	textures = MenuTextures_new(renderer);
-	Printf(textures);
+	Found(textures, "rouleau");
 
 	//int var_w = textures->rouleau->r->w;
 	//int var_h = textures->rouleau->r->h;
