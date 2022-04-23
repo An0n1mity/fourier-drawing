@@ -1,16 +1,21 @@
-#ifndef SVG_SHAPES_H
-#define SVG_SHAPES_H
+//
+// Created by biist on 18/04/2022.
+//
+
+#ifndef CYCLOIDE_SHAPES_H
+#define CYCLOIDE_SHAPES_H
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
 #include <math.h>
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
-
-
+#include <corecrt.h>
 #include "svgparser.h"
+#include "kiss_fftr.h"
 
 typedef struct ShapeAbstract_s ShapeAbstract;
 typedef struct ShapeRectangle_s ShapeRectangle;
@@ -19,9 +24,10 @@ typedef struct ShapeEllipse_s ShapeEllipse;
 typedef struct ShapeLine_s ShapeLine;
 typedef struct ShapePolyline_s ShapePolyline;
 typedef struct ShapePolygon_s ShapePolygon;
+typedef struct ShapeCubicBezier_s ShapeCubicBezier;
 typedef struct ShapePoint_s ShapePoint;
 typedef struct ShapePathblock_s ShapePathblock;
-typedef struct ShapePath_s ShapePath;
+typedef struct ShapeQuadraticBezier_s ShapeQuadraticBezier;
 
 
 /**
@@ -45,7 +51,7 @@ struct ShapePoint_s {
 
 /**
  * @brief Mathematical representation of rectangles
- * Rectangles are defined by their position, width, and height. 
+ * Rectangles are defined by their position, width, and height.
  * Rectangles may have their corners rounded.
  */
 struct ShapeRectangle_s {
@@ -68,7 +74,7 @@ struct ShapeCircle_s {
 
 /**
  * @brief Mathematical representation of ellipses
- * Ellipse is closely related to a circle. 
+ * Ellipse is closely related to a circle.
  * The difference is that an ellipse has an x and a y radius that differs from each other.
  */
 struct ShapeEllipse_s {
@@ -103,6 +109,14 @@ struct ShapePolygon_s {
     struct ShapePoint_s* p;
 };
 
+struct ShapeCubicBezier_s{
+    struct ShapePoint_s* p;
+};
+
+struct ShapeQuadraticBezier_s {
+    struct ShapePoint_s* p;
+};
+
 /**
  * @brief Used with set of command and points
  */
@@ -113,32 +127,31 @@ struct ShapePathblock_s {
     struct ShapePathblock_s* nb; ///< linked list of blocks
 };
 
-/**
- * @brief Used to represent any types of shapes
- * A path is the generic element to define a shape. 
- * All the basic shapes can be created with a path element.
- */
-struct ShapePath_s {
-    struct ShapePathblock_s* b; ///< linked list of paths blocks
-};
+struct {
+    kiss_fft_cpx complex;
+    int frequency;
+    long double amplitude;
+    float phase;
+}typedef DFT;
+
 
 /**
  * @brief Create an abstract shape based on is type and data
  * \param[in] type of the abstract shape exemple : "circle ..."
  * \param[in] data of the absract shape
- * @return 
+ * @return
 */
 ShapeAbstract* SHAPE_CreateAbstract(char* type, void* data);
 /**
  * @brief Create an abstract shape from parsing an SVG
  * \param[in] the stack of svg shapes, shapes define by svg attributes
- * @return 
+ * @return
 */
 ShapeAbstract* SHAPE_CreateAbstractFromSVG(svgShapeStack* svg_shapes);
 /**
  * @brief Add an abstract shape to the current stack of abstract shapes
  * \param[in] the stack of abstract shapes
- * @param rectangle 
+ * @param rectangle
 */
 void SHAPE_AddAbstractShapeToAbstractShapeStack(ShapeAbstract** abstract_shape_stack, ShapeAbstract* abstract_shape_to_add);
 void SHAPE_FreeAbstractShape(ShapeAbstract* abstract_shapes);
@@ -180,12 +193,17 @@ ShapePoint* SHAPE_GetPointsFromPolygon(ShapePolygon* polygon, float step);
  * \param[in] y coordinate of point to add
  * \return point_to_add
  */
+
+ShapeCubicBezier* SHAPE_CreateCubicBezier(float x0, float y0, float x1, float y1, float x2, float y2, float x3, float y3);
+ShapePoint* SHAPE_GetPointsFromCubicBezier(ShapeCubicBezier* cubic_bezier, float step);
+ShapeQuadraticBezier* SHAPE_CreateQuadraticBezier(float x0, float y0, float x1, float y1, float x2, float y2);
+ShapePoint* SHAPE_GetPointsFromQuadraticBezier(ShapeQuadraticBezier* quadratic_bezier, float step);
 void SHAPE_AddPoint(ShapePoint** points, ShapePoint* point_to_add);
- /**
- * @brief Create a path based on string of commands/points coordinates
- * \param[in] command_points command/points for block generation exemple: "M x1 y1 x2 y2 ..."
- * \return path
- */
+/**
+* @brief Create a path based on string of commands/points coordinates
+* \param[in] command_points command/points for block generation exemple: "M x1 y1 x2 y2 ..."
+* \return path
+*/
 void SHAPE_AddPoints(ShapePoint** points, ShapePoint* points_to_add);
 //ShapePath* CreatePathFromSVGPath(svgAttributeStack* path_attribute);
 void SHAPE_PathAddBlock(ShapePathblock** block, ShapePathblock* block_to_add);
@@ -197,4 +215,12 @@ ShapePoint* SHAPE_GetPointsFromPathblocks(ShapePathblock* blocks, float step);
 
 ShapePoint* SHAPE_GetPointsFromAbstractShape(ShapeAbstract* abstract_shape, float step);
 ShapePoint* SHAPE_GetPointsFromAbstractShapes(ShapeAbstract* abstract_shape_stack, float step);
-#endif //SVG_PARSER_SHAPES_H
+size_t SHAPE_GetNumberOfPoints(ShapePoint* points);
+ShapePoint* SHAPE_ListOfPointsToArray(ShapePoint* points, size_t size);
+double* SHAPE_GetXOfPoints(ShapePoint* points, size_t size);
+double* SHAPE_GetYOfPoints(ShapePoint* points, size_t size);
+DFT* SHAPE_GetDFTOfRealPointsY(ShapePoint* real_points, size_t size);
+DFT* SHAPE_GetDFTOfRealPointsX(ShapePoint* real_points, size_t size);
+void SHAPE_FreePoints(ShapePoint* points);
+
+#endif //CYCLOIDE_SHAPES_H

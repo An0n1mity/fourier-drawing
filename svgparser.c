@@ -1,22 +1,24 @@
-#define _CRT_SECURE_NO_WARNINGS
+//
+// Created by biist on 18/04/2022.
+//
 
 #include "svgparser.h"
 
 xmlDocPtr PARSER_LoadSVG(char* svg_path)
 {
-	xmlDocPtr svg_tree;
-	svg_tree = xmlReadFile(svg_path, NULL, 0);
+    xmlDocPtr svg_tree;
+    svg_tree = xmlReadFile(svg_path, NULL, 0);
     if (!svg_tree) {
         fprintf(stderr, "Error : File %s could not be load\n", svg_path);
         return NULL;
     }
 
-	return svg_tree;
+    return svg_tree;
 }
 
 void PARSER_FreeSVG(xmlDocPtr xml_tree)
 {
-	xmlFreeDoc(xml_tree);
+    xmlFreeDoc(xml_tree);
 }
 
 svgShapeStack* PARSER_GetShapesFromSVG(xmlDocPtr xml_tree)
@@ -46,11 +48,16 @@ void PARSER_ReadShapesFromXMLTree(svgShapeStack** svg_shape_stack, xmlNode* xml_
             (strcmp(xml_root_node->name, "ellipse") == 0) ||
             (strcmp(xml_root_node->name, "line") == 0) ||
             (strcmp(xml_root_node->name, "polyline") == 0) ||
-            (strcmp(xml_root_node->name, "polygone") == 0) ||
+            (strcmp(xml_root_node->name, "polygon") == 0) ||
             (strcmp(xml_root_node->name, "path") == 0)
-            ) {
+                ) {
             svgShapeStack* svg_shape = (svgShapeStack*)calloc(sizeof(svgShapeStack), 1);
+#ifdef _WIN32
             svg_shape->name = _strdup(xml_root_node->name);
+#endif
+#ifdef __linux__
+            svg_shape->name = strdup(xml_root_node->name);
+#endif
             svg_shape->attributes = PARSER_GetAttributesFromXMLNode(xml_root_node);
             PARSER_AddShapeToStack(svg_shape_stack, svg_shape);
         }
@@ -89,7 +96,7 @@ svgAttributeStack* PARSER_GetAttributesFromXMLNode(xmlNode* xml_node)
     if (!xml_node)
     {
         fprintf(stderr, "Error : Argument shape_stack is void\n");
-        return;
+        return NULL;
     }
 
     svgAttributeStack* attributes = NULL;
@@ -133,15 +140,24 @@ void PARSER_ReadAttributesFromXMLNode(svgAttributeStack** svg_attribute_stack, x
         svgAttributeStack* attribute = (svgAttributeStack*)calloc(sizeof(svgAttributeStack), 1);
         if (!attribute)
             return;
-        
+
         attribute_key = xml_node->properties->name;
         attribute_value = xmlNodeListGetString(xml_node->doc, xml_node->properties->children, 1);
-        
-        if(attribute_key)
-            attribute->key = _strdup(attribute_key);
-        if(attribute_value)
-            attribute->value = _strdup(attribute_value);
 
+        if(attribute_key)
+#ifdef _WIN32
+            attribute->key = _strdup(attribute_key);
+#endif
+#ifdef __linux__
+            attribute->key = strdup(attribute_key);
+#endif
+        if(attribute_value)
+#ifdef _WIN32
+        attribute->value = _strdup(attribute_value);
+#endif
+#ifdef __linux__
+        attribute->value = strdup(attribute_value);
+#endif
         PARSER_AddAttributesToStack(svg_attribute_stack, attribute);
 
         xml_node->properties = xml_node->properties->next;
