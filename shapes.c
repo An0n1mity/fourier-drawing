@@ -989,7 +989,7 @@ double* SHAPE_GetXOfPoints(ShapePoint* points, size_t size)
 {
     double* xs = malloc(sizeof(double)*size);
     for (size_t i = 0; i < size; ++i) {
-        xs[i] = 500 - points[i].x;
+        xs[i] = points[i].x;
     }
 
     return xs;
@@ -999,7 +999,7 @@ double* SHAPE_GetYOfPoints(ShapePoint* points, size_t size)
 {
     double* ys = malloc(sizeof(double)*size);
     for (size_t i = 0; i < size; ++i) {
-            ys[i] = 500 - points[i].y;
+            ys[i] = points[i].y;
     }
 
     return ys;
