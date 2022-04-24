@@ -161,6 +161,7 @@
     <ClCompile Include="BezierCurve.c" />
     <ClCompile Include="Camera.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="Menu.c" />
     <ClCompile Include="MenuTextures.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -171,6 +172,7 @@
   <ItemGroup>
     <ClInclude Include="BezierCurve.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="MenuTextures.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>

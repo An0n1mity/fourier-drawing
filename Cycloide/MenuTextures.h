@@ -13,51 +13,23 @@ typedef struct Image_s
     char* name[128];
 
 }Image;
-/*
-typedef struct Textures_s
-{
-    int b;
-
-}Textures;
 
 typedef struct MenuTextures_s
 {
-    
-    Image* image;
-    char* name[128];
-    struct MenuTextures* m_next;
-
-} MenuTextures;
-
-typedef struct Textures_s
-{
-    Image* image;
-    char* name[128];
-    struct MenuTextures* m_next;
-
-}Textures;
-
-typedef struct MenuTextures_s
-{
-    Textures* begin;
-
-} MenuTextures;
-*/
-typedef struct MenuTextures_s
-{
+    int hide;
     int nbImage;
     Image* list[5];
 
 } MenuTextures;
 
 
-void Create_Menu(MenuTextures** textures, SDL_Renderer* renderer, char* path,char *name, int x, int y, int h, int w);
-Image* CreateMenuTexture(SDL_Renderer*  renderer, char*  path, char*  name, int x, int y, int h, int w);
+void Create_Menu(MenuTextures** textures, SDL_Renderer* renderer, char* path, char* name, int x, int y, int h, int w);
+Image* CreateMenuTexture(SDL_Renderer* renderer, char* path, char* name, int x, int y, int h, int w);
 
 
 MenuTextures* MenuTextures_new(SDL_Renderer* renderer);
 void MenuTextures_free(MenuTextures* textures);
 void Image_free(Image* im);
-void Deroulement(MenuTextures* textures, bool rouleau, bool rouleau2);
 
-int Found(MenuTextures* textures, char *name);
+
+int Found(MenuTextures* textures, char* name);

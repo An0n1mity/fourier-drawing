@@ -7,9 +7,10 @@
 
 
 MenuTextures* MenuTextures_new(SDL_Renderer* renderer) {
-    MenuTextures* textures = (MenuTextures*)  calloc(1, sizeof(MenuTextures));
+    MenuTextures* textures = (MenuTextures*)calloc(1, sizeof(MenuTextures));
     textures->nbImage = 0;
-    
+    textures->hide = 0;
+
 
     Create_Menu(&textures, renderer, "../Assets/Images/Menu/rouleau.png", "rouleau", 330, 0, 720, 50);
 
@@ -40,19 +41,21 @@ void Create_Menu(MenuTextures** textures, SDL_Renderer* renderer, char* path, ch
 
     (*textures)->list[(*textures)->nbImage] = texture_to_add;
     (*textures)->nbImage += 1;
-    
+
 }
 
 Image* CreateMenuTexture(SDL_Renderer* renderer, char* path, char* name, int x, int y, int h, int w) {
     Image* texture = (Image*)calloc(1, sizeof(Image));
-
+    *texture->name = (char*)calloc(128, sizeof(char));
     texture->r = (SDL_Rect*)calloc(1, sizeof(SDL_Rect));
+
 
     int i = 0;
     while (name[i]) {
         texture->name[i] = name[i];
         i++;
     }
+    //printf("%s %s\n", texture->name, name);
 
     texture->s = IMG_Load(path);
     texture->t = SDL_CreateTextureFromSurface(renderer, texture->s);
@@ -64,7 +67,7 @@ Image* CreateMenuTexture(SDL_Renderer* renderer, char* path, char* name, int x, 
     texture->r->w = w;
 
 
-    
+
 
     return texture;
 
@@ -75,9 +78,9 @@ int Found(MenuTextures* texture, char* name) {
     if (!texture)return NULL;
     int i = 0;
     for (i; i <= texture->nbImage; i++) {
-        if (name = texture->list[i]->name) return i;
+        if (name == texture->list[i]->name) return i;
     }
-    
+
 
     return -1;
 }
@@ -88,13 +91,13 @@ void Image_free(Image* im) {
     SDL_DestroyTexture(im->t);
     SDL_FreeSurface(im->s);
     free(im->r);
-   
+
 }
 
 void render(SDL_Renderer* renderer, MenuTextures* texture) {
 
     if (texture == NULL)return;
-    
+
     for (int i = 0; i < texture->nbImage; i++) {
         SDL_RenderCopy(renderer, texture->list[i]->t, NULL, texture->list[i]->r);
     }
@@ -108,47 +111,8 @@ void MenuTextures_free(MenuTextures* texture) {
 
     for (int i = 0; i <= texture->nbImage; i++) {
         Image_free(texture->list[i]);
-        
+
     }
 
     free(texture);
-}
-
-
-
-void Deroulement(MenuTextures* textures, bool rouleau, bool rouleau2) {
-
-   /*
-    if (textures->rouleau->r->x < -10)
-        rouleau = false;
-
-    if (textures->rouleau->r->x > 330)
-        rouleau2 = false;
-
-    if (rouleau == true) {
-        printf("Je suis dans rouleau\n");
-        textures->rouleau->r->x -= 1;
-        textures->background->r->x -= 1;
-        if (textures->rouleau->r->x == (textures->cercle->r->x+ textures->segment->r->w)) {
-            textures->cercle->r->x -= 1;
-            textures->segment->r->x -= 1;
-            textures->point->r->x -= 1;
-        }
-        printf("%d \n", textures->rouleau->r->x);
-        
-    }
-    if (rouleau2 == true) {
-
-        printf("Je suis dans rouleau2\n");
-        textures->rouleau->r->x += 1;
-        textures->background->r->x += 1;
-        textures->cercle->r->x += 1;
-        textures->segment->r->x += 1;
-        textures->point->r->x += 1;
-
-      
-    }
-    
-    
-   */
 }
