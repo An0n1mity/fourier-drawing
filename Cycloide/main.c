@@ -15,6 +15,8 @@ int main(int argc, char* argv[])
 
 	Camera* camera = NULL;
 	camera = (Camera*)calloc(1, sizeof(Camera));
+	Camera* camera_statique = NULL;
+	camera_statique = (Camera*)calloc(1, sizeof(Camera));
 	MenuTextures* textures = NULL;
 	MenuTextures* textures_statique = NULL;
 
@@ -24,20 +26,18 @@ int main(int argc, char* argv[])
 	camera->screen->x = 0;
 	camera->screen->y = 0;
 
-	int screenw = camera->screen->w;
-	int screenh = camera->screen->h;
+	camera->precision = 100;
+	camera_statique->screen = (SDL_Rect*)calloc(1, sizeof(SDL_Rect));
+	camera_statique->screen->h = 720;
+	camera_statique->screen->w = 1024;
+	camera_statique->screen->x = 0;
+	camera_statique->screen->y = 0;
+
+	
+
 
 	SHAPE_Point test[4], testResult[4];
-	test[0].x = 50; test[0].y = 50;
-	test[1].x = 300; test[1].y = 10;
-	test[2].x = 0; test[2].y = 200;
-	test[3].x = 2000; test[3].y = 2000;
-	double** func = getBezierFunction(test[0], test[1], test[2], test[3]);
-
-	testResult[0] = getBezierPoint(func, 0.25);
-	testResult[1] = getBezierPoint(func, 0.5);
-	testResult[2] = getBezierPoint(func, 0.75);
-	testResult[3] = getBezierPoint(func, 1);
+	
 
 	if (!SDL_WasInit(SDL_INIT_EVERYTHING))
 	{
@@ -58,30 +58,28 @@ int main(int argc, char* argv[])
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
 
 	bool a = false;
-	bool rouleau = false;
-	bool rouleau2 = false;
-	int inc = 0;
-
+	
 	//Initialisation Caméra
-	camera->ratiox = 1;
-	camera->ratioy = 1;
+	
 	camera->ratioX = 1;
 	camera->ratioY = 1;
+
+	
 
 	//Initialisation Textures
 	textures = MenuTextures_new(renderer);
 	textures_statique = MenuTextures_new(renderer);
 
-	Found(textures, "rouleau");
+	bool changement = false;
 
+	float incr = 1;
+	float c = 0.1f;
+	camera->ratio = incr;
 
-
-	//Création Caméra
-	SDL_RenderSetScale(renderer, camera->ratiox, camera->ratioy);
-
+	
 	while (1)
 	{
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+		SDL_SetRenderDrawColor(renderer, 240, 240, 240, 255);
 		SDL_RenderClear(renderer);
 		SDL_Event event;
 
@@ -95,17 +93,21 @@ int main(int argc, char* argv[])
 				camera->xp = event.button.x;
 				camera->yp = event.button.y;
 
-				Interact(&textures, &textures_statique, camera);
+				Interact(&textures, &textures_statique, &camera);
 				printf("\n\n%d %d \n\n", camera->xp, camera->yp);
 
 				break;
 
 			case SDL_MOUSEBUTTONUP:
 				a = false;
+
+				if (event.motion.x <= 0) event.motion.x = 0;
+				if (event.motion.y <= 0) event.motion.y = 0;
+				if (event.motion.x >= 1024) event.motion.x = 1024;
+				if (event.motion.y >= 720) event.motion.y = 720;
 				camera->xp = event.motion.x;
 				camera->yp = event.motion.y;
-				Camera_ViewToWorld(&camera, screenw, screenh, 0);
-				Camera_ImageToWorld_deplacement(camera, &textures, &textures_statique);
+				Camera_ViewToWorld(&camera, camera_statique, &textures, 0);
 				break;
 
 			case SDL_MOUSEWHEEL:
@@ -114,15 +116,16 @@ int main(int argc, char* argv[])
 
 
 				if (wheel == -1) {
-					screenw += 50;
-					screenh += 50;
+					incr += c;
+					changement = true;
+					
 				}
 				if (wheel == 1) {
-					screenw -= 50;
-					screenh -= 50;
+					incr -= c;
+					changement = true;
 				}
-				Camera_ViewToWorld(&camera, screenw, screenh, 1);
-
+				if (incr <= 1)incr = 1;
+				
 				wheel = 0;
 				break;
 
@@ -133,10 +136,12 @@ int main(int argc, char* argv[])
 					exit(0);
 					break;
 				case SDLK_UP:
-					precision++;
+					camera->precision++;
+					printf("camera main =%d\n", camera->precision);
 					break;
 				case SDLK_DOWN:
-					precision -= precision > 1 ? 1 : 0;
+					camera->precision -= 1;
+					if (camera->precision <= 1)camera->precision = 1;
 					break;
 				case SDL_QUIT:
 					exit(0);
@@ -148,29 +153,44 @@ int main(int argc, char* argv[])
 			if (a == true) {
 				camera->x = camera->xp;
 				camera->y = camera->yp;
+				if (event.motion.x <= 0) event.motion.x = 0;
+				if (event.motion.y <= 0) event.motion.y = 0;
+				if (event.motion.x >= 1024) event.motion.x = 1024;
+				if (event.motion.y >= 720) event.motion.y = 720;
 				camera->xp = event.motion.x;
 				camera->yp = event.motion.y;
-				Camera_ViewToWorld(&camera, screenw, screenh, 0);
-				Camera_ImageToWorld_deplacement(camera, &textures, &textures_statique);
+				Camera_ViewToWorld(&camera, camera_statique, &textures, 0);
+				
 			}
-			Camera_ImageToWorld_swap(camera, &textures, &textures_statique);
-			SDL_RenderSetScale(renderer, camera->ratiox, camera->ratioy);
+			
+			
 			SDL_RenderSetViewport(renderer, camera->screen);
 		}
-		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+		test[0].x = 500 * incr; test[0].y = 500 * incr;
+		test[1].x = 500 * incr; test[1].y = 700 * incr;
+		test[2].x = 700 * incr; test[2].y = 500 * incr;
+		test[3].x = 500 * incr; test[3].y = 500 * incr;
+		double** func = getBezierFunction(test[0], test[1], test[2], test[3]);
+
+		
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		SDL_RenderDrawLineF(renderer, test[0].x, test[0].y, test[1].x, test[1].y);
 		SDL_RenderDrawLineF(renderer, test[1].x, test[1].y, test[2].x, test[2].y);
 		SDL_RenderDrawLineF(renderer, test[2].x, test[2].y, test[3].x, test[3].y);
 
-		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		SHAPE_Point lastPoint = test[0];
-		for (int i = 0; i <= precision; ++i)
+		for (int i = 0; i <= camera->precision; ++i)
 		{
-			SHAPE_Point current = getBezierPoint(func, (double)i / (double)precision);
+			SHAPE_Point current = getBezierPoint(func, (double)i / (double)camera->precision);
+			if (changement == true) {
+				camera->ratio = incr;
+				Camera_ViewToWorld(&camera, camera_statique, &textures, 1);
+				
+				changement = false;
+			}
 
-			Positionnement_Camera(camera, current);
-
-			SDL_RenderDrawLineF(renderer, lastPoint.x, lastPoint.y, current.x, current.y);
+			SDL_RenderDrawLineF(renderer, lastPoint.x , lastPoint.y , current.x , current.y );
 			lastPoint = current;
 		}
 
@@ -182,10 +202,11 @@ int main(int argc, char* argv[])
 
 		SDL_RenderPresent(renderer);
 		SDL_Delay(0);
+		freeBezierFunction(func);
 	}
 	MenuTextures_free(textures);
 	SDL_Quit();
-	freeBezierFunction(func);
+	
 	SDL_DestroyRenderer(renderer);
 
 }

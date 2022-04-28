@@ -4,6 +4,7 @@
 #include "MenuTextures.h"
 #include "SDL.h"
 #include "SDL_image.h"
+#include "Camera.h"
 
 
 MenuTextures* MenuTextures_new(SDL_Renderer* renderer) {
@@ -12,18 +13,22 @@ MenuTextures* MenuTextures_new(SDL_Renderer* renderer) {
     textures->hide = 0;
 
 
-    Create_Menu(&textures, renderer, "../Assets/Images/Menu/rouleau.png", "rouleau", 330, 0, 720, 50);
+    Create_Menu(&textures, renderer, "../Assets/Images/Menu/rouleau.png", "rouleau",  330,  0, 720, 50);
 
-    Create_Menu(&textures, renderer, "../Assets/Images/Menu/black_background.png", "background", 0, 0, 720, 330);
+    Create_Menu(&textures, renderer, "../Assets/Images/Menu/black_background.png", "background", 0,  0, 720, 330);
 
-    Create_Menu(&textures, renderer, "../Assets/Images/Menu/point.png", "point", 10, 100, 100, 100);
+    Create_Menu(&textures, renderer, "../Assets/Images/Menu/point.png", "point",  10,  100, 140, 140);
 
-    Create_Menu(&textures, renderer, "../Assets/Images/Menu/segment.png", "segment", 10, 210, 100, 100);
+    Create_Menu(&textures, renderer, "../Assets/Images/Menu/segment.png", "segment",  10,  250, 140, 140);
 
-    Create_Menu(&textures, renderer, "../Assets/Images/Menu/cercle.png", "cercle", 130, 100, 100, 100);
+    Create_Menu(&textures, renderer, "../Assets/Images/Menu/cercle.png", "cercle", 170,  100, 140, 140);
+
+    Create_Menu(&textures, renderer, "../Assets/Images/Menu/minus.png", "cercle",  100,  30, 50, 50);
+
+    Create_Menu(&textures, renderer, "../Assets/Images/Menu/plus.png", "cercle", 160, 30, 50, 50);
 
 
-
+    
     return textures;
 }
 

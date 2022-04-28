@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <stdbool.h>
+//#include "Camera.h"
 
 typedef struct Image_s
 {
@@ -18,7 +19,7 @@ typedef struct MenuTextures_s
 {
     int hide;
     int nbImage;
-    Image* list[5];
+    Image* list[7];
 
 } MenuTextures;
 
