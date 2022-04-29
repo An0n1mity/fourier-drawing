@@ -40,8 +40,9 @@ void Camera_ViewToWorld(Camera** camera,Camera* camera_statique, MenuTextures** 
 	(*camera)->screen->w = camera_statique->screen->w * (*camera)->ratio;
 	(*camera)->screen->h = camera_statique->screen->h * (*camera)->ratio;
 
-	if ((*textures)->list[0]->r->x + (*textures)->list[0]->r->w > (*camera)->screen->w) {
-		(*camera)->screen->w = (*textures)->list[0]->r->x + (*textures)->list[0]->r->w;
+	int largeur_x = (*textures)->list[8]->r->x + (*textures)->list[8]->r->w;
+	if ( largeur_x > (*camera)->screen->w) {
+		(*camera)->screen->w = largeur_x;
 	}
 	if ((*textures)->list[0]->r->y + (*textures)->list[0]->r->h > (*camera)->screen->h) {
 		(*camera)->screen->h = (*textures)->list[0]->r->y + (*textures)->list[0]->r->h;

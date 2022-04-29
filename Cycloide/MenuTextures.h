@@ -19,14 +19,14 @@ typedef struct MenuTextures_s
 {
     int hide;
     int nbImage;
-    Image* list[7];
+    int color;
+    Image* list[20];
 
 } MenuTextures;
 
 
 void Create_Menu(MenuTextures** textures, SDL_Renderer* renderer, char* path, char* name, int x, int y, int h, int w);
 Image* CreateMenuTexture(SDL_Renderer* renderer, char* path, char* name, int x, int y, int h, int w);
-
 
 MenuTextures* MenuTextures_new(SDL_Renderer* renderer);
 void MenuTextures_free(MenuTextures* textures);

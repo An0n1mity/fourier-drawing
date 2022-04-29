@@ -34,6 +34,32 @@ int main(int argc, char* argv[])
 	camera_statique->screen->y = 0;
 
 	
+	//Initialisation Couleur background 
+	camera->back = (Background*)calloc(1, sizeof(Background));
+	camera->back->clair.r = 240;
+	camera->back->clair.g = 240;
+	camera->back->clair.b = 240;
+	camera->back->clair.a = 255;
+
+	camera->back->sombre.r = 10;
+	camera->back->sombre.g = 10;
+	camera->back->sombre.b = 10;
+	camera->back->sombre.a = 255;
+
+	//Initialisation Couleur trait
+	camera->trait = (Background*)calloc(1, sizeof(Background));
+	camera->trait->clair.r = 0;
+	camera->trait->clair.g = 0;
+	camera->trait->clair.b = 0;
+	camera->trait->clair.a = 255;
+
+	camera->trait->sombre.r = 255;
+	camera->trait->sombre.g = 255;
+	camera->trait->sombre.b = 255;
+	camera->trait->sombre.a = 255;
+	
+
+
 
 
 	SHAPE_Point test[4], testResult[4];
@@ -79,7 +105,10 @@ int main(int argc, char* argv[])
 	
 	while (1)
 	{
-		SDL_SetRenderDrawColor(renderer, 240, 240, 240, 255);
+		if(textures->color == 0)
+			SDL_SetRenderDrawColor(renderer, camera->back->clair.r, camera->back->clair.g, camera->back->clair.b, camera->back->clair.a);
+		if(textures->color == 1)
+			SDL_SetRenderDrawColor(renderer, camera->back->sombre.r, camera->back->sombre.g, camera->back->sombre.b, camera->back->sombre.a);
 		SDL_RenderClear(renderer);
 		SDL_Event event;
 
@@ -93,7 +122,7 @@ int main(int argc, char* argv[])
 				camera->xp = event.button.x;
 				camera->yp = event.button.y;
 
-				Interact(&textures, &textures_statique, &camera);
+				Interact(&textures, &textures_statique, &camera, renderer);
 				printf("\n\n%d %d \n\n", camera->xp, camera->yp);
 
 				break;
@@ -172,13 +201,15 @@ int main(int argc, char* argv[])
 		test[3].x = 500 * incr; test[3].y = 500 * incr;
 		double** func = getBezierFunction(test[0], test[1], test[2], test[3]);
 
-		
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+		if(textures->color == 0)
+			SDL_SetRenderDrawColor(renderer, camera->trait->clair.r, camera->trait->clair.g, camera->trait->clair.b, camera->trait->clair.a);
+		if (textures->color == 1)
+			SDL_SetRenderDrawColor(renderer, camera->trait->sombre.r, camera->trait->sombre.g, camera->trait->sombre.b, camera->trait->sombre.a);
+
 		SDL_RenderDrawLineF(renderer, test[0].x, test[0].y, test[1].x, test[1].y);
 		SDL_RenderDrawLineF(renderer, test[1].x, test[1].y, test[2].x, test[2].y);
 		SDL_RenderDrawLineF(renderer, test[2].x, test[2].y, test[3].x, test[3].y);
 
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		SHAPE_Point lastPoint = test[0];
 		for (int i = 0; i <= camera->precision; ++i)
 		{
@@ -186,7 +217,6 @@ int main(int argc, char* argv[])
 			if (changement == true) {
 				camera->ratio = incr;
 				Camera_ViewToWorld(&camera, camera_statique, &textures, 1);
-				
 				changement = false;
 			}
 

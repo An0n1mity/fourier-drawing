@@ -7,6 +7,16 @@
 
 
 
+typedef struct ColorBackgroud_s {
+	int r, g, b;
+	int a;
+}ColorBackground;
+
+typedef struct Background_s {
+	ColorBackground clair;
+	ColorBackground sombre;
+}Background;
+
 
 typedef struct SCamera {
 	SDL_Rect* screen;
@@ -34,7 +44,8 @@ typedef struct SCamera {
 	float ratioX;
 	float ratioY;
 
-
+	Background* back;
+	Background* trait;
 
 }Camera;
 

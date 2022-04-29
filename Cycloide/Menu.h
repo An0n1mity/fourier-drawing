@@ -8,6 +8,7 @@
 #include "Camera.h"
 
 
-void Interact(MenuTextures** texture, MenuTextures** textures_statique, Camera** camera);
+void Interact(MenuTextures** texture, MenuTextures** textures_statique, Camera** camera, SDL_Renderer* renderer);
 
-void Deroulement(MenuTextures * *textures); 
+void Deroulement(MenuTextures **textures); 
+
