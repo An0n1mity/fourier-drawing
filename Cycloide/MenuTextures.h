@@ -11,7 +11,7 @@ typedef struct Image_s
     SDL_Texture* t;
     SDL_Surface* s;
     SDL_Rect* r;
-    char* name[128];
+    char* name;
 
 }Image;
 
@@ -20,6 +20,7 @@ typedef struct MenuTextures_s
     int hide;
     int nbImage;
     int color;
+    int replace;
     Image* list[20];
 
 } MenuTextures;

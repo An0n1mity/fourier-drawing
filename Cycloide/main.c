@@ -19,6 +19,7 @@ int main(int argc, char* argv[])
 	camera_statique = (Camera*)calloc(1, sizeof(Camera));
 	MenuTextures* textures = NULL;
 	MenuTextures* textures_statique = NULL;
+	MenuTextures* textures_backup = NULL;
 
 	camera->screen = (SDL_Rect*)calloc(1, sizeof(SDL_Rect));
 	camera->screen->h = 720;
@@ -95,6 +96,7 @@ int main(int argc, char* argv[])
 	//Initialisation Textures
 	textures = MenuTextures_new(renderer);
 	textures_statique = MenuTextures_new(renderer);
+	textures_backup = MenuTextures_new(renderer);
 
 	bool changement = false;
 
@@ -117,12 +119,19 @@ int main(int argc, char* argv[])
 			int wheel = 0;
 			switch (event.type)
 			{
+			case SDL_MOUSEMOTION:
+				
+				replace_texture(&textures, textures_statique,renderer, event.motion.x, event.motion.y);
+
+				break;
 			case SDL_MOUSEBUTTONDOWN:
 				a = true;
 				camera->xp = event.button.x;
 				camera->yp = event.button.y;
-
-				Interact(&textures, &textures_statique, &camera, renderer);
+				
+				Interact(&textures, textures_statique, &camera, renderer);
+				
+				
 				printf("\n\n%d %d \n\n", camera->xp, camera->yp);
 
 				break;
@@ -224,11 +233,7 @@ int main(int argc, char* argv[])
 			lastPoint = current;
 		}
 
-
 		render(renderer, textures);
-
-
-
 
 		SDL_RenderPresent(renderer);
 		SDL_Delay(0);

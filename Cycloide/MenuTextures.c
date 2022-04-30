@@ -12,9 +12,10 @@ MenuTextures* MenuTextures_new(SDL_Renderer* renderer) {
     textures->nbImage = 0;
     textures->hide = 0;
     textures->color = 0;
+    textures->replace = 0;
 
     //Clair
-    Create_Menu(&textures, renderer, "../Assets/Images/Menu/rouleau.png", "rouleau",  310,  0, 720, 50);
+    Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Barl_L1ght.png", "rouleau",  330,  0, 720, 50);
 
     Create_Menu(&textures, renderer, "../Assets/Images/Menu/white_background.png", "background", 0,  0, 720, 330);
 
@@ -26,30 +27,30 @@ MenuTextures* MenuTextures_new(SDL_Renderer* renderer) {
 
     Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Circle_L1ght.png", "cercle", 170, 250, 140, 140);
 
-    Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Min_L1ght.png", "1min",  100,  30, 50, 50);
+    Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Min_L1ght.png", "minus",  100,  30, 50, 50);
 
     Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Plu_L1ght.png", "plus", 160, 30, 50, 50);
 
-    Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Moo_D4rk.png", "moon", 900, 30, 70, 70);
+    Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Moo_L1ght.png", "moon", 900, 30, 70, 70);
 
     //Sombre
-    Create_Menu(&textures, renderer, "../Assets/Images/Menu/rouleau.png", "rouleau", 310, 0, 720, 50);
+    Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Barl_D4rk.png", "rouleau_s", 330, 0, 720, 50);
 
-    Create_Menu(&textures, renderer, "../Assets/Images/Menu/black_background.png", "background", 0, 0, 720, 330);
+    Create_Menu(&textures, renderer, "../Assets/Images/Menu/black_background.png", "background_s", 0, 0, 720, 330);
 
-    Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Cur_D4rk.png", "souris", 10, 100, 140, 140);
+    Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Cur_D4rk.png", "souris_s", 10, 100, 140, 140);
 
-    Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Dot_D4rk.png", "point", 10, 250, 140, 140);
+    Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Dot_D4rk.png", "point_s", 10, 250, 140, 140);
 
-    Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Seg_D4rk.png", "segment", 170, 100, 140, 140);
+    Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Seg_D4rk.png", "segment_s", 170, 100, 140, 140);
 
-    Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Cir_D4rk.png", "cercle", 170, 250, 140, 140);
+    Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Cir_D4rk.png", "cercle_s", 170, 250, 140, 140);
 
-    Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Min_D4rk.png", "1min", 100, 30, 50, 50);
+    Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Min_D4rk.png", "minus_s", 100, 30, 50, 50);
 
-    Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Plu_D4rk.png", "plus", 160, 30, 50, 50);
+    Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Plu_D4rk.png", "plus_s", 160, 30, 50, 50);
 
-    Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Sun_L1ght.png", "sun", 900, 30, 70, 70);
+    Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Sun_D4rk.png", "sun", 900, 30, 70, 70);
 
 
     
@@ -76,16 +77,17 @@ void Create_Menu(MenuTextures** textures, SDL_Renderer* renderer, char* path, ch
 
 Image* CreateMenuTexture(SDL_Renderer* renderer, char* path, char* name, int x, int y, int h, int w) {
     Image* texture = (Image*)calloc(1, sizeof(Image));
-    *texture->name = (char*)calloc(128, sizeof(char));
     texture->r = (SDL_Rect*)calloc(1, sizeof(SDL_Rect));
-
 
     int i = 0;
     while (name[i]) {
-        texture->name[i] = name[i];
         i++;
     }
-    //printf("%s %s\n", texture->name, name);
+
+    texture->name = (char*)calloc(i, sizeof(char));
+    for (int j = 0; j <= i; j++) {
+        texture->name[j] = name[j];
+    }
 
     texture->s = IMG_Load(path);
     texture->t = SDL_CreateTextureFromSurface(renderer, texture->s);
@@ -100,12 +102,28 @@ Image* CreateMenuTexture(SDL_Renderer* renderer, char* path, char* name, int x, 
 
 }
 
-int Found(MenuTextures* texture, char* name) {
+int Found(MenuTextures* textures, char* name) {
 
-    if (!texture)return NULL;
+    if (!textures)return NULL;
     int i = 0;
-    for (i; i <= texture->nbImage; i++) {
-        if (name == texture->list[i]->name) return i;
+    int a;
+
+    for (i; i < textures->nbImage; i++) {
+        int j = 0;
+        a = 0;
+        
+        while (name[j]) {
+            
+            if (textures->list[i]->name[j] != name[j]) {
+                a = 1;
+                break;
+            }
+            j++;
+
+        }
+        if (a == 0) {
+            return i;
+        }
     }
 
 
