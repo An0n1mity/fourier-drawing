@@ -26,8 +26,9 @@ int main(int argc, char* argv[])
 	camera->screen->w = 1024;
 	camera->screen->x = 0;
 	camera->screen->y = 0;
-
 	camera->precision = 100;
+
+	//Ne change jamais
 	camera_statique->screen = (SDL_Rect*)calloc(1, sizeof(SDL_Rect));
 	camera_statique->screen->h = 720;
 	camera_statique->screen->w = 1024;
@@ -95,13 +96,18 @@ int main(int argc, char* argv[])
 
 	//Initialisation Textures
 	textures = MenuTextures_new(renderer);
+
+	//Initialisation Textures qui ne change jamais
 	textures_statique = MenuTextures_new(renderer);
-	textures_backup = MenuTextures_new(renderer);
+	
 
 	bool changement = false;
 
+	
 	float incr = 1;
 	float c = 0.1f;
+
+	//Zoom de l'écran
 	camera->ratio = incr;
 
 	
@@ -120,9 +126,7 @@ int main(int argc, char* argv[])
 			switch (event.type)
 			{
 			case SDL_MOUSEMOTION:
-				
 				replace_texture(&textures, textures_statique,renderer, event.motion.x, event.motion.y);
-
 				break;
 			case SDL_MOUSEBUTTONDOWN:
 				a = true;
@@ -130,8 +134,6 @@ int main(int argc, char* argv[])
 				camera->yp = event.button.y;
 				
 				Interact(&textures, textures_statique, &camera, renderer);
-				
-				
 				printf("\n\n%d %d \n\n", camera->xp, camera->yp);
 
 				break;
@@ -143,6 +145,7 @@ int main(int argc, char* argv[])
 				if (event.motion.y <= 0) event.motion.y = 0;
 				if (event.motion.x >= 1024) event.motion.x = 1024;
 				if (event.motion.y >= 720) event.motion.y = 720;
+
 				camera->xp = event.motion.x;
 				camera->yp = event.motion.y;
 				Camera_ViewToWorld(&camera, camera_statique, &textures, 0);
@@ -151,7 +154,6 @@ int main(int argc, char* argv[])
 			case SDL_MOUSEWHEEL:
 
 				wheel = event.wheel.y;
-
 
 				if (wheel == -1) {
 					incr += c;
@@ -175,7 +177,6 @@ int main(int argc, char* argv[])
 					break;
 				case SDLK_UP:
 					camera->precision++;
-					printf("camera main =%d\n", camera->precision);
 					break;
 				case SDLK_DOWN:
 					camera->precision -= 1;
@@ -191,6 +192,7 @@ int main(int argc, char* argv[])
 			if (a == true) {
 				camera->x = camera->xp;
 				camera->y = camera->yp;
+
 				if (event.motion.x <= 0) event.motion.x = 0;
 				if (event.motion.y <= 0) event.motion.y = 0;
 				if (event.motion.x >= 1024) event.motion.x = 1024;
@@ -200,8 +202,6 @@ int main(int argc, char* argv[])
 				Camera_ViewToWorld(&camera, camera_statique, &textures, 0);
 				
 			}
-			
-			
 			SDL_RenderSetViewport(renderer, camera->screen);
 		}
 		test[0].x = 500 * incr; test[0].y = 500 * incr;

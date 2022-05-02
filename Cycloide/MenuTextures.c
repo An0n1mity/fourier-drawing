@@ -33,7 +33,8 @@ MenuTextures* MenuTextures_new(SDL_Renderer* renderer) {
 
     Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Moo_L1ght.png", "moon", 900, 30, 70, 70);
 
-    //Sombre
+    //Sombre si on veut commencer direct à sombre
+    /*
     Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Barl_D4rk.png", "rouleau_s", 330, 0, 720, 50);
 
     Create_Menu(&textures, renderer, "../Assets/Images/Menu/black_background.png", "background_s", 0, 0, 720, 330);
@@ -51,7 +52,7 @@ MenuTextures* MenuTextures_new(SDL_Renderer* renderer) {
     Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Plu_D4rk.png", "plus_s", 160, 30, 50, 50);
 
     Create_Menu(&textures, renderer, "../Assets/Images/Labeur_pas_paye/Sun_D4rk.png", "sun", 900, 30, 70, 70);
-
+    */
 
     
     return textures;
@@ -144,21 +145,13 @@ void render(SDL_Renderer* renderer, MenuTextures* texture) {
 
     if (texture == NULL)return;
 
-    int a = 0;
-    int b = 0;
 
-    if (texture->color == 0) {
-        a = 0;
-        b = texture->nbImage / 2;
-    }
-    if (texture->color == 1) {
-        a = texture->nbImage / 2;
-        b = texture->nbImage;
-    }
-    for (int i = a; i < b; i++) {
+    
+    for (int i = 0; i < texture->nbImage; i++) {
         SDL_RenderCopy(renderer, texture->list[i]->t, NULL, texture->list[i]->r);
     }
     SDL_RenderPresent(renderer);
+
 }
 
 void MenuTextures_free(MenuTextures* texture) {

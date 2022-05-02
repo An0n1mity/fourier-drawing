@@ -40,12 +40,19 @@ void Camera_ViewToWorld(Camera** camera,Camera* camera_statique, MenuTextures** 
 	(*camera)->screen->w = camera_statique->screen->w * (*camera)->ratio;
 	(*camera)->screen->h = camera_statique->screen->h * (*camera)->ratio;
 
-	int largeur_x = (*textures)->list[8]->r->x + (*textures)->list[8]->r->w;
+	//plus grand x 
+	int moon = Found(*textures, "moon");
+	//Plus petit x et y
+	int background = Found(*textures, "background");
+	//Plus grand y
+	int rouleau = Found(*textures, "rouleau");
+
+	int largeur_x = (*textures)->list[moon]->r->x + (*textures)->list[moon]->r->w;
+
 	if ( largeur_x > (*camera)->screen->w) {
 		(*camera)->screen->w = largeur_x;
 	}
-	if ((*textures)->list[0]->r->y + (*textures)->list[0]->r->h > (*camera)->screen->h) {
-		(*camera)->screen->h = (*textures)->list[0]->r->y + (*textures)->list[0]->r->h;
+	if ((*textures)->list[rouleau]->r->y + (*textures)->list[rouleau]->r->h > (*camera)->screen->h) {
+		(*camera)->screen->h = (*textures)->list[rouleau]->r->y + (*textures)->list[rouleau]->r->h;
 	}
-
 }

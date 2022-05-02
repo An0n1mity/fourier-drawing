@@ -20,3 +20,4 @@ void replace2(MenuTextures** textures, SDL_Renderer* renderer);
 
 void replace_surface(Image** image, SDL_Renderer* renderer, char* path);
 
+void Switch_Dark_White(MenuTextures** textures, SDL_Renderer* renderer);
