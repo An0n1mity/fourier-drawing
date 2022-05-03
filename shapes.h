@@ -13,7 +13,7 @@
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
-#include <corecrt.h>
+//#include <corecrt.h>
 #include "svgparser.h"
 #include "kiss_fftr.h"
 
@@ -210,11 +210,12 @@ void SHAPE_PathAddBlock(ShapePathblock** block, ShapePathblock* block_to_add);
 ShapePoint* SHAPE_CreatePoint(float x, float y);
 
 ShapePathblock* SHAPE_CreatePathBlock(char type, char* points);
+ShapePathblock* SHAPE_CreatePathBlockWithPoints(char type, ShapePoint* points);
 ShapePathblock* SHAPE_CreatePathblocksFromSVGPathblocks(svgAttributeStack* path_attribute);
 ShapePoint* SHAPE_GetPointsFromPathblocks(ShapePathblock* blocks, float step);
 
 ShapePoint* SHAPE_GetPointsFromAbstractShape(ShapeAbstract* abstract_shape, float step);
-ShapePoint* SHAPE_GetPointsFromAbstractShapes(ShapeAbstract* abstract_shape_stack, float step);
+ShapePoint* SHAPE_GetPointsFromAbstractShapes(ShapeAbstract* abstract_shape_stack, float step, size_t* nbpoints);
 size_t SHAPE_GetNumberOfPoints(ShapePoint* points);
 ShapePoint* SHAPE_ListOfPointsToArray(ShapePoint* points, size_t size);
 double* SHAPE_GetXOfPoints(ShapePoint* points, size_t size);
