@@ -3,6 +3,7 @@
 
 #include "BezierCurve.h"
 #include "complex.h"
+#include "SDL2/SDL.h"
 
 #define PI 3.14159265358979323846
 
@@ -24,7 +25,10 @@ struct Circle_s* createCircle(int p_index, SHAPE_Point p_position, struct Comple
 
 void addCircleList(struct Circle_s** p_list, struct Circle_s* p_toAdd);
 
-SHAPE_Point getPositionFromCircles(struct Circle_s* p_circleList, double p_time);
+SHAPE_Point getPositionFromCircles(struct Circle_s* p_circleList, double*** p_bezierList, int p_nbBezier, double p_time);
 
-struct Complex_s getCoeff(int index, struct Complex_s p_position);
+struct Complex_s getCircleCoeff(int index, double*** p_bezierList, int p_nbBezier);
+
+void drawCircle(SDL_Renderer* renderer, struct Circle_s p_circle);
+
 #endif // FOURIER_H

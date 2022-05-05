@@ -28,8 +28,8 @@ struct SHAPE_Abstract_s {
  * Points are stored as linked list
  */
 struct SHAPE_Point_s {
-    float x; ///< x coordinate
-    float y; ///< y coordinate
+    double x; ///< x coordinate
+    double y; ///< y coordinate
     struct SHAPE_Point_s* np; ///< pointer to the next point
 };
 

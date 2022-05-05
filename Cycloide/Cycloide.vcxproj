@@ -164,6 +164,7 @@
     <ClInclude Include="BezierCurve.h" />
     <ClInclude Include="complex.h" />
     <ClInclude Include="Fourier.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="shapes.h" />
     <ClInclude Include="svgparser.h" />
   </ItemGroup>
