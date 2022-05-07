@@ -43,20 +43,20 @@ void PARSER_ReadShapesFromXMLTree(svgShapeStack** svg_shape_stack, xmlNode* xml_
     }
     for (xml_root_node = xml_root_node->children; xml_root_node != NULL; xml_root_node = xml_root_node->next) {
         if (xml_root_node->type == XML_ELEMENT_NODE && (strcmp(xml_root_node->name, "rect") == 0) ||
-            (strcmp(xml_root_node->name, "circle") == 0) ||
-            (strcmp(xml_root_node->name, "point") == 0) ||
-            (strcmp(xml_root_node->name, "ellipse") == 0) ||
-            (strcmp(xml_root_node->name, "line") == 0) ||
-            (strcmp(xml_root_node->name, "polyline") == 0) ||
-            (strcmp(xml_root_node->name, "polygon") == 0) ||
-            (strcmp(xml_root_node->name, "path") == 0)
+            (strcmp((const char*)xml_root_node->name, "circle") == 0) ||
+            (strcmp((const char*)xml_root_node->name, "point") == 0) ||
+            (strcmp((const char*)xml_root_node->name, "ellipse") == 0) ||
+            (strcmp((const char*)xml_root_node->name, "line") == 0) ||
+            (strcmp((const char*)xml_root_node->name, "polyline") == 0) ||
+            (strcmp((const char*)xml_root_node->name, "polygon") == 0) ||
+            (strcmp((const char*)xml_root_node->name, "path") == 0)
                 ) {
             svgShapeStack* svg_shape = (svgShapeStack*)calloc(sizeof(svgShapeStack), 1);
 #ifdef _WIN32
             svg_shape->name = _strdup(xml_root_node->name);
 #endif
 #ifdef __linux__
-            svg_shape->name = strdup(xml_root_node->name);
+            svg_shape->name = strdup((const char*)xml_root_node->name);
 #endif
             svg_shape->attributes = PARSER_GetAttributesFromXMLNode(xml_root_node);
             PARSER_AddShapeToStack(svg_shape_stack, svg_shape);

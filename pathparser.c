@@ -4,6 +4,8 @@
 
 #include "pathparser.h"
 
+// TODO: Optimizing and checking memory leaks
+
 ShapePathblock* ParsePath(svgAttributeStack* path_attribute)
 {
     ShapePathblock* path_blocks = NULL;
@@ -73,8 +75,7 @@ ShapePathblock* ParsePath(svgAttributeStack* path_attribute)
                     l = 0;
                     SHAPE_PathAddBlock(&path_blocks, SHAPE_CreatePathBlockWithPoints(*delimiters[i], SHAPE_CreatePoint(x0, y0)));
 
-                    printf("\n%c %f %f\n", *delimiters[i], x0, y0);
-
+                    //printf("\n%c %f %f\n", *delimiters[i], x0, y0);
                 }
 
                 if((isdigit(path_attribute->value[k]) || (path_attribute->value[k] == '.') || path_attribute->value[k] == '-')) {
@@ -96,7 +97,7 @@ ShapePathblock* ParsePath(svgAttributeStack* path_attribute)
                     x0 = atof(x);
                     SHAPE_PathAddBlock(&path_blocks, SHAPE_CreatePathBlockWithPoints(*delimiters[i], SHAPE_CreatePoint(x0, 0)));
 
-                    printf("\n%c %f\n", *delimiters[i], x0);
+                    //printf("\n%c %f\n", *delimiters[i], x0);
                 }
 
                 if ((isdigit(path_attribute->value[k]) || (path_attribute->value[k] == '.') || (path_attribute->value[k] == '-')) && reading_x){
@@ -151,7 +152,7 @@ ShapePathblock* ParsePath(svgAttributeStack* path_attribute)
                     reading_x = true;
                     reading_y = false;
                     nb = 0;
-                    printf("\n%c %f %f, %f %f\n", *delimiters[i], x0, y0, x1, y1);
+                    //printf("\n%c %f %f, %f %f\n", *delimiters[i], x0, y0, x1, y1);
                 }
 
                 if ((isdigit(path_attribute->value[k]) || (path_attribute->value[k] == '.') || (path_attribute->value[k] == '-'))){
@@ -209,7 +210,7 @@ ShapePathblock* ParsePath(svgAttributeStack* path_attribute)
                     SHAPE_AddPoint(&p0, SHAPE_CreatePoint(x2, y2));
                     SHAPE_PathAddBlock(&path_blocks, SHAPE_CreatePathBlockWithPoints(*delimiters[i], p0));
 
-                    printf("\n%c %f %f, %f %f, %f %f\n", *delimiters[i], x0, y0, x1, y1, x2, y2);
+                    //printf("\n%c %f %f, %f %f, %f %f\n", *delimiters[i], x0, y0, x1, y1, x2, y2);
                     //reading_x = reading_y = false;
                     nb = 0;
                 }

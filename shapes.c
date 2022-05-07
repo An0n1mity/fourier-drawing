@@ -317,8 +317,10 @@ ShapeLine* SHAPE_CreateLineFromSVGLine(svgAttributeStack* attributes)
 
 void SHAPE_FreePoints(ShapePoint* points)
 {
-    ShapePoint* tmp = points;
+    if(!points)
+        return;
 
+        ShapePoint* tmp = points;
     while (points->np)
     {
         tmp = points;
@@ -742,10 +744,10 @@ ShapePathblock* SHAPE_CreatePathblocksFromSVGPathblocks(svgAttributeStack* path_
     //system(path);
 #endif
 #ifdef __linux__
-    FILE* process = popen(path, "r");
-    fgets(output, sizeof(output), process);
-    path_attribute->value = strdup(output),
-            pclose(process);
+    //FILE* process = popen(path, "r");
+    //fgets(output, sizeof(output), process);
+    //path_attribute->value = strdup(output),
+            //pclose(process);
     //system(path);
 #endif
     // Delimiter in our example start_char is M
@@ -803,116 +805,135 @@ ShapePoint* SHAPE_GetPointsFromPathblocks(ShapePathblock* blocks, float step)
     //blocks = blocks->nb;
 
     // Every time we register the current position on wich we land
-    ShapePoint* current_p = SHAPE_CreatePoint(0, 0);
+    ShapePoint current_p = {0};
 
     while (blocks)
     {
         if (blocks->id == 'M')
         {
             SHAPE_AddPoint(&points, SHAPE_CreatePoint(blocks->p->x, blocks->p->y));
-            memcpy(current_p, blocks->p, sizeof(ShapePoint));
+            memcpy(&current_p, blocks->p, sizeof(ShapePoint));
         }
 
         else if (blocks->id == 'm')
         {
             // Make a shift from current position by dx and dy and add it to the list
-            SHAPE_AddPoint(&points, SHAPE_CreatePoint(current_p->x + blocks->p->x, current_p->y + blocks->p->y));
+            SHAPE_AddPoint(&points, SHAPE_CreatePoint(current_p.x + blocks->p->x, current_p.y + blocks->p->y));
             // Update the current by the shift amount
-            current_p->x += blocks->p->x; current_p->y += blocks->p->y;
+            current_p.x += blocks->p->x; current_p.y += blocks->p->y;
         }
 
         else if (blocks->id == 'H')
         {
-            ShapeLine* line = SHAPE_CreateLine(current_p->x, blocks->p->x, current_p->y, current_p->y);
+            ShapeLine* line = SHAPE_CreateLine(current_p.x, blocks->p->x, current_p.y, current_p.y);
             SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
-            SHAPE_FreePoints(line->p);
 
-            current_p->x = blocks->p->x;
+            SHAPE_FreePoints(line->p);
+            free(line);
+
+            current_p.x = blocks->p->x;
         }
 
         else if (blocks->id == 'h')
         {
-            ShapeLine* line = SHAPE_CreateLine(current_p->x, current_p->x + blocks->p->x, current_p->y, current_p->y);
+            ShapeLine* line = SHAPE_CreateLine(current_p.x, current_p.x + blocks->p->x, current_p.y, current_p.y);
             SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
-            SHAPE_FreePoints(line->p);
 
-            current_p->x += blocks->p->x;
+            SHAPE_FreePoints(line->p);
+            free(line);
+
+            current_p.x += blocks->p->x;
         }
 
         else if (blocks->id == 'V')
         {
-            ShapeLine* line = SHAPE_CreateLine(current_p->x, current_p->x, current_p->y, blocks->p->x);
+            ShapeLine* line = SHAPE_CreateLine(current_p.x, current_p.x, current_p.y, blocks->p->x);
             SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
-            SHAPE_FreePoints(line->p);
 
-            current_p->y = blocks->p->x;
+            SHAPE_FreePoints(line->p);
+            free(line);
+
+            current_p.y = blocks->p->x;
         }
 
         else if (blocks->id == 'v')
         {
-            ShapeLine* line = SHAPE_CreateLine(current_p->x, current_p->x, current_p->y, current_p->y + blocks->p->x);
+            ShapeLine* line = SHAPE_CreateLine(current_p.x, current_p.x, current_p.y, current_p.y + blocks->p->x);
             SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
-            SHAPE_FreePoints(line->p);
 
-            current_p->y += blocks->p->x;
+            SHAPE_FreePoints(line->p);
+            free(line);
+
+            current_p.y += blocks->p->x;
         }
 
         else if (blocks->id == 'L')
         {
-            ShapeLine* line = SHAPE_CreateLine(current_p->x, blocks->p->x, current_p->y, blocks->p->y);
+            ShapeLine* line = SHAPE_CreateLine(current_p.x, blocks->p->x, current_p.y, blocks->p->y);
             SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
-            SHAPE_FreePoints(line->p);
 
-            current_p->x = blocks->p->x;
-            current_p->y = blocks->p->y;
+            SHAPE_FreePoints(line->p);
+            free(line);
+
+            current_p.x = blocks->p->x;
+            current_p.y = blocks->p->y;
         }
 
         else if (blocks->id == 'l')
         {
-            ShapeLine* line = SHAPE_CreateLine(current_p->x, current_p->x + blocks->p->x, current_p->y, current_p->y + blocks->p->y);
+            ShapeLine* line = SHAPE_CreateLine(current_p.x, current_p.x + blocks->p->x, current_p.y, current_p.y + blocks->p->y);
             SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
-            SHAPE_FreePoints(line->p);
 
-            current_p->x += blocks->p->x;
-            current_p->y += blocks->p->y;
+            SHAPE_FreePoints(line->p);
+            free(line);
+
+            current_p.x += blocks->p->x;
+            current_p.y += blocks->p->y;
         }
 
         else if (blocks->id == 'Z')
         {
             ShapeLine* line = SHAPE_CreateLine(points->x, first_x, points->y, first_y);
             SHAPE_AddPoints(&points, SHAPE_GetPointsFromLine(line, step));
+
             SHAPE_FreePoints(line->p);
+            free(line);
         }
 
         else if (blocks->id == 'S')
         {
-            ShapePoint v = {current_p->x - control_point.x , current_p->y - control_point.y};
-            ShapePoint* c1 = SHAPE_CreatePoint(2*v.x + current_p->x, 2*v.y + current_p->y);
-            ShapePoint* c2 = SHAPE_CreatePoint(blocks->p->np->x, blocks->p->np->y);
-            ShapePoint* e = SHAPE_CreatePoint(blocks->p->x, blocks->p->y);
+            ShapePoint v = {current_p.x - control_point.x , current_p.y - control_point.y};
+            ShapePoint c1 = {2*v.x + current_p.x, 2*v.y + current_p.y};
+            ShapePoint c2 = {blocks->p->np->x, blocks->p->np->y};
+            ShapePoint e = {blocks->p->x, blocks->p->y};
 
-            ShapeCubicBezier* cubic_bezier = SHAPE_CreateCubicBezier(current_p->x, current_p->y, c1->x, c1->y, c2->x, c2->y, e->x, e->y);
+            ShapeCubicBezier* cubic_bezier = SHAPE_CreateCubicBezier(current_p.x, current_p.y, c1.x, c1.y, c2.x, c2.y, e.x, e.y);
             ShapePoint* cubic_bezier_points = SHAPE_GetPointsFromCubicBezier(cubic_bezier, step);
+
             SHAPE_AddPoints(&points, cubic_bezier_points);
+            SHAPE_FreePoints(cubic_bezier->p);
+            free(cubic_bezier);
 
-            memcpy(current_p, e, sizeof(ShapePoint));
-            memcpy(&control_point, c2, sizeof(ShapePoint));
-
+            memcpy(&current_p, &e, sizeof(ShapePoint));
+            memcpy(&control_point, &c2, sizeof(ShapePoint));
         }
 
         else if (blocks->id == 's')
         {
-            ShapePoint v = {current_p->x - control_point.x , current_p->y - control_point.y};
-            ShapePoint* c1 = SHAPE_CreatePoint(2*v.x + current_p->x, 2*v.y + current_p->y);
-            ShapePoint* c2 = SHAPE_CreatePoint(blocks->p->np->x + current_p->x, blocks->p->np->y + current_p->y);
-            ShapePoint* e = SHAPE_CreatePoint(blocks->p->x + current_p->x, blocks->p->y + current_p->y);
+            ShapePoint v = {current_p.x - control_point.x , current_p.y - control_point.y};
+            ShapePoint c1 = {2*v.x + current_p.x, 2*v.y + current_p.y};
+            ShapePoint c2 = {blocks->p->np->x + current_p.x, blocks->p->np->y + current_p.y};
+            ShapePoint e = {blocks->p->x + current_p.x, blocks->p->y + current_p.y};
 
-            ShapeCubicBezier* cubic_bezier = SHAPE_CreateCubicBezier(current_p->x, current_p->y, c1->x, c1->y, c2->x, c2->y, e->x, e->y);
+            ShapeCubicBezier* cubic_bezier = SHAPE_CreateCubicBezier(current_p.x, current_p.y, c1.x, c1.y, c2.x, c2.y, e.x, e.y);
             ShapePoint* cubic_bezier_points = SHAPE_GetPointsFromCubicBezier(cubic_bezier, step);
             SHAPE_AddPoints(&points, cubic_bezier_points);
 
-            memcpy(current_p, e, sizeof(ShapePoint));
-            memcpy(&control_point, c2, sizeof(ShapePoint));
+            SHAPE_FreePoints(cubic_bezier->p);
+            free(cubic_bezier);
+
+            memcpy(&current_p, &e, sizeof(ShapePoint));
+            memcpy(&control_point, &c2, sizeof(ShapePoint));
 
         }
 
@@ -931,15 +952,17 @@ ShapePoint* SHAPE_GetPointsFromPathblocks(ShapePathblock* blocks, float step)
             x2 = blocks->p->x;                     y2 = blocks->p->y;
 
             //memcpy(&control_point, blocks->p->np, sizeof(ShapePoint));
-            control_point.x = x1 + current_p->x;
-            control_point.y = y1 + current_p->y;
+            control_point.x = x1 + current_p.x;
+            control_point.y = y1 + current_p.y;
 
-            ShapeCubicBezier* cubic_bezier = SHAPE_CreateCubicBezier(current_p->x, current_p->y, current_p->x+x0, current_p->y+y0, current_p->x+x1, current_p->y+y1, current_p->x+x2, current_p->y+y2);
+            ShapeCubicBezier* cubic_bezier = SHAPE_CreateCubicBezier(current_p.x, current_p.y, current_p.x+x0, current_p.y+y0, current_p.x+x1, current_p.y+y1, current_p.x+x2, current_p.y+y2);
             ShapePoint* cubic_bezier_points = SHAPE_GetPointsFromCubicBezier(cubic_bezier, step);
+
             SHAPE_AddPoints(&points, cubic_bezier_points);
             SHAPE_FreePoints(cubic_bezier->p);
+            free(cubic_bezier);
 
-            current_p->x += x2; current_p->y += y2;
+            current_p.x += x2; current_p.y += y2;
 
         }
 
@@ -957,13 +980,16 @@ ShapePoint* SHAPE_GetPointsFromPathblocks(ShapePathblock* blocks, float step)
             x1 = blocks->p->np->x;                 y1 = blocks->p->np->y;
             x2 = blocks->p->x;                     y2 = blocks->p->y;
 
-            ShapeCubicBezier* cubic_bezier = SHAPE_CreateCubicBezier(current_p->x, current_p->y, x0, y0, x1, y1, x2, y2);
+            ShapeCubicBezier* cubic_bezier = SHAPE_CreateCubicBezier(current_p.x, current_p.y, x0, y0, x1, y1, x2, y2);
             ShapePoint* cubic_bezier_points = SHAPE_GetPointsFromCubicBezier(cubic_bezier, step);
             SHAPE_AddPoints(&points, cubic_bezier_points);
+
             SHAPE_FreePoints(cubic_bezier->p);
 
             memcpy(&control_point, blocks->p->np, sizeof(ShapePoint));
-            current_p->x = x2; current_p->y = y2;
+            free(cubic_bezier);
+
+            current_p.x = x2; current_p.y = y2;
 
         }
 
@@ -975,8 +1001,11 @@ ShapePoint* SHAPE_GetPointsFromPathblocks(ShapePathblock* blocks, float step)
 
             ShapeQuadraticBezier* quadratic_bezier = SHAPE_CreateQuadraticBezier(first_x, first_y, x1, y1, x2, y2);
             ShapePoint* quadratic_bezier_points = SHAPE_GetPointsFromQuadraticBezier(quadratic_bezier, step);
+
             SHAPE_AddPoints(&points, quadratic_bezier_points);
             SHAPE_FreePoints(quadratic_bezier->p);
+
+            free(quadratic_bezier);
 
         }
 
@@ -1008,7 +1037,7 @@ void SHAPE_PathAddBlock(ShapePathblock** blocks, ShapePathblock* block_to_add)
 
 void SHAPE_AddPoint(ShapePoint** points, ShapePoint* point_to_add)
 {
-    if (!points)
+    if (!points || !point_to_add)
         return;
 
     if (!*points)

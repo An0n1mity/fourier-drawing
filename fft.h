@@ -7,9 +7,16 @@
 
 #include "shapes.h"
 
+struct FFT_s{
+    double amplitude;
+    double phase;
+    size_t frequency;
+};
+
 /*
  * Return the coefficent of the DFT from abstract shapes stack
  */
-DFT* GetDFTOfAbstractShapes(ShapeAbstract* abstract_shapes);
+kiss_fft_cpx* GetComplexArrayFromPoints(ShapePoint* points, size_t nbpoints);
+struct FFT_s* GetFFTOfComplexArray(kiss_fft_cpx* complex_array, size_t nbcomplex);
 
 #endif //CYCLOIDE_FFT_H
