@@ -194,12 +194,14 @@ int main(int argc, char** argv) {
     GtkFileChooserButton* file_chooser_button = (GtkFileChooserButton *) gtk_builder_get_object (builder, "file_chooser");
     GtkScale* precision_scale = (GtkScale *) gtk_builder_get_object (builder, "precision_scale");
     GtkDrawingArea* drawing_area = (GtkDrawingArea *) gtk_builder_get_object (builder, "drawing_area");
+    GtkCheckButton* svg_check_button = (GtkCheckButton *) gtk_builder_get_object (builder, "svg_check_button");
     user_data.drawing_area = drawing_area;
 
-    g_timeout_add (1 /* milliseconds */, ForceRenderUpdate, &user_data);
+    g_timeout_add (10 /* milliseconds */, ForceRenderUpdate, &user_data);
     g_signal_connect (G_OBJECT (file_chooser_button), "selection-changed", G_CALLBACK (GetFileNameFromFileChooser), &user_data);
     g_signal_connect(G_OBJECT(precision_scale), "value_changed", G_CALLBACK( GetPrecisionFromScale), &user_data);
     g_signal_connect(G_OBJECT(drawing_area), "draw", G_CALLBACK(DrawOnScreen), &user_data);
+    g_signal_connect(G_OBJECT(svg_check_button), "clicked", G_CALLBACK(SVGCheckButton), &user_data);
 
     gtk_widget_show_all (window);
     gtk_main ();

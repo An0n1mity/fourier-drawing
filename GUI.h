@@ -13,6 +13,9 @@ struct UserData_s{
     char* filename;
     GdkPixbuf* svgpixbuf;
     GtkDrawingArea* drawing_area;
+    gboolean drawsvg;
+    int width;
+    int height;
 
     int precision;
     gboolean turn;
@@ -30,5 +33,6 @@ void DrawSVG(cairo_t* cr, gpointer user_data);
 ShapePoint* DrawEpicycloides(cairo_t* cr, gpointer user_data);
 gint ForceRenderUpdate(gpointer user_data);
 void DrawPoints(cairo_t* cr, gpointer user_data);
+void SVGCheckButton(GtkCheckButton* button, gpointer user_data);
 
 #endif //CYCLOIDE_GUI_H

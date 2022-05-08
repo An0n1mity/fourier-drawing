@@ -12,9 +12,14 @@ void GetFileNameFromFileChooser(GtkFileChooser* file_chooser, gpointer user_data
 
     // Get the file name of the svg
     data->filename = filename;
-
     // Load svg into a pixbuffer
-    data->svgpixbuf = gdk_pixbuf_new_from_file_at_scale(filename, 800, 800, TRUE, NULL);
+    //data->svgpixbuf = gdk_pixbuf_new_from_file_at_scale(filename, 800, 800, TRUE, NULL);
+    data->svgpixbuf = gdk_pixbuf_new_from_file(filename, NULL);
+    //gdk_pixbuf_get_width(data->svgpixbuf);
+    data->width =  gdk_pixbuf_get_width(data->svgpixbuf);
+    data->height =  gdk_pixbuf_get_height(data->svgpixbuf);
+
+    data->svgpixbuf = gdk_pixbuf_scale_simple(data->svgpixbuf, 800, 800, GDK_INTERP_HYPER);
     //data->svgpixbuf = gdk_pixbuf_new_from_file (filename, NULL);
     //data->svgpixbuf = gdk_pixbuf_scale_simple(data->svgpixbuf, 800, 800, GDK_INTERP_BILINEAR);
 
@@ -30,11 +35,17 @@ void GetFileNameFromFileChooser(GtkFileChooser* file_chooser, gpointer user_data
     size_t nb_points = 0;
     ShapePoint *points = SHAPE_GetPointsFromAbstractShapes(abstract_shapes, 0.1f, &nb_points);
     kiss_fft_cpx* complex_array = GetComplexArrayFromPoints(points, nb_points);
+    if(data->fft_array)
+        free(data->fft_array);
     data->fft_array = GetFFTOfComplexArray(complex_array, nb_points);
     data->nb_points = nb_points;
 
-    gtk_widget_queue_draw(GTK_WIDGET(data->drawing_area));
+    SHAPE_FreePoints(data->points_list);
+    data->points_list = NULL;
+    data->actual_time = 0.f;
+    data->previous_time = 0.f;
 
+    gtk_widget_queue_draw(GTK_WIDGET(data->drawing_area));
 }
 
 void GetPrecisionFromScale(GtkScale* precision_scale, gpointer user_data)
@@ -45,6 +56,16 @@ void GetPrecisionFromScale(GtkScale* precision_scale, gpointer user_data)
     data->points_list = NULL;
     data->turn = false;
     data->previous_time = data->actual_time;
+}
+
+void SVGCheckButton(GtkCheckButton* button, gpointer user_data)
+{
+    struct UserData_s* data = (struct UserData_s*)user_data;
+    if (gtk_toggle_button_get_active(&button->toggle_button))
+    {
+        data->drawsvg = TRUE;
+    } else
+        data->drawsvg = FALSE;
 }
 
 gint ForceRenderUpdate(gpointer user_data)
@@ -59,7 +80,8 @@ gint ForceRenderUpdate(gpointer user_data)
 void DrawOnScreen(GtkDrawingArea* drawing_area, cairo_t* cr, gpointer user_data)
 {
     struct UserData_s* data = (struct UserData_s*)user_data;
-    DrawSVG(cr, user_data);
+    if(data->drawsvg)
+        DrawSVG(cr, user_data);
     if(data->fft_array)
         SHAPE_AddPoint(&data->points_list, DrawEpicycloides(cr, user_data));
     DrawPoints(cr, user_data);
@@ -78,18 +100,19 @@ void DrawSVG(cairo_t* cr, gpointer user_data)
 void DrawPoints(cairo_t* cr, gpointer user_data)
 {
     struct UserData_s* data = (struct UserData_s*)user_data;
+    float x_scale = 800.f/(float)data->width, y_scale = 800.f/(float)data->height;
     ShapePoint* points = data->points_list;
     cairo_set_source_rgba(cr, 1.f, 0, 0, 1.f);
+    cairo_set_line_width(cr, 2.f);
     while(points)
     {
-        cairo_arc(cr, points->x, points->y, 1.f, 0, 2 * M_PI);
-        cairo_set_line_width(cr, 2.f);
+        cairo_arc(cr, points->x*x_scale, y_scale*points->y, 1.f, 0, 2 * M_PI);
         cairo_fill(cr);
 
         if(points->np)
         {
-            cairo_move_to(cr, points->x, points->y);
-            cairo_line_to(cr, points->np->x, points->np->y);
+            cairo_move_to(cr, points->x*x_scale, points->y*y_scale);
+            cairo_line_to(cr, points->np->x*x_scale, points->np->y*y_scale);
             cairo_stroke(cr);
         }
 
@@ -98,11 +121,13 @@ void DrawPoints(cairo_t* cr, gpointer user_data)
 }
 
 ShapePoint* DrawEpicycloides(cairo_t* cr, gpointer user_data) {
+    struct UserData_s *data = (struct UserData_s *) user_data;
+
     float amplitude, phase;
     size_t frequency;
     float x = 0, y = 0;
     static float prev_x, prev_y;
-    struct UserData_s *data = (struct UserData_s *) user_data;
+    float x_scale = 800.f/(float)data->width, y_scale = 800.f/(float)data->height;
     const float dt = M_PI * 2 / (float) data->nb_points;
 
     if (data->actual_time >= 2 * M_PI){
@@ -110,30 +135,30 @@ ShapePoint* DrawEpicycloides(cairo_t* cr, gpointer user_data) {
         data->actual_time = 0.f;
     }
 
+    cairo_set_source_rgba(cr, 0, 0, 0, 0.2);
+    for (size_t i = 0; i < (size_t)((data->precision/100.f)*data->nb_points); i++) {
+        prev_x = x;
+        prev_y = y;
 
-        for (size_t i = 0; i < (data->precision/100.f)*data->nb_points; i++) {
-            prev_x = x;
-            prev_y = y;
+        amplitude = (float)data->fft_array[i].amplitude;
+        phase =  (float)data->fft_array[i].phase;
+        frequency = data->fft_array[i].frequency;
 
-            amplitude = (float)data->fft_array[i].amplitude;
-            phase =  (float)data->fft_array[i].phase;
-            frequency = data->fft_array[i].frequency;
+        x += amplitude * cosf(frequency *  data->actual_time + phase);
+        y += amplitude * sinf(frequency *  data->actual_time + phase);
 
-            x += amplitude * cosf(frequency *  data->actual_time + phase);
-            y += amplitude * sinf(frequency *  data->actual_time + phase);
-
-            cairo_set_source_rgba(cr, 0, 0, 0, 0.5);
-            if(prev_x && prev_y) {
-                cairo_move_to(cr, prev_x, prev_y);
-                cairo_line_to(cr, x, y);
-                cairo_stroke(cr);
-            }
-            cairo_arc(cr, x, y, amplitude, 0, 2 * M_PI);
+        if(prev_x && prev_y) {
+            cairo_move_to(cr, prev_x*x_scale, prev_y*y_scale);
+            cairo_line_to(cr, x*x_scale, y*y_scale);
+            cairo_stroke(cr);
+        }
+            cairo_arc(cr, x*x_scale, y*y_scale, amplitude, 0, 2 * M_PI);
             cairo_stroke(cr);
         }
         data->actual_time +=dt;
-
-        if(!data->turn)
+        if(data->turn)
+            data->previous_time -= dt;
+        if(!data->turn || data->previous_time > 0.f)
             return SHAPE_CreatePoint(x, y);
         return NULL;
 
