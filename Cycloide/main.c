@@ -8,6 +8,7 @@
 #include "main.h"
 
 int precision = 1;
+double timeScale = 10.0;
 
 void doInput()
 {
@@ -32,7 +33,12 @@ void doInput()
 			case SDL_QUIT:
 				exit(0);
 				break;
-
+			case SDLK_PLUS:
+				timeScale *= 2.0;
+				break;
+			case SDLK_MINUS:
+				timeScale /= 2.0;
+				break;
 			default:
 				break;
 			}
@@ -163,14 +169,14 @@ int main(int argc, char* argv[])
 
 	for (int i = 0; i < 4; ++i)
 		freeBezierFunction(bezierList[i]);
-#elif 1
+#else
 	srand(time(NULL));
-
 
 	xmlDocPtr svgfile = PARSER_LoadSVG("../Cycloide/test.xml");
 	xmlNodeShape* shapes = PARSER_GetShapesFromSVG(svgfile);
 
 	SHAPE_Point pointList[4][4] = { 0 };
+
 	pointList[0][0].x = 100; pointList[0][0].y = 300;
 	pointList[0][1].x = 50; pointList[0][1].y = 250;
 	pointList[0][2].x = 50; pointList[0][2].y = 200;
@@ -194,6 +200,7 @@ int main(int argc, char* argv[])
 	double*** bezierList = (double***) malloc(4 * sizeof(double**));
 	if (!bezierList)
 		return -1;
+
 	bezierList[0] = getBezierFunction(pointList[0][0], pointList[0][1], pointList[0][2], pointList[0][3]);
 	bezierList[1] = getBezierFunction(pointList[1][0], pointList[1][1], pointList[1][2], pointList[1][3]);
 	bezierList[2] = getBezierFunction(pointList[2][0], pointList[2][1], pointList[2][2], pointList[2][3]);
@@ -202,123 +209,66 @@ int main(int argc, char* argv[])
 	SDL_Window* window = SDL_CreateWindow("BezierCurve", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 720, SDL_WINDOW_OPENGL);
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
 
-	int nbCircles = 10;
+	int nbCircles = 40;
 
-	struct Circle_s* circleList =  createCircle(0, (SHAPE_Point) { 0, 0 }, createComplex(0, 0));
-
-	for (int i = nbCircles / 2 * -1; i < 0; ++i)
-	{
-		struct Circle_s* currentCircle = createCircle(i, (SHAPE_Point) { 0, 0 }, getCircleCoeff(i, bezierList, 4));
-		addCircleList(&circleList, currentCircle);
-	}
+	struct Circle_s* circleList = createCircle(0, getCircleCoeff(0, bezierList, 4));
+	struct Circle_s* currentCircle;
 
 	for (int i = 1; i <= nbCircles / 2; ++i)
 	{
-		struct Circle_s* currentCircle = createCircle(i, (SHAPE_Point) { 0, 0 }, getCircleCoeff(i, bezierList, 4));
+		currentCircle = createCircle(i, getCircleCoeff(i, bezierList, 4));
+		addCircleList(&circleList, currentCircle);
+		currentCircle = createCircle(-1 * i, getCircleCoeff(-1 * i, bezierList, 4));
 		addCircleList(&circleList, currentCircle);
 	}
 
 	double startTime = clock();
 	double currentTime = startTime;
 	double currentDeltaTime = startTime;
+
 	SHAPE_Point currentPosition = { 0 }, lastPosition = getPositionFromCircles(circleList, bezierList, 4, 0);
 	SDL_RenderClear(renderer);
+	SHAPE_Point* drawPointList = (SHAPE_Point*) calloc(1, sizeof(SHAPE_Point));
+	if (!drawPointList)
+		return -1;
+
+	drawPointList->x = lastPosition.x;
+	drawPointList->y = lastPosition.y;
 
 	while (1)
 	{
-		currentTime =  (double)(clock() - startTime) / (double) CLOCKS_PER_SEC;
-		if (currentTime > 1.0)
-		{
-			startTime = currentTime;
-			currentTime = 0;
-		}
-		currentPosition = getPositionFromCircles(circleList, bezierList, 4, currentTime);
-		printf("%.2lf %.2lf \n", currentPosition.x, currentPosition.y);
-;		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-		doInput();
-		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-		SDL_RenderDrawLineF(renderer, lastPosition.x, lastPosition.y, currentPosition.x, currentPosition.y);
-		SDL_SetRenderDrawColor(renderer, 0, 100, 255, 255);
-		//drawCircle(renderer, circleList[0]);
-		SDL_RenderPresent(renderer);
-		SDL_Delay(0);
-		lastPosition = currentPosition;
-	}
-
-	for (int i = 0; i < 4; ++i)
-		freeBezierFunction(bezierList[i]);	
-#else
-	srand(time(NULL));
-
-	struct Complex_s a = createComplex(3, -6);
-	struct Complex_s b = createComplex(12, 1);
-	struct Complex_s c = createComplex(0, 7);
-	struct Complex_s d = createComplex(4, -2);
-	struct ComplexList_s* list = createComplexList(&a);
-	addObjectComplexList(&list, &b);
-	addObjectComplexList(&list, &c);
-	addObjectComplexList(&list, &d);
-	struct Complex_s result1 = addComplexList(list);
-	struct Complex_s result2 = subComplexList(list);
-	struct Complex_s result3 = multiplyComplexList(list);
-	struct Complex_s result4 = divideComplexList(list);
-	printComplex(result1, 4);
-	printComplex(result2, 4);
-	printComplex(result3, 4);
-	printComplex(result4, 4);
-	destroyComplexList(list);
-
-	SDL_Window* window = SDL_CreateWindow("BezierCurve", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 720, SDL_WINDOW_OPENGL);
-	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
-
-	int precision = 10;
-	struct Complex_s* tab = (struct Complex_s*) calloc(precision, sizeof(struct Complex_s));
-
-	for (int i = 0; i < precision; ++i)
-	{
-		tab[i].m_real = 2.0 * ((double)rand() / RAND_MAX);
-		tab[i].m_imaginary = 2.0 * ((double)rand() / RAND_MAX);
-	}
-	struct Circle_s* circleList =  createCircle(0, (SHAPE_Point) { 0, 0 }, createComplex(0, 0));
-
-	for (int i = precision / 2 * -1; i < 0; ++i)
-	{
-		struct Circle_s* currentCircle = createCircle(i, (SHAPE_Point) { tab[i + (precision / 2)].m_real, tab[i + (precision / 2)].m_imaginary }, getCircleCoeff(i, tab[i + (precision / 2)], i));
-		addCircleList(&circleList, currentCircle);
-	}
-
-	for (int i = 1; i <= precision / 2; ++i)
-	{
-		struct Circle_s* currentCircle = createCircle(i, (SHAPE_Point) { tab[i + (precision / 2)].m_real, tab[i + (precision / 2)].m_imaginary }, getCircleCoeff(i, tab[i + (precision / 2)], i));
-		addCircleList(&circleList, currentCircle);
-	}
-
-	time_t startTime = clock();
-	time_t currentTime = startTime;
-	time_t currentDeltaTime = startTime;
-	SHAPE_Point currentPosition = { 0 }, lastPosition = {0};
-	SDL_RenderClear(renderer);
-
-	/*
-	
-				delta time se met bien à jour mais currentPosition reste constant 
-	
-	*/
-
-	while (1)
-	{
-		currentTime = (double) (clock() - startTime) / CLOCKS_PER_SEC;
-		currentPosition = getPositionFromCircles(circleList, currentTime);
-	 
+		SHAPE_Point* currentPoint = drawPointList;
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-		doInput();
+		SDL_RenderClear(renderer);
+		currentTime =  (double)(clock() - startTime) / ((double) CLOCKS_PER_SEC * timeScale);
+		if (currentTime >= 1.0)
+		{
+			startTime = clock();
+			destroySHAPE_PointList(drawPointList->np);
+			drawPointList->np = NULL;
+			currentTime = 0.0;
+		}
+		printf("currentTime : %.4lf\n", currentTime);
+		currentPosition = getPositionFromCircles(circleList, bezierList, 4, currentTime);
+		SHAPE_AddPoint(&drawPointList, currentPosition.x, currentPosition.y);
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-		SDL_RenderDrawLineF(renderer, lastPosition.x, lastPosition.y, currentPosition.x, currentPosition.y);
+
+		while (currentPoint)
+		{
+			SDL_RenderDrawLineF(renderer, lastPosition.x, lastPosition.y, currentPoint->x, currentPoint->y);
+			lastPosition = (*currentPoint);
+			currentPoint = currentPoint->np;
+		}
+		doInput();
 		SDL_SetRenderDrawColor(renderer, 0, 100, 255, 255);
+		drawCircles(renderer, circleList);
 		SDL_RenderPresent(renderer);
 		SDL_Delay(0);
-		lastPosition = currentPosition;
 	}
+
+	destroySHAPE_PointList(drawPointList);
+	for (int i = 0; i < 4; ++i)
+		freeBezierFunction(bezierList[i]);
 #endif
 	return 0;
 }

@@ -197,16 +197,34 @@ SHAPE_Pathblock* SHAPE_PathAddBlock(SHAPE_Pathblock** block, SHAPE_Pathblock* bl
 
 SHAPE_Point* SHAPE_AddPoint(SHAPE_Point** points, float x, float y)
 {
-    SHAPE_Point* point_to_add = (SHAPE_Point*)calloc(sizeof(SHAPE_Point), 1);
+    SHAPE_Point* point_to_add = (SHAPE_Point*) calloc(sizeof(SHAPE_Point), 1);
     if (!point_to_add)
         return NULL;
     point_to_add->x = x; point_to_add->y = y;
 
-    if (!(*points)) {
-        *points = point_to_add;
-        return *points;
+    if (!(*points))
+    {
+        (*points) = point_to_add;
+        return point_to_add;
     }
+    SHAPE_Point* temp = (*points);
+    while(temp && temp->np) 
+        temp = temp->np;
 
-    (*points)->np = point_to_add;
+    temp->np = point_to_add;
     return point_to_add;
+}
+
+void destroySHAPE_PointList(SHAPE_Point* points)
+{
+    if (!points)
+        return;
+
+    while (points->np)
+    {
+        SHAPE_Point* tmp = points;
+        points = points->np;
+        free(tmp);
+        tmp = NULL;
+    }
 }

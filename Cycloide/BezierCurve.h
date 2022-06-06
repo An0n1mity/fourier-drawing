@@ -9,4 +9,7 @@ double** getBezierFunction(SHAPE_Point p_P0, SHAPE_Point p_P1, SHAPE_Point p_P2,
 void freeBezierFunction(double** p_bezierFunction);
 
 SHAPE_Point getBezierPoint(double** p_bezierFunction, double p_time);
+
+SHAPE_Point getBezierPointFromList(double*** p_bezierFunction, int p_nbBezier, double p_time);
+
 #endif

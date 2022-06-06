@@ -53,3 +53,11 @@ SHAPE_Point getBezierPoint(double** p_bezierFunction, double p_time)
 		(p_bezierFunction[1][3] * tCubed);
 	return point;
 }
+
+
+SHAPE_Point getBezierPointFromList(double*** p_bezierFunction, int p_nbBezier, double p_time)
+{
+	int currentBezier = (int)(p_time * p_nbBezier) % p_nbBezier;
+	double bezierBeginTime = (double) currentBezier / p_nbBezier;
+	return getBezierPoint(p_bezierFunction[currentBezier], (p_time - bezierBeginTime) * p_nbBezier);
+}

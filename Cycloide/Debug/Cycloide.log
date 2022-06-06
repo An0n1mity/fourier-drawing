@@ -1,7 +1,13 @@
 ﻿  main.c
-D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(167,12): warning C4244: 'function': conversion from 'time_t' to 'unsigned int', possible loss of data
-D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(240,45): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
-D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(240,61): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
-D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(240,80): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
-D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(240,99): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\complex.h(60,38): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\complex.h(60,64): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\complex.h(60,94): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\complex.h(60,120): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(173,12): warning C4244: 'function': conversion from 'time_t' to 'unsigned int', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(253,49): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(253,68): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(258,46): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(258,62): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(258,78): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(258,95): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
   Cycloide.vcxproj -> D:\Codes\PST Fourier\svg_parser\Debug\Cycloide.exe

@@ -139,4 +139,6 @@ SHAPE_Point* SHAPE_AddPoint(SHAPE_Point** points, float x, float y);
 SHAPE_Path* SHAPE_CreatePath(char* points);
 SHAPE_Pathblock* SHAPE_PathAddBlock(SHAPE_Pathblock** block, SHAPE_Pathblock* block_to_add);
 
+void destroySHAPE_PointList(SHAPE_Point* points);
+
 #endif //SVG_PARSER_SHAPES_H

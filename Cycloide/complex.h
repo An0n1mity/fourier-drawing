@@ -4,12 +4,14 @@
 #include <math.h>
 #include <stdio.h>
 
+extern double timeScale;
+
 struct Complex_s
 {
 	double m_real;
 	double m_imaginary;
 };
-
+  
 struct ComplexList_s
 {
 	struct Complex_s* m_complex;
@@ -55,7 +57,7 @@ struct Complex_s divideComplexList(struct ComplexList_s* p_complexList);
 
 inline struct Complex_s getExponentialComplex(struct Complex_s p_exponent)
 {
-	return createComplex(exp(p_exponent.m_real) * cos(p_exponent.m_imaginary), exp(p_exponent.m_real) * sin(p_exponent.m_imaginary));
+	return createComplex(expf(p_exponent.m_real) * cosf(p_exponent.m_imaginary), expf(p_exponent.m_real) * sinf(p_exponent.m_imaginary));
 }
 
 inline void printComplex(struct Complex_s p_complex, int p_precision)
