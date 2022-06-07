@@ -6,6 +6,7 @@
 
 extern double g_timeScale;	///< scale to draw more or less fast
 extern int g_nbCircles;		///< count of nb of circles
+
 struct Complex_s
 {
 	double m_real;		///< real value

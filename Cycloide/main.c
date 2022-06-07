@@ -35,11 +35,11 @@ void doInput()
 				break;
 			case SDLK_PLUS:
 			case SDLK_KP_PLUS:
-				g_timeScale *= 2.0;
+				g_timeScale /= 1.5;
 				break;
 			case SDLK_MINUS:
 			case SDLK_KP_MINUS:
-				g_timeScale /= 2.0;
+				g_timeScale *= 1.5;
 				break;
 			default:
 				break;
