@@ -1,0 +1,5 @@
+﻿svgparser.obj : error LNK2001: unresolved external symbol _xmlDocGetRootElement
+svgparser.obj : error LNK2001: unresolved external symbol _xmlFreeDoc
+svgparser.obj : error LNK2001: unresolved external symbol _xmlReadFile
+MSVCRT.lib(exe_main.obj) : error LNK2001: unresolved external symbol _main
+D:\Codes\PST Fourier\svg_parser\Release\Cycloide.exe : fatal error LNK1120: 4 unresolved externals

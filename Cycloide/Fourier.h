@@ -94,4 +94,17 @@ void freeLastCircles(struct Circle_s** p_circleList);
  */
 void addLastCircles(struct Circle_s** p_circleList, int p_index, double*** p_bezierList, int p_nbBezier);
 
+/**
+ * @brief setup the fourier transform 
+ * \param[in/out] p_bezierList list that will be filled with functions from given points inside
+ * \return complex number representing the position
+ */
+struct Circle_s* initFourier(double*** p_bezierList);
+
+/**
+ * @brief free all the created circles
+ * \param[in] p_circleList list of the circles
+ */
+void freeCircles(struct Circle_s* p_circleList);
+
 #endif // FOURIER_H

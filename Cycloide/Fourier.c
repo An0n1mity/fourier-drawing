@@ -120,3 +120,67 @@ void addLastCircles(struct Circle_s** p_circleList, int p_index, double*** p_bez
 	addCircleList(p_circleList, createCircle(p_index, getCircleCoeff(p_index, p_bezierList, p_nbBezier)));
 	addCircleList(p_circleList, createCircle(-p_index, getCircleCoeff(-p_index, p_bezierList, p_nbBezier)));
 }
+
+struct Circle_s* initFourier(double*** p_bezierList)
+{
+	//replace with getPointList 
+	SHAPE_Point pointList[4][4] = { 0 };
+
+	pointList[0][0].x = 100; pointList[0][0].y = 300;
+	pointList[0][1].x = 50; pointList[0][1].y = 250;
+	pointList[0][2].x = 50; pointList[0][2].y = 200;
+	pointList[0][3].x = 100; pointList[0][3].y = 150;
+
+	pointList[1][0].x = 100; pointList[1][0].y = 150;
+	pointList[1][1].x = 200; pointList[1][1].y = 180;
+	pointList[1][2].x = 350; pointList[1][2].y = 280;
+	pointList[1][3].x = 400; pointList[1][3].y = 300;
+
+	pointList[2][0].x = 400; pointList[2][0].y = 300;
+	pointList[2][1].x = 450; pointList[2][1].y = 250;
+	pointList[2][2].x = 450; pointList[2][2].y = 200;
+	pointList[2][3].x = 400; pointList[2][3].y = 150;
+
+	pointList[3][0].x = 400; pointList[3][0].y = 150;
+	pointList[3][1].x = 350; pointList[3][1].y = 180;
+	pointList[3][2].x = 200; pointList[3][2].y = 280;
+	pointList[3][3].x = 100; pointList[3][3].y = 300;
+
+	//stop replacing
+
+
+	p_bezierList[0] = getBezierFunction(pointList[0][0], pointList[0][1], pointList[0][2], pointList[0][3]);
+	p_bezierList[1] = getBezierFunction(pointList[1][0], pointList[1][1], pointList[1][2], pointList[1][3]);
+	p_bezierList[2] = getBezierFunction(pointList[2][0], pointList[2][1], pointList[2][2], pointList[2][3]);
+	p_bezierList[3] = getBezierFunction(pointList[3][0], pointList[3][1], pointList[3][2], pointList[3][3]);
+
+
+	struct Circle_s* circleList = createCircle(0, getCircleCoeff(0, p_bezierList, 4));
+
+	struct Circle_s* currentCircle;
+	for (int i = 1; i <= g_nbCircles / 2; ++i)
+	{
+		currentCircle = createCircle(i, getCircleCoeff(i, p_bezierList, 4));
+		addCircleList(&circleList, currentCircle);
+		currentCircle = createCircle(-1 * i, getCircleCoeff(-1 * i, p_bezierList, 4));
+		addCircleList(&circleList, currentCircle);
+	}
+	return circleList;
+
+}
+
+void freeCircles(struct Circle_s* p_circleList)
+{
+	if (!p_circleList)
+		return;
+
+	struct Circle_s* cursor = p_circleList,* temp;
+	while (cursor->m_nextCircle)
+	{
+		temp = cursor->m_nextCircle;
+		free(cursor);
+		cursor = temp;
+	}
+	free(cursor);
+	p_circleList = NULL;
+}
