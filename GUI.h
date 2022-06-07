@@ -7,7 +7,9 @@
 
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 #include "fft.h"
+#include "audio.h"
 
 struct UserData_s{
     char* filename;
@@ -24,6 +26,9 @@ struct UserData_s{
     struct FFT_s* fft_array;
     ShapePoint* points_list;
     size_t nb_points;
+
+    PaStream* stream;
+    paData* pa_data;
 };
 
 void GetFileNameFromFileChooser(GtkFileChooser* file_chooser, gpointer user_data);
@@ -34,5 +39,6 @@ ShapePoint* DrawEpicycloides(cairo_t* cr, gpointer user_data);
 gint ForceRenderUpdate(gpointer user_data);
 void DrawPoints(cairo_t* cr, gpointer user_data);
 void SVGCheckButton(GtkCheckButton* button, gpointer user_data);
+void TakeScreenshotOfDrawing(GtkButton* button, gpointer user_data);
 
 #endif //CYCLOIDE_GUI_H

@@ -38,6 +38,7 @@ void GetFileNameFromFileChooser(GtkFileChooser* file_chooser, gpointer user_data
     if(data->fft_array)
         free(data->fft_array);
     data->fft_array = GetFFTOfComplexArray(complex_array, nb_points);
+    data->pa_data->frequencies_array = data->fft_array;
     data->nb_points = nb_points;
 
     SHAPE_FreePoints(data->points_list);
@@ -120,8 +121,22 @@ void DrawPoints(cairo_t* cr, gpointer user_data)
     }
 }
 
+void TakeScreenshotOfDrawing(GtkButton* button, gpointer user_data)
+{
+    struct UserData_s *data = (struct UserData_s *) user_data;
+    gint width, height;
+    GtkWindow* window = gtk_widget_get_window(GTK_WIDGET(data->drawing_area));
+    gtk_window_get_size(window, &width, &height);
+    printf("%d %d\n", width, height);
+    GdkPixbuf* pixbuf = gdk_pixbuf_get_from_window(GDK_WINDOW(data->drawing_area), 0, 0, width, height);
+    gdk_pixbuf_save(pixbuf, "fourier.jpeg", "jpeg", NULL, "quality", "100", NULL);
+}
+
 ShapePoint* DrawEpicycloides(cairo_t* cr, gpointer user_data) {
     struct UserData_s *data = (struct UserData_s *) user_data;
+    // Select a random circle to read frequency from
+    size_t frequency_cirlce_idx = rand()%(size_t)(((data->precision/100.f)*data->nb_points));
+    data->pa_data->idx = frequency_cirlce_idx;
 
     float amplitude, phase;
     size_t frequency;
@@ -152,14 +167,19 @@ ShapePoint* DrawEpicycloides(cairo_t* cr, gpointer user_data) {
             cairo_line_to(cr, x*x_scale, y*y_scale);
             cairo_stroke(cr);
         }
+            if(i == frequency_cirlce_idx)
+                cairo_set_source_rgba(cr, 1, 0, 0, 0.5);
+            else
+                cairo_set_source_rgba(cr, 0, 0, 0, 0.2);
+
             cairo_arc(cr, x*x_scale, y*y_scale, amplitude, 0, 2 * M_PI);
             cairo_stroke(cr);
-        }
+     }
+
         data->actual_time +=dt;
         if(data->turn)
             data->previous_time -= dt;
         if(!data->turn || data->previous_time > 0.f)
             return SHAPE_CreatePoint(x, y);
         return NULL;
-
 }

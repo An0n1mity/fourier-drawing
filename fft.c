@@ -33,7 +33,7 @@ struct FFT_s* GetFFTOfComplexArray(kiss_fft_cpx* complex_array, size_t nbcomplex
     struct FFT_s* fft = malloc(sizeof(struct FFT_s) * nbcomplex);
     kiss_fft_cfg cfg = kiss_fft_alloc( nbcomplex, 1 , NULL, NULL);
     kiss_fft_cpx* complex_fft_array = malloc(sizeof(kiss_fft_cpx)*nbcomplex);
-
+    
     kiss_fft(cfg, complex_array, complex_fft_array);
     free(cfg);
 
