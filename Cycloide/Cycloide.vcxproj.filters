@@ -19,6 +19,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="fourier.svg" />
+    <None Include="gui.glade" />
+    <None Include="gui.glade~" />
+    <None Include="linux.svg" />
+    <None Include="dog.svg" />
+    <None Include="Doxyfile" />
+    <None Include="eiffel.svg" />
+    <None Include="controller.svg" />
+    <None Include="Cycloide.aps" />
+    <None Include="main.svg" />
+    <None Include="pc.svg" />
+    <None Include="Pi.svg" />
+    <None Include="svg" />
+    <None Include="star.svg" />
+    <None Include="svg.svg" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -30,6 +45,18 @@
     <ClCompile Include="svgparser.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="BezierCurve.c">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="complex.c">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Fourier.c">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="pathparser.c">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shapes.h">
@@ -38,8 +65,32 @@
     <ClInclude Include="svgparser.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="BezierCurve.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Fourier.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="complex.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="pathparser.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="test.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Cycloide.rc">
+      <Filter>Fichiers de ressources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="conanfile.txt" />
+    <Text Include="CMakeLists.txt" />
   </ItemGroup>
 </Project>

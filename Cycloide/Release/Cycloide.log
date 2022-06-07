@@ -1,15 +1,65 @@
-﻿  main.c
+﻿  BezierCurve.c
+  complex.c
+D:\Codes\PST Fourier\svg_parser\Cycloide\complex.h(131,38): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\complex.h(131,64): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\complex.h(131,94): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\complex.h(131,120): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+  Fourier.c
+D:\Codes\PST Fourier\svg_parser\Cycloide\complex.h(131,38): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\complex.h(131,64): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\complex.h(131,94): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\complex.h(131,120): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\Fourier.c(12,64): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\Fourier.c(76,45): warning C4244: 'function': conversion from 'double' to 'int', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\Fourier.c(76,61): warning C4244: 'function': conversion from 'double' to 'int', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\Fourier.c(77,45): warning C4244: 'function': conversion from 'double' to 'int', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\Fourier.c(77,61): warning C4244: 'function': conversion from 'double' to 'int', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\Fourier.c(78,45): warning C4244: 'function': conversion from 'double' to 'int', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\Fourier.c(78,61): warning C4244: 'function': conversion from 'double' to 'int', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\Fourier.c(79,45): warning C4244: 'function': conversion from 'double' to 'int', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\Fourier.c(79,61): warning C4244: 'function': conversion from 'double' to 'int', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\Fourier.c(80,45): warning C4244: 'function': conversion from 'double' to 'int', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\Fourier.c(80,61): warning C4244: 'function': conversion from 'double' to 'int', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\Fourier.c(81,45): warning C4244: 'function': conversion from 'double' to 'int', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\Fourier.c(81,61): warning C4244: 'function': conversion from 'double' to 'int', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\Fourier.c(82,45): warning C4244: 'function': conversion from 'double' to 'int', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\Fourier.c(82,61): warning C4244: 'function': conversion from 'double' to 'int', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\Fourier.c(83,45): warning C4244: 'function': conversion from 'double' to 'int', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\Fourier.c(83,61): warning C4244: 'function': conversion from 'double' to 'int', possible loss of data
+  main.c
+D:\Codes\PST Fourier\svg_parser\Cycloide\complex.h(131,38): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\complex.h(131,64): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\complex.h(131,94): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\complex.h(131,120): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(53,12): warning C4244: 'function': conversion from 'time_t' to 'unsigned int', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(101,49): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(101,68): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(106,46): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(106,62): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(106,78): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\main.c(106,95): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
   shapes.c
-C:\Users\biist\source\repos\Cycloide\Cycloide\shapes.c(76,21): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
-C:\Users\biist\source\repos\Cycloide\Cycloide\shapes.c(81,21): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
-C:\Users\biist\source\repos\Cycloide\Cycloide\shapes.c(119,21): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
-C:\Users\biist\source\repos\Cycloide\Cycloide\shapes.c(127,21): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
-C:\Users\biist\source\repos\Cycloide\Cycloide\shapes.c(189,25): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
-C:\Users\biist\source\repos\Cycloide\Cycloide\shapes.c(194,25): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
-C:\Users\biist\source\repos\Cycloide\Cycloide\shapes.c(168,10): warning C4101: 'current_block' : variable locale non référencée
+D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(60,9): warning C4033: 'SHAPE_CreateEllipse' must return a value
+D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(70,9): warning C4033: 'SHAPE_CreatePolyline' must return a value
+D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(79,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(84,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(103,9): warning C4033: 'SHAPE_CreatePolygone' must return a value
+D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(110,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(118,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(166,25): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Codes\PST Fourier\svg_parser\Cycloide\shapes.c(171,25): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
   svgparser.c
-C:\Users\biist\source\repos\Cycloide\Cycloide\svgparser.c(6,43): warning C4133: '=' : types incompatibles - de 'xmlDocPtr' à 'svgTree'
-C:\Users\biist\source\repos\Cycloide\Cycloide\svgparser.c(15,21): warning C4133: 'fonction' : types incompatibles - de 'svgTree' à 'xmlDocPtr'
-svgparser.obj : error LNK2001: symbole externe non résolu _xmlFreeDoc
-svgparser.obj : error LNK2001: symbole externe non résolu _xmlReadFile
-C:\Users\biist\source\repos\Cycloide\Release\Cycloide.exe : fatal error LNK1120: 2 externes non résolus
+Fourier.obj : error LNK2001: unresolved external symbol _SDL_RenderDrawPoint
+main.obj : error LNK2001: unresolved external symbol _SDL_RenderClear
+main.obj : error LNK2001: unresolved external symbol _SDL_Delay
+main.obj : error LNK2001: unresolved external symbol _SDL_RenderDrawLineF
+main.obj : error LNK2001: unresolved external symbol _SDL_PollEvent
+main.obj : error LNK2001: unresolved external symbol _SDL_CreateRenderer
+main.obj : error LNK2001: unresolved external symbol _SDL_RenderPresent
+main.obj : error LNK2001: unresolved external symbol _SDL_CreateWindow
+main.obj : error LNK2001: unresolved external symbol _SDL_SetRenderDrawColor
+svgparser.obj : error LNK2001: unresolved external symbol _xmlDocGetRootElement
+svgparser.obj : error LNK2001: unresolved external symbol _xmlFreeDoc
+svgparser.obj : error LNK2001: unresolved external symbol _xmlReadFile
+MSVCRT.lib(exe_main.obj) : error LNK2001: unresolved external symbol _main
+D:\Codes\PST Fourier\svg_parser\Release\Cycloide.exe : fatal error LNK1120: 13 unresolved externals

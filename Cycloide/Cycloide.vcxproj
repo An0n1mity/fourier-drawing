@@ -72,12 +72,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\biist\source\repos\Cycloide\packages\libxml2.2.7.8.7\build\native\include\libxml;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\biist\source\repos\Cycloide\packages\libxml2.2.7.8.7\build\native\lib\v110\Win32\Debug\dynamic\cdecl;$(LibraryPath)</LibraryPath>
-    <ExecutablePath>C:\Users\biist\Desktop\libxml2-2.7.8.win32\bin;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>D:\Codes\PST Fourier\svg_parser\packages\sdl2_x86-windows\include\SDL2;D:\Programmes\vcpkg\installed\x86-windows\include;D:\Codes\PST Fourier\svg_parser\SDL2-2.0.16\include;C:\Users;D:\Codes\PST Fourier\svg_parser\packages\libxml2.2.7.8.7\build\native\include\libxml;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Codes\PST Fourier\svg_parser\packages\sdl2_x86-windows\lib;D:\Codes\PST Fourier\svg_parser\packages\sdl2_x86-windows\lib\manual-link;D:\Programmes\vcpkg\installed\x86-windows\lib;D:\Programmes\vcpkg\installed\x86-windows\lib\manual-link;D:\Codes\PST Fourier\svg_parser\SDL2-2.0.16\lib\x86;D:\Codes\PST Fourier\svg_parser\packages\libxml2.2.7.8.7\build\native\lib\v110\Win32\Debug\dynamic\cdecl;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>D:\Codes\PST Fourier\svg_parser\packages\sdl2_x86-windows\include\SDL2;D:\Programmes\vcpkg\installed\x86-windows\include;D:\Codes\PST Fourier\svg_parser\SDL2-2.0.16\include;C:\Users;D:\Codes\PST Fourier\svg_parser\packages\libxml2.2.7.8.7\build\native\include\libxml;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Codes\PST Fourier\svg_parser\packages\sdl2_x86-windows\lib;D:\Codes\PST Fourier\svg_parser\packages\sdl2_x86-windows\lib\manual-link;D:\Programmes\vcpkg\installed\x86-windows\lib;D:\Programmes\vcpkg\installed\x86-windows\lib\manual-link;D:\Codes\PST Fourier\svg_parser\SDL2-2.0.16\lib\x86;D:\Codes\PST Fourier\svg_parser\packages\libxml2.2.7.8.7\build\native\lib\v110\Win32\Debug\dynamic\cdecl;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -88,17 +89,24 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <VcpkgInstalledDir>..\..\..\..\Programmes\vcpkg\installed\x86-windows</VcpkgInstalledDir>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <VcpkgInstalledDir>..\..\..\..\Programmes\vcpkg\installed\x86-windows</VcpkgInstalledDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\Programmes\vcpkg\installed\x86-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libxml2.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -107,8 +115,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\Programmes\vcpkg\installed\x86-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,19 +156,50 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="controller.svg" />
+    <None Include="Cycloide.aps" />
+    <None Include="dog.svg" />
+    <None Include="Doxyfile" />
+    <None Include="eiffel.svg" />
+    <None Include="fourier.svg" />
+    <None Include="gui.glade" />
+    <None Include="gui.glade~" />
+    <None Include="linux.svg" />
+    <None Include="main.svg" />
     <None Include="packages.config" />
+    <None Include="pc.svg" />
+    <None Include="Pi.svg" />
+    <None Include="star.svg" />
+    <None Include="svg" />
+    <None Include="svg.svg" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BezierCurve.c" />
+    <ClCompile Include="complex.c" />
+    <ClCompile Include="Fourier.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="pathparser.c" />
     <ClCompile Include="shapes.c" />
     <ClCompile Include="svgparser.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BezierCurve.h" />
+    <ClInclude Include="complex.h" />
+    <ClInclude Include="Fourier.h" />
+    <ClInclude Include="pathparser.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="shapes.h" />
     <ClInclude Include="svgparser.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="test.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Cycloide.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
+    <Text Include="conanfile.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

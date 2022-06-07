@@ -1,7 +1,0 @@
-[requires]
-libxml2/2.9.12
-libiconv/1.16
-zlib/1.2.11
-
-[generators]
-cmake

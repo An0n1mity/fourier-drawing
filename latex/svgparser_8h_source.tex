@@ -1,0 +1,26 @@
+\hypertarget{svgparser_8h_source}{}\doxysection{svgparser.\+h}
+\mbox{\hyperlink{svgparser_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef SVGPARSER\_H}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define SVGPARSER\_H}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <libxml/tree.h>}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <libxml/parser.h>}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include <stdio.h>}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <string.h>}}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structxml_node_shape__s}{xmlNodeShape\_s}} \mbox{\hyperlink{structxml_node_shape__s}{xmlNodeShape}};}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{keyword}{struct }\mbox{\hyperlink{structxml_node_shape__s}{xmlNodeShape\_s}} \{}
+\DoxyCodeLine{12     xmlNode* \mbox{\hyperlink{structxml_node_shape__s_af3082a1141c02b142107e2a7ac751658}{shape}};}
+\DoxyCodeLine{13     \textcolor{keyword}{struct }\mbox{\hyperlink{structxml_node_shape__s}{xmlNodeShape\_s}}* \mbox{\hyperlink{structxml_node_shape__s_afb8f884652011e63ab1ab298b3b89543}{next}};}
+\DoxyCodeLine{14 \};}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{21 xmlDocPtr \mbox{\hyperlink{svgparser_8h_a46461ab44c0769d41947123d5ea2e4e2}{PARSER\_LoadSVG}}(\textcolor{keywordtype}{char}* svg\_path);}
+\DoxyCodeLine{26 \textcolor{keywordtype}{void} \mbox{\hyperlink{svgparser_8h_ab11856778a5e754098d8513ae6c72983}{PARSER\_FreeSVG}}(xmlDocPtr svg\_tree);}
+\DoxyCodeLine{30 \mbox{\hyperlink{structxml_node_shape__s}{xmlNodeShape}}* \mbox{\hyperlink{svgparser_8h_ab536fedfcd496326250b8380a1e42702}{PARSER\_GetShapesFromSVG}}(xmlDocPtr svg\_tree);}
+\DoxyCodeLine{31 \textcolor{keywordtype}{void} \mbox{\hyperlink{svgparser_8h_a7fe6bf06a9d3a0fe3f5c9c54d5ce2d26}{PARSER\_ReadShapesFromSVG}}(\mbox{\hyperlink{structxml_node_shape__s}{xmlNodeShape}}** shapes, xmlNode* svg\_node);}
+\DoxyCodeLine{32 \textcolor{keywordtype}{void} \mbox{\hyperlink{svgparser_8h_ac3e4fe62d5a5590a2129037cede5b696}{PARSER\_AddShapesNode}}(\mbox{\hyperlink{structxml_node_shape__s}{xmlNodeShape}}** shapes\_node, xmlNode* node\_to\_add);}
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// !PARSER\_H}}
+
+\end{DoxyCode}

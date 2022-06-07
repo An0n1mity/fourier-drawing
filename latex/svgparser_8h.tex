@@ -1,0 +1,96 @@
+\hypertarget{svgparser_8h}{}\doxysection{svgparser.\+h File Reference}
+\label{svgparser_8h}\index{svgparser.h@{svgparser.h}}
+{\ttfamily \#include $<$libxml/tree.\+h$>$}\newline
+{\ttfamily \#include $<$libxml/parser.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+\doxysubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structxml_node_shape__s}{xml\+Node\+Shape\+\_\+s}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{structxml_node_shape__s}{xml\+Node\+Shape\+\_\+s}} \mbox{\hyperlink{svgparser_8h_a52f4fc110dd6da67a65f5048d10a1289}{xml\+Node\+Shape}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+xml\+Doc\+Ptr \mbox{\hyperlink{svgparser_8h_a46461ab44c0769d41947123d5ea2e4e2}{PARSER\+\_\+\+Load\+SVG}} (char $\ast$svg\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Load the svg in memory as a tree. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{svgparser_8h_ab11856778a5e754098d8513ae6c72983}{PARSER\+\_\+\+Free\+SVG}} (xml\+Doc\+Ptr svg\+\_\+tree)
+\begin{DoxyCompactList}\small\item\em Free the svg tree in memory. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{svgparser_8h_a52f4fc110dd6da67a65f5048d10a1289}{xml\+Node\+Shape}} $\ast$ \mbox{\hyperlink{svgparser_8h_ab536fedfcd496326250b8380a1e42702}{PARSER\+\_\+\+Get\+Shapes\+From\+SVG}} (xml\+Doc\+Ptr svg\+\_\+tree)
+\begin{DoxyCompactList}\small\item\em Get nodes containing shapes. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{svgparser_8h_a7fe6bf06a9d3a0fe3f5c9c54d5ce2d26}{PARSER\+\_\+\+Read\+Shapes\+From\+SVG}} (\mbox{\hyperlink{svgparser_8h_a52f4fc110dd6da67a65f5048d10a1289}{xml\+Node\+Shape}} $\ast$$\ast$shapes, xml\+Node $\ast$svg\+\_\+node)
+\item 
+void \mbox{\hyperlink{svgparser_8h_ac3e4fe62d5a5590a2129037cede5b696}{PARSER\+\_\+\+Add\+Shapes\+Node}} (\mbox{\hyperlink{svgparser_8h_a52f4fc110dd6da67a65f5048d10a1289}{xml\+Node\+Shape}} $\ast$$\ast$shapes\+\_\+node, xml\+Node $\ast$node\+\_\+to\+\_\+add)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{svgparser_8h_a52f4fc110dd6da67a65f5048d10a1289}\label{svgparser_8h_a52f4fc110dd6da67a65f5048d10a1289}} 
+\index{svgparser.h@{svgparser.h}!xmlNodeShape@{xmlNodeShape}}
+\index{xmlNodeShape@{xmlNodeShape}!svgparser.h@{svgparser.h}}
+\doxysubsubsection{\texorpdfstring{xmlNodeShape}{xmlNodeShape}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structxml_node_shape__s}{xml\+Node\+Shape\+\_\+s}} \mbox{\hyperlink{svgparser_8h_a52f4fc110dd6da67a65f5048d10a1289}{xml\+Node\+Shape}}}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{svgparser_8h_ac3e4fe62d5a5590a2129037cede5b696}\label{svgparser_8h_ac3e4fe62d5a5590a2129037cede5b696}} 
+\index{svgparser.h@{svgparser.h}!PARSER\_AddShapesNode@{PARSER\_AddShapesNode}}
+\index{PARSER\_AddShapesNode@{PARSER\_AddShapesNode}!svgparser.h@{svgparser.h}}
+\doxysubsubsection{\texorpdfstring{PARSER\_AddShapesNode()}{PARSER\_AddShapesNode()}}
+{\footnotesize\ttfamily void PARSER\+\_\+\+Add\+Shapes\+Node (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{svgparser_8h_a52f4fc110dd6da67a65f5048d10a1289}{xml\+Node\+Shape}} $\ast$$\ast$}]{shapes\+\_\+node,  }\item[{xml\+Node $\ast$}]{node\+\_\+to\+\_\+add }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{svgparser_8h_ab11856778a5e754098d8513ae6c72983}\label{svgparser_8h_ab11856778a5e754098d8513ae6c72983}} 
+\index{svgparser.h@{svgparser.h}!PARSER\_FreeSVG@{PARSER\_FreeSVG}}
+\index{PARSER\_FreeSVG@{PARSER\_FreeSVG}!svgparser.h@{svgparser.h}}
+\doxysubsubsection{\texorpdfstring{PARSER\_FreeSVG()}{PARSER\_FreeSVG()}}
+{\footnotesize\ttfamily void PARSER\+\_\+\+Free\+SVG (\begin{DoxyParamCaption}\item[{xml\+Doc\+Ptr}]{svg\+\_\+tree }\end{DoxyParamCaption})}
+
+
+
+Free the svg tree in memory. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em svg\+\_\+tree} & svg tree to free \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{svgparser_8h_ab536fedfcd496326250b8380a1e42702}\label{svgparser_8h_ab536fedfcd496326250b8380a1e42702}} 
+\index{svgparser.h@{svgparser.h}!PARSER\_GetShapesFromSVG@{PARSER\_GetShapesFromSVG}}
+\index{PARSER\_GetShapesFromSVG@{PARSER\_GetShapesFromSVG}!svgparser.h@{svgparser.h}}
+\doxysubsubsection{\texorpdfstring{PARSER\_GetShapesFromSVG()}{PARSER\_GetShapesFromSVG()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{svgparser_8h_a52f4fc110dd6da67a65f5048d10a1289}{xml\+Node\+Shape}} $\ast$ PARSER\+\_\+\+Get\+Shapes\+From\+SVG (\begin{DoxyParamCaption}\item[{xml\+Doc\+Ptr}]{svg\+\_\+tree }\end{DoxyParamCaption})}
+
+
+
+Get nodes containing shapes. 
+
+\mbox{\Hypertarget{svgparser_8h_a46461ab44c0769d41947123d5ea2e4e2}\label{svgparser_8h_a46461ab44c0769d41947123d5ea2e4e2}} 
+\index{svgparser.h@{svgparser.h}!PARSER\_LoadSVG@{PARSER\_LoadSVG}}
+\index{PARSER\_LoadSVG@{PARSER\_LoadSVG}!svgparser.h@{svgparser.h}}
+\doxysubsubsection{\texorpdfstring{PARSER\_LoadSVG()}{PARSER\_LoadSVG()}}
+{\footnotesize\ttfamily xml\+Doc\+Ptr PARSER\+\_\+\+Load\+SVG (\begin{DoxyParamCaption}\item[{char $\ast$}]{svg\+\_\+path }\end{DoxyParamCaption})}
+
+
+
+Load the svg in memory as a tree. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em svg\+\_\+path} & path to svg file \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+svg\+Tree 
+\end{DoxyReturn}
+\mbox{\Hypertarget{svgparser_8h_a7fe6bf06a9d3a0fe3f5c9c54d5ce2d26}\label{svgparser_8h_a7fe6bf06a9d3a0fe3f5c9c54d5ce2d26}} 
+\index{svgparser.h@{svgparser.h}!PARSER\_ReadShapesFromSVG@{PARSER\_ReadShapesFromSVG}}
+\index{PARSER\_ReadShapesFromSVG@{PARSER\_ReadShapesFromSVG}!svgparser.h@{svgparser.h}}
+\doxysubsubsection{\texorpdfstring{PARSER\_ReadShapesFromSVG()}{PARSER\_ReadShapesFromSVG()}}
+{\footnotesize\ttfamily void PARSER\+\_\+\+Read\+Shapes\+From\+SVG (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{svgparser_8h_a52f4fc110dd6da67a65f5048d10a1289}{xml\+Node\+Shape}} $\ast$$\ast$}]{shapes,  }\item[{xml\+Node $\ast$}]{svg\+\_\+node }\end{DoxyParamCaption})}
+
