@@ -27,7 +27,17 @@ struct ComplexList_s
  */
 __inline struct Complex_s createComplex(double p_real, double p_imaginary)
 {
-	return (struct Complex_s) {p_real, p_imaginary};
+	return (struct Complex_s) { p_real, p_imaginary };
+}
+
+/**
+ * @brief get the conjugate of a complex number
+ * \param[in] p_complex a complex number
+ * \return complex conjugate
+ */
+__inline struct Complex_s getComplexConjugate(struct Complex_s p_complex)
+{
+	return (struct Complex_s) { p_complex.m_real, -p_complex.m_imaginary };
 }
 
 

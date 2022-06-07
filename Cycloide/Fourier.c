@@ -9,10 +9,11 @@ struct Circle_s* createCircle(int p_index, struct Complex_s p_coeff)
 	circle->m_index = p_index;
 	circle->m_position = (ShapePoint) { 0.0, 0.0 };
 	circle->m_coeff = p_coeff;
-	circle->m_amplitude = sqrtf((p_coeff.m_real * p_coeff.m_real) + (p_coeff.m_imaginary * p_coeff.m_imaginary));
+	circle->m_amplitude = sqrtf(multiplyComplex(p_coeff, getComplexConjugate(p_coeff)).m_real);
 	circle->m_nextCircle = NULL;
 	return circle;
 }
+
 
 void addCircleList(struct Circle_s** p_circleList, struct Circle_s* p_toAdd)
 {
@@ -25,29 +26,31 @@ void addCircleList(struct Circle_s** p_circleList, struct Circle_s* p_toAdd)
 	temp->m_nextCircle = p_toAdd;
 }
 
-ShapePoint getPositionFromCircles(struct Circle_s* p_circleList, double*** p_bezierList, int p_nbBezier, double p_time)
+ShapePoint getPositionFromCircles(struct Circle_s* p_circleList, double*** p_bezierList, size_t p_nbBezier, double p_time)
 {
 	if (!p_circleList)
-		return (ShapePoint) { 0, 0 };
+		return (ShapePoint) { 0.0, 0.0 };
 
 	struct Complex_s result = { 0 };
 	while (p_circleList)
 	{
-		updateCirclePosition(p_circleList, (ShapePoint) { result.m_real, result.m_imaginary });
+		updateCirclePosition(p_circleList, (ShapePoint) { result.m_real - 512, result.m_imaginary });
 		result = addComplex(result, multiplyComplex(p_circleList->m_coeff, getExponentialComplex(createComplex(0, (double)(p_circleList->m_index * 2) * PI * p_time))));
 		p_circleList = p_circleList->m_nextCircle;
 	}
-	return (ShapePoint) { result.m_real, result.m_imaginary};
+	return (ShapePoint) { result.m_real - 512, result.m_imaginary};
 }
 
 
 struct Complex_s getCircleCoeff(int index, double*** p_bezierList, int p_nbBezier)
 {
-	struct Complex_s result = {0, 0};
+	struct Complex_s result = {0};
+	struct Complex_s f_t = {0};
 	for (double i = 0; i < 1; i += 0.01)
 	{
-		// result = result + p_bezierList(t) * e^-indexPIit 
-		result = addComplex(result, multiplyComplex(convertPointToComplex(getBezierPointFromList(p_bezierList, p_nbBezier, i)), getExponentialComplex(createComplex(0,  - 2 * index * PI * i))));
+		// result = result + p_bezierList(t) * e^-indexPIit  
+		f_t = convertPointToComplex(getBezierPointFromList(p_bezierList, p_nbBezier, i));
+		result = addComplex(result, multiplyComplex(f_t, getExponentialComplex(createComplex(0, -2 * index * PI * i))));
 	}
 
 	//result = result * dt
@@ -121,10 +124,30 @@ void addLastCircles(struct Circle_s** p_circleList, int p_index, double*** p_bez
 	addCircleList(p_circleList, createCircle(-p_index, getCircleCoeff(-p_index, p_bezierList, p_nbBezier)));
 }
 
-struct Circle_s* initFourier(double*** p_bezierList)
+struct Circle_s* initFourier(double**** p_bezierList, ShapePoint* p_pointsList, size_t p_nbPoints, size_t* p_nbFunctions)
 {
-	//replace with getPointList 
+#if 1
+	size_t nbFunctions = (double)p_nbPoints / 4;
+	ShapePoint* points[4] = { 0 };
+	double*** bezierList = (double***) calloc(nbFunctions, sizeof(double**));
+
+	for (size_t i = 0; i < nbFunctions; ++i)
+	{
+		points[0] = p_pointsList;
+		p_pointsList = p_pointsList->np;
+		points[1] = p_pointsList;
+		p_pointsList = p_pointsList->np;
+		points[2] = p_pointsList;
+		p_pointsList = p_pointsList->np;
+		points[3] = p_pointsList;
+
+		bezierList[i] = getBezierFunction(*(points[0]), *(points[1]), *(points[2]), *(points[3]));
+		p_pointsList = p_pointsList->np;
+	}
+#else
 	ShapePoint pointList[4][4] = { 0 };
+	double*** bezierList = (double***) calloc(4, sizeof(double**));
+	int nbFunctions = 4;
 
 	pointList[0][0].x = 100; pointList[0][0].y = 300;
 	pointList[0][1].x = 50; pointList[0][1].y = 250;
@@ -149,20 +172,22 @@ struct Circle_s* initFourier(double*** p_bezierList)
 	//stop replacing
 
 
-	p_bezierList[0] = getBezierFunction(pointList[0][0], pointList[0][1], pointList[0][2], pointList[0][3]);
-	p_bezierList[1] = getBezierFunction(pointList[1][0], pointList[1][1], pointList[1][2], pointList[1][3]);
-	p_bezierList[2] = getBezierFunction(pointList[2][0], pointList[2][1], pointList[2][2], pointList[2][3]);
-	p_bezierList[3] = getBezierFunction(pointList[3][0], pointList[3][1], pointList[3][2], pointList[3][3]);
+	bezierList[0] = getBezierFunction(pointList[0][0], pointList[0][1], pointList[0][2], pointList[0][3]);
+	bezierList[1] = getBezierFunction(pointList[1][0], pointList[1][1], pointList[1][2], pointList[1][3]);
+	bezierList[2] = getBezierFunction(pointList[2][0], pointList[2][1], pointList[2][2], pointList[2][3]);
+	bezierList[3] = getBezierFunction(pointList[3][0], pointList[3][1], pointList[3][2], pointList[3][3]);
+#endif
 
-
-	struct Circle_s* circleList = createCircle(0, getCircleCoeff(0, p_bezierList, 4));
+	*p_nbFunctions = nbFunctions;
+	*p_bezierList = bezierList;
+	struct Circle_s* circleList = createCircle(0, getCircleCoeff(0, bezierList, nbFunctions));
 
 	struct Circle_s* currentCircle;
 	for (int i = 1; i <= g_nbCircles / 2; ++i)
 	{
-		currentCircle = createCircle(i, getCircleCoeff(i, p_bezierList, 4));
+		currentCircle = createCircle(i, getCircleCoeff(i, bezierList, nbFunctions));
 		addCircleList(&circleList, currentCircle);
-		currentCircle = createCircle(-1 * i, getCircleCoeff(-1 * i, p_bezierList, 4));
+		currentCircle = createCircle(-1 * i, getCircleCoeff(-1 * i, bezierList, nbFunctions));
 		addCircleList(&circleList, currentCircle);
 	}
 	return circleList;

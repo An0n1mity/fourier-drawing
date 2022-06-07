@@ -16,7 +16,7 @@ ShapePathblock* ParsePath(svgAttributeStack* path_attribute)
     //strcat(path_attribute->value, end_delimiter);
     size_t pathlen = strlen(path_attribute->value);
     int j = 0;
-    for (int i = 0; i <= pathlen; ++i) {
+    for (size_t i = 0; i <= pathlen; ++i) {
         if (path_attribute->value[i] == 'M' || path_attribute->value[i] == 'H' ||
             path_attribute->value[i] == 'V' || path_attribute->value[i] == 'v' ||
             path_attribute->value[i] == 'L' || path_attribute->value[i] == 'Z' ||

@@ -412,6 +412,7 @@ ShapePolyline* SHAPE_CreatePolylineFromSVGPolyline(svgAttributeStack* attributes
 
         attributes = attributes->na;
     }
+    return NULL;
 }
 
 ShapePoint* SHAPE_GetPointsFromPolyline(ShapePolyline* polyline, float step)
@@ -501,6 +502,7 @@ ShapePolygon* SHAPE_CreatePolygonFromSVGPolygon(svgAttributeStack* attributes)
 
         attributes = attributes->na;
     }
+    return NULL;
 }
 
 ShapePoint* SHAPE_GetPointsFromPolygon(ShapePolygon* polygon, float step)

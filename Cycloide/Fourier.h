@@ -51,7 +51,7 @@ void addCircleList(struct Circle_s** p_list, struct Circle_s* p_toAdd);
  * \param[in] p_time the time of the next circle position
  * \return the new position led by the circles
  */
-ShapePoint getPositionFromCircles(struct Circle_s* p_circleList, double*** p_bezierList, int p_nbBezier, double p_time);
+ShapePoint getPositionFromCircles(struct Circle_s* p_circleList, double*** p_bezierList, size_t p_nbBezier, double p_time);
 
 /**
  * @brief calculate the coeff of the circle depending of the index and the path
@@ -97,9 +97,12 @@ void addLastCircles(struct Circle_s** p_circleList, int p_index, double*** p_bez
 /**
  * @brief setup the fourier transform 
  * \param[in/out] p_bezierList list that will be filled with functions from given points inside
+ * \param[in] p_pointsList list of points of the drawing
+ * \param[in] p_nbPoints number of points inside the list
+ * \param[out] p_nbFunctions get the number of bezier functions
  * \return complex number representing the position
  */
-struct Circle_s* initFourier(double*** p_bezierList);
+struct Circle_s* initFourier(double**** p_bezierList, ShapePoint* p_pointsList, size_t p_nbPoints, size_t* p_nbFunctions);
 
 /**
  * @brief free all the created circles
