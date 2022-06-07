@@ -14,11 +14,11 @@ struct Circle_s* createCircle(int p_index, struct Complex_s p_coeff)
 	return circle;
 }
 
-void addCircleList(struct Circle_s** p_list, struct Circle_s* p_toAdd)
+void addCircleList(struct Circle_s** p_circleList, struct Circle_s* p_toAdd)
 {
-	if (!p_list || !(*p_list) || !p_toAdd)
+	if (!p_circleList || !(*p_circleList) || !p_toAdd)
 		return;
-	struct Circle_s* temp = (*p_list);
+	struct Circle_s* temp = (*p_circleList);
 	while (temp->m_nextCircle)
 		temp = temp->m_nextCircle;
 
@@ -43,23 +43,14 @@ SHAPE_Point getPositionFromCircles(struct Circle_s* p_circleList, double*** p_be
 
 struct Complex_s getCircleCoeff(int index, double*** p_bezierList, int p_nbBezier)
 {
-	/*struct Complex_s f_0 = convertPointToComplex(getBezierPointFromList(p_bezierList, p_nbBezier, 0));
-	struct Complex_s f_half = convertPointToComplex(getBezierPointFromList(p_bezierList, p_nbBezier, 0.5));
-	//f_1 = f_0
-
-	struct Complex_s exponent_half = getExponentialComplex(createComplex(0, -index * PI));
-	struct Complex_s exponent_1 = getExponentialComplex(createComplex(0, -2 * index * PI));
-
-	struct Complex_s result = addComplex(f_0, addComplex(multiplyComplex(multiplyComplex(createComplex(4, 0), f_half), exponent_half), multiplyComplex(f_0, exponent_1)));
-	result.m_real /= 6.0;
-	result.m_imaginary /= 6.0;
-	*/
-
-	struct Complex_s result = { 0, 0 };
+	struct Complex_s result = {0, 0};
 	for (double i = 0; i < 1; i += 0.01)
 	{
+		// result = result + p_bezierList(t) * e^-indexPIit 
 		result = addComplex(result, multiplyComplex(convertPointToComplex(getBezierPointFromList(p_bezierList, p_nbBezier, i)), getExponentialComplex(createComplex(0,  - 2 * index * PI * i))));
 	}
+
+	//result = result * dt
 	result.m_real *= 0.01;
 	result.m_imaginary *= 0.01;
 	return result;
@@ -107,4 +98,25 @@ void drawCircles(SDL_Renderer* renderer, struct Circle_s* p_circleList)
 		}
 		p_circleList = p_circleList->m_nextCircle;
 	}
+}
+
+void freeLastCircles(struct Circle_s** p_circleList)
+{
+	if (!p_circleList)
+		return;
+
+	struct Circle_s** cursor = p_circleList;
+	while ((*cursor)->m_nextCircle && (*cursor)->m_nextCircle->m_nextCircle)
+		cursor = &(*cursor)->m_nextCircle;
+
+	free((*cursor)->m_nextCircle);
+	(*cursor)->m_nextCircle = NULL;
+	free((*cursor));
+	(*cursor) = NULL;
+}
+
+void addLastCircles(struct Circle_s** p_circleList, int p_index, double*** p_bezierList, int p_nbBezier)
+{
+	addCircleList(p_circleList, createCircle(p_index, getCircleCoeff(p_index, p_bezierList, p_nbBezier)));
+	addCircleList(p_circleList, createCircle(-p_index, getCircleCoeff(-p_index, p_bezierList, p_nbBezier)));
 }
