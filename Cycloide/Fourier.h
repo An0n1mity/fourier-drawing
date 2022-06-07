@@ -10,7 +10,7 @@
 struct Circle_s
 {
 	int m_index;					///< index of the circle
-	SHAPE_Point m_position;			///< position of the circle
+	ShapePoint m_position;			///< position of the circle
 	struct Complex_s m_coeff;		///< complex coeff corresponding to the initial angle and the amplitude
 	double m_amplitude;				///< radius of the circle
 	struct Circle_s* m_nextCircle;	///< pointer to the next circle
@@ -30,7 +30,7 @@ struct Circle_s* createCircle(int p_index, struct Complex_s p_coeff);
  * \param[in] p_position the new position of the circle
  */
 
-__inline void updateCirclePosition(struct Circle_s* p_circle, SHAPE_Point p_position)
+__inline void updateCirclePosition(struct Circle_s* p_circle, ShapePoint p_position)
 {
 	p_circle->m_position.x = p_position.x;
 	p_circle->m_position.y = p_position.y;
@@ -51,7 +51,7 @@ void addCircleList(struct Circle_s** p_list, struct Circle_s* p_toAdd);
  * \param[in] p_time the time of the next circle position
  * \return the new position led by the circles
  */
-SHAPE_Point getPositionFromCircles(struct Circle_s* p_circleList, double*** p_bezierList, int p_nbBezier, double p_time);
+ShapePoint getPositionFromCircles(struct Circle_s* p_circleList, double*** p_bezierList, int p_nbBezier, double p_time);
 
 /**
  * @brief calculate the coeff of the circle depending of the index and the path
@@ -70,11 +70,11 @@ struct Complex_s getCircleCoeff(int index, double*** p_bezierList, int p_nbBezie
 void drawCircles(SDL_Renderer* renderer, struct Circle_s* p_circleList);
 
 /**
- * @brief convert a SHAPE_Point to a complex number
- * \param[in] p_point the SHAPE_Point to convert
+ * @brief convert a ShapePoint to a complex number
+ * \param[in] p_point the ShapePoint to convert
  * \return complex number representing the position
  */
-__inline struct Complex_s convertPointToComplex(SHAPE_Point p_point)
+__inline struct Complex_s convertPointToComplex(ShapePoint p_point)
 {
 	return createComplex(p_point.x, p_point.y);
 }

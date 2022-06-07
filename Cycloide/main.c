@@ -1,3 +1,4 @@
+
 #include "shapes.h"
 #include "svgparser.h"
 #include "BezierCurve.h"
@@ -5,7 +6,6 @@
 #include "SDL2/SDL.h"
 #include "Fourier.h"
 #include <time.h>
-#include "main.h"
 
 int g_nbCircles = 10;
 double g_timeScale = 10.0;
@@ -50,10 +50,22 @@ void doInput()
 
 int main(int argc, char* argv[])
 {
-	srand(time(NULL));
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+		fprintf(stderr, "%s\n", SDL_GetError());
 
-	xmlDocPtr svgfile = PARSER_LoadSVG("../Cycloide/test.xml");
-	xmlNodeShape* shapes = PARSER_GetShapesFromSVG(svgfile);
+	srand(time(NULL));
+	size_t nbPoints;
+
+	// Load the svg file in memory
+	xmlDocPtr svgfile = PARSER_LoadSVG("../fourier.svg");
+
+	// Parse the svg file and create SVG shapes with attributes of the file
+	svgShapeStack* svg_shapes = PARSER_GetShapesFromSVG(svgfile);
+
+	// Transform to mathematical represnetation from svg shapes
+	ShapeAbstract* abstract_shapes = SHAPE_CreateAbstractFromSVG(svg_shapes);
+	ShapePoint* pointsList = SHAPE_GetPointsFromAbstractShapes(abstract_shapes, 1.f, &nbPoints);
+
 	SDL_Window* window = SDL_CreateWindow("Fourier drawing", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 720, SDL_WINDOW_OPENGL);
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
 
@@ -66,39 +78,45 @@ int main(int argc, char* argv[])
 	double currentTime = startTime;
 	double currentDeltaTime = startTime;
 
-	SHAPE_Point currentPosition = { 0 }, lastPosition = getPositionFromCircles(circleList, bezierList, 4, 0);
+	ShapePoint* currentPosition = NULL, lastPosition = getPositionFromCircles(circleList, bezierList, 4, 0);
 	SDL_RenderClear(renderer);
 
 
-	SHAPE_Point* drawPointList = (SHAPE_Point*) calloc(1, sizeof(SHAPE_Point));
+	ShapePoint* drawPointList = (ShapePoint*) calloc(1, sizeof(ShapePoint));
 	if (!drawPointList)
 		return -1;
 
 	drawPointList->x = lastPosition.x;
 	drawPointList->y = lastPosition.y;
 	double prevTimeScale = g_timeScale;
-	SHAPE_Point* currentPoint = drawPointList;
+	ShapePoint* currentPoint = drawPointList;
 	while (1)
 	{
-		currentPoint = drawPointList;
-		lastPosition.x = currentPoint->x;
-		lastPosition.y = currentPoint->y;
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-		SDL_RenderClear(renderer);
-		currentTime =  (double)(clock() - startTime) / ((double) CLOCKS_PER_SEC * g_timeScale);
+		currentTime = (double)(clock() - startTime) / ((double)CLOCKS_PER_SEC * g_timeScale);
 
 		if (currentTime >= 1.0 || prevTimeScale != g_timeScale)
 		{
 			startTime = clock();
-			destroySHAPE_PointList(drawPointList->np);
-			drawPointList->np = NULL;
+			SHAPE_FreePoints(drawPointList);
+			drawPointList = NULL;
 			currentTime = 0.0;
 			prevTimeScale = g_timeScale;
 		}
 
+		if (currentPoint = drawPointList)
+		{
+
+			lastPosition.x = currentPoint->x;
+			lastPosition.y = currentPoint->y;
+		}
+
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+		SDL_RenderClear(renderer);
+
 		printf("currentTime : %.4lf\n", currentTime);
-		currentPosition = getPositionFromCircles(circleList, bezierList, 4, currentTime);
-		SHAPE_AddPoint(&drawPointList, currentPosition.x, currentPosition.y);
+		currentPosition = (ShapePoint*) malloc(sizeof(ShapePoint));
+		*currentPosition = getPositionFromCircles(circleList, bezierList, 4, currentTime);
+		SHAPE_AddPoint(&drawPointList, currentPosition);
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
 		while (currentPoint)
@@ -129,7 +147,7 @@ int main(int argc, char* argv[])
 		SDL_Delay(0);
 	}
 
-	destroySHAPE_PointList(drawPointList);
+	SHAPE_FreePoints(drawPointList);
 	for (int i = 0; i < 4; ++i)
 		freeBezierFunction(bezierList[i]);
 

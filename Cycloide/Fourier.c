@@ -7,7 +7,7 @@ struct Circle_s* createCircle(int p_index, struct Complex_s p_coeff)
 		return NULL;
 
 	circle->m_index = p_index;
-	circle->m_position = (SHAPE_Point) { 0.0, 0.0 };
+	circle->m_position = (ShapePoint) { 0.0, 0.0 };
 	circle->m_coeff = p_coeff;
 	circle->m_amplitude = sqrtf((p_coeff.m_real * p_coeff.m_real) + (p_coeff.m_imaginary * p_coeff.m_imaginary));
 	circle->m_nextCircle = NULL;
@@ -25,19 +25,19 @@ void addCircleList(struct Circle_s** p_circleList, struct Circle_s* p_toAdd)
 	temp->m_nextCircle = p_toAdd;
 }
 
-SHAPE_Point getPositionFromCircles(struct Circle_s* p_circleList, double*** p_bezierList, int p_nbBezier, double p_time)
+ShapePoint getPositionFromCircles(struct Circle_s* p_circleList, double*** p_bezierList, int p_nbBezier, double p_time)
 {
 	if (!p_circleList)
-		return (SHAPE_Point) { 0, 0 };
+		return (ShapePoint) { 0, 0 };
 
 	struct Complex_s result = { 0 };
 	while (p_circleList)
 	{
-		updateCirclePosition(p_circleList, (SHAPE_Point) { result.m_real, result.m_imaginary });
+		updateCirclePosition(p_circleList, (ShapePoint) { result.m_real, result.m_imaginary });
 		result = addComplex(result, multiplyComplex(p_circleList->m_coeff, getExponentialComplex(createComplex(0, (double)(p_circleList->m_index * 2) * PI * p_time))));
 		p_circleList = p_circleList->m_nextCircle;
 	}
-	return (SHAPE_Point) { result.m_real, result.m_imaginary};
+	return (ShapePoint) { result.m_real, result.m_imaginary};
 }
 
 
@@ -69,7 +69,7 @@ void drawCircles(SDL_Renderer* renderer, struct Circle_s* p_circleList)
 		double tx = 1;
 		double ty = 1;
 		double error = (tx - diameter);
-		SHAPE_Point position = p_circleList->m_position;
+		ShapePoint position = p_circleList->m_position;
 		while (x >= y)
 		{
 			//  Each of the following renders an octant of the circle
@@ -124,7 +124,7 @@ void addLastCircles(struct Circle_s** p_circleList, int p_index, double*** p_bez
 struct Circle_s* initFourier(double*** p_bezierList)
 {
 	//replace with getPointList 
-	SHAPE_Point pointList[4][4] = { 0 };
+	ShapePoint pointList[4][4] = { 0 };
 
 	pointList[0][0].x = 100; pointList[0][0].y = 300;
 	pointList[0][1].x = 50; pointList[0][1].y = 250;

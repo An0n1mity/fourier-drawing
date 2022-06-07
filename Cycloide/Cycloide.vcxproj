@@ -99,7 +99,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>D:\Programmes\vcpkg\installed\x86-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -115,7 +115,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>D:\Programmes\vcpkg\installed\x86-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -156,13 +156,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="controller.svg" />
+    <None Include="Cycloide.aps" />
+    <None Include="dog.svg" />
+    <None Include="Doxyfile" />
+    <None Include="eiffel.svg" />
+    <None Include="fourier.svg" />
+    <None Include="gui.glade" />
+    <None Include="gui.glade~" />
+    <None Include="linux.svg" />
+    <None Include="main.svg" />
     <None Include="packages.config" />
+    <None Include="pc.svg" />
+    <None Include="Pi.svg" />
+    <None Include="star.svg" />
+    <None Include="svg" />
+    <None Include="svg.svg" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BezierCurve.c" />
     <ClCompile Include="complex.c" />
     <ClCompile Include="Fourier.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="pathparser.c" />
     <ClCompile Include="shapes.c" />
     <ClCompile Include="svgparser.c" />
   </ItemGroup>
@@ -170,7 +186,8 @@
     <ClInclude Include="BezierCurve.h" />
     <ClInclude Include="complex.h" />
     <ClInclude Include="Fourier.h" />
-    <ClInclude Include="main.h" />
+    <ClInclude Include="pathparser.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="shapes.h" />
     <ClInclude Include="svgparser.h" />
   </ItemGroup>
@@ -179,6 +196,10 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Cycloide.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
+    <Text Include="conanfile.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

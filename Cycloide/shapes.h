@@ -15,7 +15,7 @@
 #endif
 //#include <corecrt.h>
 #include "svgparser.h"
-#include "kiss_fftr.h"
+//#include "kiss_fftr.h"
 
 typedef struct ShapeAbstract_s ShapeAbstract;
 typedef struct ShapeRectangle_s ShapeRectangle;
@@ -126,14 +126,14 @@ struct ShapePathblock_s {
     struct ShapePoint_s* p; ///< linked list of points
     struct ShapePathblock_s* nb; ///< linked list of blocks
 };
-
+/*
 struct {
     kiss_fft_cpx complex;
     int frequency;
     long double amplitude;
     float phase;
 }typedef DFT;
-
+*/
 
 /**
  * @brief Create an abstract shape based on is type and data
@@ -220,8 +220,12 @@ size_t SHAPE_GetNumberOfPoints(ShapePoint* points);
 ShapePoint* SHAPE_ListOfPointsToArray(ShapePoint* points, size_t size);
 double* SHAPE_GetXOfPoints(ShapePoint* points, size_t size);
 double* SHAPE_GetYOfPoints(ShapePoint* points, size_t size);
+
+/*
 DFT* SHAPE_GetDFTOfRealPointsY(ShapePoint* real_points, size_t size);
-DFT* SHAPE_GetDFTOfRealPointsX(ShapePoint* real_points, size_t size);
+DFT* SHAPE_GetDFTOfRealPointsX(ShapePoint* real_points, size_t size);*/
+
+
 void SHAPE_FreePoints(ShapePoint* points);
 
 #endif //CYCLOIDE_SHAPES_H

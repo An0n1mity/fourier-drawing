@@ -13,7 +13,7 @@
  * \param[in] p_P3 the fourth point 
  * \return matrix containing function of x and function of y by this order : 1, x, x^2, x^3
  */
-double** getBezierFunction(SHAPE_Point p_P0, SHAPE_Point p_P1, SHAPE_Point p_P2, SHAPE_Point p_P3);
+double** getBezierFunction(ShapePoint p_P0, ShapePoint p_P1, ShapePoint p_P2, ShapePoint p_P3);
 
 /**
  * @brief free the bezierFunction
@@ -27,7 +27,7 @@ void freeBezierFunction(double** p_bezierFunction);
  * \param[in] p_time at which time I want to get the point
  * \return the point depending of the time
  */
-SHAPE_Point getBezierPoint(double** p_bezierFunction, double p_time);
+ShapePoint getBezierPoint(double** p_bezierFunction, double p_time);
 
 /**
  * @brief get a point from a list of bezier function from a certain time
@@ -36,6 +36,6 @@ SHAPE_Point getBezierPoint(double** p_bezierFunction, double p_time);
  * \param[in] p_time at which time I want to get the position
  * \return the point the assembled functions at a certain time
  */
-SHAPE_Point getBezierPointFromList(double*** p_bezierFunction, int p_nbBezier, double p_time);
+ShapePoint getBezierPointFromList(double*** p_bezierFunction, int p_nbBezier, double p_time);
 
 #endif
