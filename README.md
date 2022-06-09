@@ -29,7 +29,7 @@
 
 ## 🧐 About <a name = "about"></a>
 
-This project was made has a demonstrative and visual uses of the this powerful mathematical concept that is the Fourier Series. 
+This project was made as a demonstrative and visual uses of the this powerful mathematical concept that is the Fourier Series. 
 
 The program gets the data from a SVG passed by the user, and then process it, resulting in a beautiful approximative drawing of the original SVG.
 
