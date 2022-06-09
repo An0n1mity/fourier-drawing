@@ -9,7 +9,7 @@ struct Circle_s* createCircle(int p_index, struct Complex_s p_coeff)
 	circle->m_index = p_index;
 	circle->m_position = (ShapePoint) { 0.0, 0.0 };
 	circle->m_coeff = p_coeff;
-	circle->m_amplitude = sqrtf(multiplyComplex(p_coeff, getComplexConjugate(p_coeff)).m_real);
+	circle->m_amplitude = sqrtf(multiplyComplex(p_coeff, getComplexConjugate(p_coeff)).m_real) / 2;
 	circle->m_nextCircle = NULL;
 	return circle;
 }
@@ -34,11 +34,11 @@ ShapePoint getPositionFromCircles(struct Circle_s* p_circleList, double*** p_bez
 	struct Complex_s result = { 0 };
 	while (p_circleList)
 	{
-		updateCirclePosition(p_circleList, (ShapePoint) { result.m_real - 512, result.m_imaginary });
+		updateCirclePosition(p_circleList, (ShapePoint) { (result.m_real) / 2, (result.m_imaginary) / 2});
 		result = addComplex(result, multiplyComplex(p_circleList->m_coeff, getExponentialComplex(createComplex(0, (double)(p_circleList->m_index * 2) * PI * p_time))));
 		p_circleList = p_circleList->m_nextCircle;
 	}
-	return (ShapePoint) { result.m_real - 512, result.m_imaginary};
+	return (ShapePoint) { (result.m_real) / 2, (result.m_imaginary) / 2};
 }
 
 
@@ -46,7 +46,7 @@ struct Complex_s getCircleCoeff(int index, double*** p_bezierList, int p_nbBezie
 {
 	struct Complex_s result = {0};
 	struct Complex_s f_t = {0};
-	for (double i = 0; i < 1; i += 0.01)
+	for (double i = 0; i < 1; i += 0.005)
 	{
 		// result = result + p_bezierList(t) * e^-indexPIit  
 		f_t = convertPointToComplex(getBezierPointFromList(p_bezierList, p_nbBezier, i));
@@ -54,8 +54,8 @@ struct Complex_s getCircleCoeff(int index, double*** p_bezierList, int p_nbBezie
 	}
 
 	//result = result * dt
-	result.m_real *= 0.01;
-	result.m_imaginary *= 0.01;
+	result.m_real *= 0.005;
+	result.m_imaginary *= 0.005;
 	return result;
 }
 
@@ -63,6 +63,8 @@ void drawCircles(SDL_Renderer* renderer, struct Circle_s* p_circleList)
 {
 	while (p_circleList)
 	{
+		if (!p_circleList->m_nextCircle)
+			SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 		double radius = p_circleList->m_amplitude;
 		radius *= radius < 0 ? -1 : 1;
 		const double diameter = radius * 2;
