@@ -37,6 +37,7 @@ This project is built using those following libraries :
 - libxml2 
 - portaudio
 - gtk3 
+- kiss fft
 ```
 
 ### Linux
@@ -61,4 +62,5 @@ cd build
 
 A great thanks to those great youtube channels that explained the mathematicals conecpts behind Fourier drawing.  
 El Jj : <a>https://www.youtube.com/watch?v=uazPP0ny3XQ</a>  
-3Blue1Brown : <a>https://www.youtube.com/watch?v=r6sGWTCMz2k</a>
+3Blue1Brown : <a>https://www.youtube.com/watch?v=r6sGWTCMz2k</a>  
+Thanks to Mark Borgerding providing us with his powerful tool : https://github.com/mborgerding/kissfft
