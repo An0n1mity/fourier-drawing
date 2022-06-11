@@ -59,6 +59,6 @@ cd build
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
-A great thanks to those great youtube channels that explained the mathematicals conecpts behind Fourier drawing.
-El Jj : <a>https://www.youtube.com/watch?v=uazPP0ny3XQ</a>
+A great thanks to those great youtube channels that explained the mathematicals conecpts behind Fourier drawing.  
+El Jj : <a>https://www.youtube.com/watch?v=uazPP0ny3XQ</a>  
 3Blue1Brown : <a>https://www.youtube.com/watch?v=r6sGWTCMz2k</a>
