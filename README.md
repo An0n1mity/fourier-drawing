@@ -19,7 +19,7 @@
 
 - [About](#about)
 - [Installation](#installation)
-- [Screenshots](#screenshots)
+- [Screenshot](#screenshot)
 - [Acknowledgments](#acknowledgement)
 
 ## 🧐 About <a name = "about"></a>
@@ -30,7 +30,7 @@ The program gets the data from a SVG passed by the user, and then process it, re
 
 Disclaimer : The parsing module for SVG is not robust, program might crash on most of the files. 
 
-## Installation <a name = "installation"></a>
+## 🚀 Installation <a name = "installation"></a>
 This project is built using those following libraries :
 
 ```
@@ -54,7 +54,8 @@ cd build
 .. cmake
 ```
 
-## Screenshots <a name = "screenshots"></a>
+## Screenshot <a name = "screenshot"></a>
+![alt text](https://github.com/An0n1mity/fourier-drawing/blob/main/screenshot.png)
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
