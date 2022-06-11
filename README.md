@@ -3,7 +3,7 @@
  <img width=200px height=200px src="https://www.tomesoftware.com/wp-content/uploads/2019/09/Screen-Shot-2019-07-09-at-10.50.35-AM-1-768x616.png" alt="Project logo"></a>
 </p>
 
-<h3 align="center">Fourier Drawing GTK</h3>
+<h3 align="center">Fourier Drawing</h3>
 
 <div align="center">
 
@@ -18,13 +18,8 @@
 ## 📝 Table of Contents
 
 - [About](#about)
-- [Getting Started](#getting_started)
-- [Deployment](#deployment)
-- [Usage](#usage)
-- [Built Using](#built_using)
-- [TODO](../TODO.md)
-- [Contributing](../CONTRIBUTING.md)
-- [Authors](#authors)
+- [Installation](#installation)
+- [Screenshots](#screenshots)
 - [Acknowledgments](#acknowledgement)
 
 ## 🧐 About <a name = "about"></a>
@@ -33,81 +28,33 @@ This project was made as a demonstrative and visual uses of the this powerful ma
 
 The program gets the data from a SVG passed by the user, and then process it, resulting in a beautiful approximative drawing of the original SVG.
 
-Disclaimer : The parsing module for SVG is not robust, program might crash on most of the files.
+Disclaimer : The parsing module for SVG is not robust, program might crash on most of the files. 
 
-## 🏁 Getting Started <a name = "getting_started"></a>
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
-
-### Prerequisites
-
-To build and run the program you will need those following packages :
+## Installation <a name = "installation"></a>
+This project is built using those following libraries :
 
 ```
 - libxml2 
 - portaudio
 - gtk3 
-
 ```
 
-### Installing
-
-A step by step series of examples that tell you how to get a development env running.
-
-Say what the step will be
+### Linux
+Installing libraries
 
 ```
-Give the example
+sudo apt-get install libxml2-dev libasound-dev libgtk-3-dev
 ```
 
-And repeat
-
+Cloning and building 
 ```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo.
-
-## 🔧 Running the tests <a name = "tests"></a>
-
-Explain how to run the automated tests for this system.
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
+git clone https://github.com/An0n1mity/fourier-drawing
+mkdir build 
+cd build
+.. cmake
 ```
 
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## 🎈 Usage <a name="usage"></a>
-
-Add notes about how to use the system.
-
-## 🚀 Deployment <a name = "deployment"></a>
-
-Add additional notes about how to deploy this on a live system.
-
-## ⛏️ Built Using <a name = "built_using"></a>
-
-- [MongoDB](https://www.mongodb.com/) - Database
-- [Express](https://expressjs.com/) - Server Framework
-- [VueJs](https://vuejs.org/) - Web Framework
-- [NodeJs](https://nodejs.org/en/) - Server Environment
-
-## ✍️ Authors <a name = "authors"></a>
-
-- [@kylelobo](https://github.com/kylelobo) - Idea & Initial work
-
-See also the list of [contributors](https://github.com/kylelobo/The-Documentation-Compendium/contributors) who participated in this project.
+## Screenshots <a name = "screenshots"></a>
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
