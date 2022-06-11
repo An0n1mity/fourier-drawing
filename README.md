@@ -54,11 +54,11 @@ cd build
 .. cmake
 ```
 
-## Screenshot <a name = "screenshot"></a>
+## 📷 Screenshot <a name = "screenshot"></a>
 ![alt text](https://github.com/An0n1mity/fourier-drawing/blob/main/screenshot.png)
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
-- Hat tip to anyone whose code was used
-- Inspiration
-- References
+A great thanks to those great youtube channels that explained the mathematicals conecpts behind Fourier drawing.
+<a>https://www.youtube.com/watch?v=uazPP0ny3XQ</a>
+<a>https://www.youtube.com/watch?v=r6sGWTCMz2k</a>
