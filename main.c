@@ -1,6 +1,3 @@
-
-#define SDL_MAIN_HANDLED
-
 #include "shapes.h"
 #include "svgparser.h"
 #include "GUI.h"
