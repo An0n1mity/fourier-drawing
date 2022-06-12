@@ -52,7 +52,7 @@ Cloning and building
 git clone https://github.com/An0n1mity/fourier-drawing
 mkdir build 
 cd build
-.. cmake
+cmake ..
 ```
 
 ## 📷 Screenshot <a name = "screenshot"></a>
