@@ -10,6 +10,12 @@ void GetFileNameFromFileChooser(GtkFileChooser* file_chooser, gpointer user_data
     struct UserData_s* data = (struct UserData_s*)user_data;
     if (!filename) return;
 
+     if(data->fft_array){
+        free(data->fft_array);
+        SHAPE_FreePoints(data->points_list);
+        data->points_list = NULL; 
+    }  
+
     // Get the file name of the svg
     data->filename = filename;
     // Load svg into a pixbuffer
@@ -20,8 +26,6 @@ void GetFileNameFromFileChooser(GtkFileChooser* file_chooser, gpointer user_data
     data->height =  gdk_pixbuf_get_height(data->svgpixbuf);
 
     data->svgpixbuf = gdk_pixbuf_scale_simple(data->svgpixbuf, 800, 800, GDK_INTERP_HYPER);
-    //data->svgpixbuf = gdk_pixbuf_new_from_file (filename, NULL);
-    //data->svgpixbuf = gdk_pixbuf_scale_simple(data->svgpixbuf, 800, 800, GDK_INTERP_BILINEAR);
 
     // Calculate the FFT of all the svg points
     // Load the svg file in memory
@@ -33,19 +37,19 @@ void GetFileNameFromFileChooser(GtkFileChooser* file_chooser, gpointer user_data
 
     // Get the sets of points from the abstract shapes this operation frees the abstract shapes stack
     size_t nb_points = 0;
-    ShapePoint *points = SHAPE_GetPointsFromAbstractShapes(abstract_shapes, 0.1f, &nb_points);
+    ShapePoint *points = SHAPE_GetPointsFromAbstractShapes(abstract_shapes, 0.5f, &nb_points);
     kiss_fft_cpx* complex_array = GetComplexArrayFromPoints(points, nb_points);
-    if(data->fft_array)
-        free(data->fft_array);
+
     data->fft_array = GetFFTOfComplexArray(complex_array, nb_points);
     data->pa_data->frequencies_array = data->fft_array;
     data->nb_points = nb_points;
+    data->turn = FALSE;
 
-    SHAPE_FreePoints(data->points_list);
-    data->points_list = NULL;
+  
     data->actual_time = 0.f;
     data->previous_time = 0.f;
 
+    SHAPE_FreePoints(points);
     gtk_widget_queue_draw(GTK_WIDGET(data->drawing_area));
 }
 
@@ -55,7 +59,7 @@ void GetPrecisionFromScale(GtkScale* precision_scale, gpointer user_data)
     data->precision = (int)gtk_range_get_value(GTK_RANGE(precision_scale));
     SHAPE_FreePoints(data->points_list);
     data->points_list = NULL;
-    data->turn = false;
+    data->turn = FALSE;
     data->previous_time = data->actual_time;
 }
 
@@ -67,6 +71,16 @@ void SVGCheckButton(GtkCheckButton* button, gpointer user_data)
         data->drawsvg = TRUE;
     } else
         data->drawsvg = FALSE;
+}
+
+void CycloidesCheckButton(GtkCheckButton* button, gpointer user_data)
+{
+    struct UserData_s* data = (struct UserData_s*)user_data;
+    if (gtk_toggle_button_get_active(&button->toggle_button))
+    {
+        data->drawcycloides = TRUE;
+    } else
+        data->drawcycloides = FALSE;
 }
 
 gint ForceRenderUpdate(gpointer user_data)
@@ -83,7 +97,7 @@ void DrawOnScreen(GtkDrawingArea* drawing_area, cairo_t* cr, gpointer user_data)
     struct UserData_s* data = (struct UserData_s*)user_data;
     if(data->drawsvg)
         DrawSVG(cr, user_data);
-    if(data->fft_array)
+    if(data->fft_array && data->drawcycloides)
         SHAPE_AddPoint(&data->points_list, DrawEpicycloides(cr, user_data));
     DrawPoints(cr, user_data);
 }
@@ -101,7 +115,7 @@ void DrawSVG(cairo_t* cr, gpointer user_data)
 void DrawPoints(cairo_t* cr, gpointer user_data)
 {
     struct UserData_s* data = (struct UserData_s*)user_data;
-    float x_scale = 800.f/(float)data->width, y_scale = 800.f/(float)data->height;
+    const float x_scale = 800.f/(float)data->width, y_scale = 800.f/(float)data->height;
     ShapePoint* points = data->points_list;
     cairo_set_source_rgba(cr, 1.f, 0, 0, 1.f);
     cairo_set_line_width(cr, 2.f);
@@ -124,11 +138,8 @@ void DrawPoints(cairo_t* cr, gpointer user_data)
 void TakeScreenshotOfDrawing(GtkButton* button, gpointer user_data)
 {
     struct UserData_s *data = (struct UserData_s *) user_data;
-    gint width, height;
     GtkWindow* window = gtk_widget_get_window(GTK_WIDGET(data->drawing_area));
-    gtk_window_get_size(window, &width, &height);
-    printf("%d %d\n", width, height);
-    GdkPixbuf* pixbuf = gdk_pixbuf_get_from_window(GDK_WINDOW(data->drawing_area), 0, 0, width, height);
+    GdkPixbuf* pixbuf = gdk_pixbuf_get_from_window(GDK_WINDOW(data->drawing_area), 0, 0, 800, 800);
     gdk_pixbuf_save(pixbuf, "fourier.jpeg", "jpeg", NULL, "quality", "100", NULL);
 }
 
@@ -142,7 +153,7 @@ ShapePoint* DrawEpicycloides(cairo_t* cr, gpointer user_data) {
     size_t frequency;
     float x = 0, y = 0;
     static float prev_x, prev_y;
-    float x_scale = 800.f/(float)data->width, y_scale = 800.f/(float)data->height;
+    const float x_scale = 800.f/(float)data->width, y_scale = 800.f/(float)data->height;
     const float dt = M_PI * 2 / (float) data->nb_points;
 
     if (data->actual_time >= 2 * M_PI){
@@ -151,7 +162,7 @@ ShapePoint* DrawEpicycloides(cairo_t* cr, gpointer user_data) {
     }
 
     cairo_set_source_rgba(cr, 0, 0, 0, 0.2);
-    for (size_t i = 0; i < (size_t)((data->precision/100.f)*data->nb_points); i++) {
+    for (size_t i = 0; i < (size_t)((data->precision/100.f)*data->nb_points)-1; i++) {
         prev_x = x;
         prev_y = y;
 
@@ -176,10 +187,22 @@ ShapePoint* DrawEpicycloides(cairo_t* cr, gpointer user_data) {
             cairo_stroke(cr);
      }
 
-        data->actual_time +=dt;
-        if(data->turn)
-            data->previous_time -= dt;
-        if(!data->turn || data->previous_time > 0.f)
-            return SHAPE_CreatePoint(x, y);
-        return NULL;
+    data->actual_time +=dt;
+    if(data->turn)
+        data->previous_time -= dt;
+    if(!data->turn || data->previous_time > 0.f)
+        return SHAPE_CreatePoint(x, y);
+    return NULL;
+}
+
+void FrequencyCheckButton(GtkCheckButton* button, gpointer user_data)
+{
+     struct UserData_s* data = (struct UserData_s*)user_data;
+    if (gtk_toggle_button_get_active(&button->toggle_button))
+    {
+        data->playfrequency = TRUE;
+        Pa_StartStream(data->stream);
+    } else
+        Pa_StopStream(data->stream);
+
 }

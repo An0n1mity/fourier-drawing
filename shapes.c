@@ -4,7 +4,6 @@
 
 #include <stdbool.h>
 #include <string.h>
-//#include <corecrt.h>
 #include "shapes.h"
 #include "svgparser.h"
 #include "kiss_fftr.h"
@@ -51,8 +50,6 @@ ShapeAbstract* SHAPE_CreateAbstractFromSVG(svgShapeStack* svg_shapes)
         else if (!strcmp(svg_shapes->name, "polygon"))
             abstract_to_add = SHAPE_CreateAbstract(svg_shapes->name, SHAPE_CreatePolygonFromSVGPolygon(svg_shapes->attributes));
         else if (!strcmp(svg_shapes->name, "path")) {
-
-
             abstract_to_add = SHAPE_CreateAbstract(svg_shapes->name, SHAPE_CreatePathblocksFromSVGPathblocks(svg_shapes->attributes));
         }
 
@@ -83,12 +80,10 @@ void SHAPE_FreeAbstractShape(ShapeAbstract* abstract_shapes)
 {
     if (!abstract_shapes)
         return;
-    //SHAPE_FreeAbstractShape(abstract_shapes->next);
     if (!strcmp(abstract_shapes->type, "rect"))
         SHAPE_FreeRectangle(abstract_shapes->data);
     else if (!strcmp(abstract_shapes->type, "circle"))
         SHAPE_FreeCircle(abstract_shapes->data);
-
 
 
     free(abstract_shapes->type);
@@ -652,8 +647,10 @@ ShapePathblock* SHAPE_CreatePathBlock(char type, char* points)
 
     if (type == 'L')
     {
+        #ifdef __linux__
         strcpy(buffer, points);
         char* second_point_token = strtok(buffer, " ");
+        
         char* first_point_token = strdup(second_point_token);
         second_point_token = strtok(NULL, " ");
 
@@ -666,6 +663,28 @@ ShapePathblock* SHAPE_CreatePathBlock(char type, char* points)
         x2 = atof(token);
         token = strtok(NULL, ",");
         y2 = atof(token);
+        #endif 
+
+        #ifdef _WIN32
+            char* ptr;
+            strcpy(buffer, points);
+            char* second_point_token = strtok_s(buffer, " ", &ptr);
+            
+            char* first_point_token = _strdup(second_point_token);
+            second_point_token = strtok_s(NULL, " ", &ptr);
+
+            token = strtok_s(first_point_token, ",", &ptr);
+            x1 = atof(token);
+            token = strtok(NULL, ",");
+            y1 = atof(token);
+
+            token = strtok_s(second_point_token, ",", &ptr);
+            x2 = atof(token);
+            token = strtok(NULL, ",");
+            y2 = atof(token);
+        #endif
+
+
 
         SHAPE_AddPoint(&path_block->p, SHAPE_CreatePoint(x1, y1));
         SHAPE_AddPoint(&path_block->p, SHAPE_CreatePoint(x2, y2));
@@ -1244,8 +1263,6 @@ kiss_fft_cpx* SHAPE_GetFFTOfRealPointsX(ShapePoint* real_points, size_t size)
     free(configuration);
     return complexe_x;
 }
-
-
 
 
 

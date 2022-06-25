@@ -8,8 +8,8 @@ kiss_fft_cpx* GetComplexArrayFromPoints(ShapePoint* points, size_t nbpoints)
     kiss_fft_cpx* complex_array = malloc(sizeof(kiss_fft_cpx) * nbpoints);
     ShapePoint* point = points;
 
-    double scale_x = 800.f/1920.f;
-    double scale_y = 800.f/1080.f;
+    const double scale_x = 800.f/1920.f;
+    const double scale_y = 800.f/1080.f;
 
     for (int i = 0; i < nbpoints; ++i, point = point->np) {
         complex_array[i].r = point->x;//* scale_x;

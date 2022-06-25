@@ -4,17 +4,15 @@
 
 #include "pathparser.h"
 
-// TODO: Optimizing and checking memory leaks
-
+// Not robust path svg's element parser
 ShapePathblock* ParsePath(svgAttributeStack* path_attribute)
 {
     ShapePathblock* path_blocks = NULL;
-
-    char* delimiters[1000] = {0};
-    int delimiters_idx[1000] = {0};
-    //char* end_delimiter = "\0";
-    //strcat(path_attribute->value, end_delimiter);
     size_t pathlen = strlen(path_attribute->value);
+
+    char** delimiters = malloc(sizeof(char*) * 1000);
+    int* delimiters_idx = malloc(sizeof(int) * 1000);
+
     int j = 0;
     for (int i = 0; i <= pathlen; ++i) {
         if (path_attribute->value[i] == 'M' || path_attribute->value[i] == 'H' ||
@@ -25,7 +23,7 @@ ShapePathblock* ParsePath(svgAttributeStack* path_attribute)
             path_attribute->value[i] == 'c' || path_attribute->value[i] == 'z' ||
             path_attribute->value[i] == 'l' || path_attribute->value[i] == 's' ||
             path_attribute->value[i] == 'S' || path_attribute->value[i] == '\0' ||
-                path_attribute->value[i] == 'm'
+            path_attribute->value[i] == 'm'
                 )
         {
             delimiters[j] = &path_attribute->value[i];
@@ -33,7 +31,6 @@ ShapePathblock* ParsePath(svgAttributeStack* path_attribute)
             j++;
         }
     }
-
 
     // We are going to parse each string between delimiters
     ptrdiff_t bytes;
@@ -74,8 +71,6 @@ ShapePathblock* ParsePath(svgAttributeStack* path_attribute)
                     memset(x, 0, sizeof(char)*10);
                     l = 0;
                     SHAPE_PathAddBlock(&path_blocks, SHAPE_CreatePathBlockWithPoints(*delimiters[i], SHAPE_CreatePoint(x0, y0)));
-
-                    //printf("\n%c %f %f\n", *delimiters[i], x0, y0);
                 }
 
                 if((isdigit(path_attribute->value[k]) || (path_attribute->value[k] == '.') || path_attribute->value[k] == '-')) {
@@ -96,8 +91,6 @@ ShapePathblock* ParsePath(svgAttributeStack* path_attribute)
                 {
                     x0 = atof(x);
                     SHAPE_PathAddBlock(&path_blocks, SHAPE_CreatePathBlockWithPoints(*delimiters[i], SHAPE_CreatePoint(x0, 0)));
-
-                    //printf("\n%c %f\n", *delimiters[i], x0);
                 }
 
                 if ((isdigit(path_attribute->value[k]) || (path_attribute->value[k] == '.') || (path_attribute->value[k] == '-')) && reading_x){
@@ -152,7 +145,6 @@ ShapePathblock* ParsePath(svgAttributeStack* path_attribute)
                     reading_x = true;
                     reading_y = false;
                     nb = 0;
-                    //printf("\n%c %f %f, %f %f\n", *delimiters[i], x0, y0, x1, y1);
                 }
 
                 if ((isdigit(path_attribute->value[k]) || (path_attribute->value[k] == '.') || (path_attribute->value[k] == '-'))){
@@ -210,8 +202,6 @@ ShapePathblock* ParsePath(svgAttributeStack* path_attribute)
                     SHAPE_AddPoint(&p0, SHAPE_CreatePoint(x2, y2));
                     SHAPE_PathAddBlock(&path_blocks, SHAPE_CreatePathBlockWithPoints(*delimiters[i], p0));
 
-                    //printf("\n%c %f %f, %f %f, %f %f\n", *delimiters[i], x0, y0, x1, y1, x2, y2);
-                    //reading_x = reading_y = false;
                     nb = 0;
                 }
 
@@ -225,11 +215,13 @@ ShapePathblock* ParsePath(svgAttributeStack* path_attribute)
             }
         }
 
-        //printf("%c\n", *delimiters[i]);
-       // ShapePoint* points = SHAPE_GetPointsFromPathblocks(path_blocks, 1.f);
-
     }
+
+    free(delimiters);
+    free(delimiters_idx);
 
     return path_blocks;
 }
+
+
 
