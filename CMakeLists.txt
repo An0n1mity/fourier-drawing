@@ -10,7 +10,6 @@ INCLUDE(FindPkgConfig)
 pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
 
 add_compile_definitions(${LIBXML2_DEFINITIONS} ${GTK3_DEFINITIONS})
-add_compile_options(-Wall -Wextra -Werror)
 add_definitions(${GTK3_CFLAGS_OTHER})
 include_directories(${LIBXML2_INCLUDE_DIR} ${GTK3_INCLUDE_DIRS} ${PORTAUDIO_INCLUDE_DIRS})
 link_directories(${GTK3_LIBRARY_DIRS})
